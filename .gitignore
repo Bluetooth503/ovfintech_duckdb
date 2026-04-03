@@ -49,7 +49,6 @@ env/
 # Database
 *.db
 *.duckdb
-dev.duckdb
 
 # OS
 .DS_Store

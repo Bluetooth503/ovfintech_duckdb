@@ -15,14 +15,14 @@ DORIS_PASSWORD = 'ggjx2024_qa'
 DORIS_DATABASE = 'ods'
 
 # 数据导出配置
-SEEDS_DIR = '/Users/enlai/ovfintech/seeds'
-EXPORT_LIMIT = 50000  # 查询数据条数限制
+SEEDS_DIR = './seeds'
+EXPORT_LIMIT = 500000  # 查询数据条数限制
 
 # CSV文件名到Doris表名的手工映射配置（去掉.csv扩展名）
 TABLE_MAPPING = {
     # 'ods_ranch': 'ods_ranch_ranch',
     # 'ods_ranch_stall': 'ods_ranch_ranch_stall',
-    # 'ods_ranch_onstall': 'ods_ranch_ranch_onstall',
+    'ods_ranch_onstall': 'ods_ranch_ranch_onstall',
     # 'ods_psi_cattle_purchase': 'ods_ranch_psi_cattle_purchase',
     # 'ods_psi_cattle_sell': 'ods_ranch_psi_cattle_sell',
     # 'ods_psi_cattle_return': 'ods_ranch_psi_cattle_return',
@@ -37,7 +37,7 @@ TABLE_MAPPING = {
     # 'ods_psi_cattle_hth_daily_rpt': 'ods_ranch_psi_cattle_hth_daily_rpt',
     # 'ods_psi_cattle_feed_detail': 'ods_ranch_psi_cattle_feed_detail',
 
-    # 'ods_ranch_onstall_history': 'ods_psi_ranch_synthesize',
+    # 'ods_ranch_onstall_history': 'ods_ranch_ranch_onstall_history',
     # 'ods_psi_ranch_synthesize': 'ods_psi_ranch_synthesize',
     # 'ods_psi_in_out_warehouse': 'ods_psi_in_out_warehouse',
     # 'ods_psi_inventory': 'ods_psi_inventory',
