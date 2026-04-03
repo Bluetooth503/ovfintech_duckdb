@@ -14,6 +14,7 @@ docs/
 __pycache__/
 *.py[cod]
 *$py.class
+export_doris_to_csv.py
 *.so
 .Python
 build/
