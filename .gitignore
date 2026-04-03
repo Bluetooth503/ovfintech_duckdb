@@ -5,6 +5,10 @@ logs/
 dbt_cloud_provider/
 profiling/
 macros/
+jeecg-boot/
+seeds/
+export_doris_to_csv.py
+
 # Python
 __pycache__/
 *.py[cod]
@@ -26,11 +30,13 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
 # Virtual environments
 venv/
 ENV/
 env/
 .venv
+
 # IDE
 .vscode/
 .idea/
@@ -38,15 +44,19 @@ env/
 *.swo
 *~
 .DS_Store
+
 # Database
 *.db
 *.duckdb
 dev.duckdb
+
 # OS
 .DS_Store
 Thumbs.db
+
 # Logs
 *.log
+
 # Environment
 .env
 .env.local
