@@ -18,7 +18,7 @@ WITH src_install AS (
         code AS cattle_code,                            -- 牛只编号
         vice_code,                                      -- 副编号
         stall_id,                                       -- 栏舍ID
-        commodity_id,                                   -- 商品ID
+        commodity_id AS sku_id,                         -- 商品ID
         CAST(weight AS DOUBLE) AS weight,               -- 入栏重量
         CAST(price AS DOUBLE) AS price,                 -- 单价
         CAST(total_price AS DOUBLE) AS total_price,     -- 总价
@@ -39,7 +39,7 @@ SELECT
     cattle_code,                                    -- 牛只编号
     vice_code,                                      -- 副编号
     stall_id,                                       -- 栏舍ID
-    commodity_id,                                   -- 商品ID
+    sku_id      ,                                   -- 商品ID
     weight,                                         -- 入栏重量
     price,                                          -- 单价
     total_price,                                    -- 总价
@@ -52,6 +52,6 @@ SELECT
     update_time                                     -- 更新时间
 FROM src_install
 
-{% if is_incremental() %}
-WHERE create_time > (SELECT COALESCE(MAX(create_time), '1900-01-01'::timestamp) FROM {{ this }})
-{% endif %}
+-- {% if is_incremental() %}
+-- WHERE create_time > (SELECT COALESCE(MAX(create_time), '1900-01-01'::timestamp) FROM {{ this }})
+-- {% endif %}

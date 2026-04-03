@@ -20,7 +20,7 @@ WITH src_return AS (
         CAST(return_weight AS DOUBLE) AS return_weight, -- 退回重量
         CAST(return_price AS DOUBLE) AS return_price,   -- 退回价格
         reason,                                         -- 退回原因
-        tenant_id,                                      -- 租户ID
+        tenant_id AS ranch_id,                          -- 牧场ID
         create_time::timestamp AS create_time,          -- 创建时间
         COALESCE(update_time::timestamp, create_time::timestamp) AS update_time  -- 更新时间
     FROM {{ ref('ods_psi_cattle_return') }}
@@ -35,7 +35,7 @@ SELECT
     return_weight,                                  -- 退回重量
     return_price,                                   -- 退回价格
     reason,                                         -- 退回原因
-    tenant_id,                                      -- 租户ID
+    ranch_id,                                       -- 牧场ID
     create_time,                                    -- 创建时间
     update_time                                     -- 更新时间
 FROM src_return

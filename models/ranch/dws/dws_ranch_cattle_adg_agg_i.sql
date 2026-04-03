@@ -129,7 +129,7 @@ filter_valid_intervals AS (
 lkp_cattle AS (
     SELECT
         cattle_id,
-        cattle_no,
+        cattle_code,
         stall_id,
         stall_name,
         ranch_id,
@@ -193,7 +193,7 @@ join_base AS (
         m.measure_code,
         m.measure_type,
         m.ai_score,
-        c.cattle_no,
+        c.cattle_code,
         c.sku_id,
         c.sku_name,
         c.brand_name,
@@ -263,7 +263,7 @@ join_feed AS (
     SELECT
         s.stats_date,
         s.cattle_id,
-        s.cattle_no,
+        s.cattle_code,
         s.ranch_id,
         s.ranch_name,
         s.stall_id,
@@ -313,7 +313,7 @@ SELECT
     -- ====================
     stats_date,                              -- 统计日期（称重日期）
     cattle_id,                               -- 牛只ID
-    cattle_no,                               -- 牛只编号
+    cattle_code,                              -- 牛只编号
     ranch_id,                                -- 牧场ID
     ranch_name,                              -- 牧场名称
     stall_id,                                -- 栏舍ID

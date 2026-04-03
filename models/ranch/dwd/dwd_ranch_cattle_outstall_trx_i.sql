@@ -22,15 +22,15 @@ WITH src_outstall AS (
         CAST(price AS DOUBLE) AS price,                 -- 出栏单价
         reason,                                         -- 出栏原因
         out_type,                                       -- 出栏类型
-        tenant_id,                                      -- 租户ID
+        tenant_id AS ranch_id,                          -- 牧场ID
         CAST(loan_money AS DOUBLE) AS loan_money,       -- 贷款金额
-        investor_id,                                    -- 投资人ID
-        investor_name,                                  -- 投资人名称
-        commodity_id,                                   -- 商品ID
-        commodity_name,                                 -- 商品名称
+        investor_id AS customer_id,                     -- 客户ID
+        investor_name AS customer_name,                 -- 客户名称
+        commodity_id AS sku_id,                         -- 商品ID
+        commodity_name as sku_name,                     -- 商品名称
         status,                                         -- 状态
-        id AS create_time,                              -- 使用ID作为时间戳替代
-        id AS update_time                               -- 使用ID作为时间戳替代
+        outstall_date AS create_time,                   -- 创建时间（使用出栏日期）
+        outstall_date AS update_time                    -- 更新时间（使用出栏日期）
     FROM {{ ref('ods_ranch_outstall') }}
     WHERE id IS NOT NULL
 )
@@ -45,17 +45,17 @@ SELECT
     price,                                          -- 出栏单价
     reason,                                         -- 出栏原因
     out_type,                                       -- 出栏类型
-    tenant_id,                                      -- 租户ID
+    ranch_id,                                       -- 牧场ID
     loan_money,                                     -- 贷款金额
-    investor_id,                                    -- 投资人ID
-    investor_name,                                  -- 投资人名称
-    commodity_id,                                   -- 商品ID
-    commodity_name,                                 -- 商品名称
+    customer_id,                                    -- 客户ID
+    customer_name,                                  -- 客户名称
+    sku_id,                                         -- 商品ID
+    sku_name,                                       -- 商品名称
     status,                                         -- 状态
     create_time,                                    -- 创建时间
     update_time                                     -- 更新时间
 FROM src_outstall
 
-{% if is_incremental() %}
-WHERE create_time > (SELECT COALESCE(MAX(create_time), '1900-01-01'::timestamp) FROM {{ this }})
-{% endif %}
+-- {% if is_incremental() %}
+-- WHERE create_time > (SELECT COALESCE(MAX(create_time), '1900-01-01'::timestamp) FROM {{ this }})
+-- {% endif %}

@@ -26,7 +26,7 @@ WITH source_commodity AS (
         unitweight,
         dry,
         sort,
-        uprice,
+        uprice AS unit_price,
         if_alert AS is_alert_enabled,
         allow_offset_weight,
         create_time,
@@ -65,7 +65,7 @@ final AS (
         s.unitweight,                       -- 单位重量
         s.dry,                              -- 干物质
         s.sort,                             -- 排序
-        s.uprice,                           -- 单价
+        s.unit_price,                       -- 单价
         s.is_alert_enabled,                 -- 是否预警
         s.allow_offset_weight,              -- 允许误差重量
         s.dw_effective_date,                -- 生效日期
@@ -92,7 +92,7 @@ SELECT
     unitweight,                       -- 单位重量
     dry,                              -- 干物质
     sort,                             -- 排序
-    uprice,                           -- 单价
+    unit_price,                       -- 单价
     is_alert_enabled,                 -- 是否预警
     allow_offset_weight,              -- 允许误差重量
     dw_effective_date,                -- 生效日期

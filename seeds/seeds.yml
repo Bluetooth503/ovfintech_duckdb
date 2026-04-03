@@ -137,16 +137,35 @@ seeds:
         end_weight: double
         sku_id: bigint
 
-  - name: ods_psi_cattle_purchase
+  - name: ods_ranch_onstall_history
     config:
       column_types:
         id: bigint
-        customer_id: bigint
-        quantity: bigint
-        purchase_cost: double
+        stall_id: bigint
+        code: varchar
+        vice_code: varchar
+        commodity_id: bigint
+        snap_date: date
         investor_id: bigint
+        livestock_id: varchar
         tenant_id: bigint
-        status: bigint
+        total_loan_money: double
+        real_price: double
+        estimated_weight: double
+        is_loan: bigint
+        weight_add: double
+        feed_quantity: double
+        feed_dry_quantity: double
+        funding_id: bigint
+        other1_loan_money: double
+        other2_loan_money: double
+        in_stall_loan_money: double
+        weight_add_loan_money: double
+        if_sick: bigint
+        plan_feed_quantity: double
+        total_feed_cost: double
+        feed_cost: double
+        purchase_id: bigint
 
   - name: ods_psi_cattle_return
     config:
@@ -255,33 +274,6 @@ seeds:
         weight_add_loan_money: double
         total_feed_cost: double
 
-  - name: ods_ranch_onstall_history
-    config:
-      column_types:
-        id: bigint
-        stall_id: bigint
-        commodity_id: bigint
-        livestock_id: bigint
-        tenant_id: bigint
-        investor_id: bigint
-        total_loan_money: double
-        real_price: double
-        estimated_weight: double
-        is_loan: bigint
-        weight_add: double
-        feed_quantity: double
-        feed_dry_quantity: double
-        funding_id: bigint
-        other1_loan_money: double
-        other2_loan_money: double
-        in_stall_loan_money: double
-        weight_add_loan_money: double
-        if_sick: bigint
-        plan_feed_quantity: double
-        total_feed_cost: double
-        feed_cost: double
-        purchase_id: bigint
-
   - name: ods_ranch_install
     config:
       column_types:
@@ -311,3 +303,18 @@ seeds:
         investor_id: bigint
         commodity_id: bigint
         status: bigint
+
+  - name: ods_psi_cattle_ai_score_result
+    config:
+      column_types:
+        id: varchar
+        weight: double
+        score: varchar
+        hair: varchar
+        muscle: varchar
+        out_stall_weight: double
+        feed_ratio: double
+        is_submit: bigint
+        cattle_code: varchar
+        score_record_count: bigint
+        gender: bigint

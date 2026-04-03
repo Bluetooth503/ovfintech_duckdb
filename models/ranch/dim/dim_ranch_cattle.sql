@@ -86,7 +86,7 @@ lkp_stall AS (
 cattle_final AS (
     SELECT
         s.id AS cattle_id,
-        s.code AS cattle_no,
+        s.code AS cattle_code,
         s.vice_code,
         s.stall_id,
         st.stall_name,
@@ -135,7 +135,7 @@ cattle_final AS (
 SELECT
     -- 关键标识
     cattle_id,                          -- 牛只ID
-    cattle_no,                          -- 牛只编号
+    cattle_code,                        -- 牛只编号
     vice_code,                          -- 副编号
     -- 层级关系：牧场-栏舍-牛只
     ranch_id,                           -- 牧场ID
