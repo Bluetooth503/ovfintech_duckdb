@@ -6,7 +6,9 @@ dbt_cloud_provider/
 profiling/
 macros/
 jeecg-boot/
+glossary/
 seeds/
+docs/
 export_doris_to_csv.py
 
 # Python

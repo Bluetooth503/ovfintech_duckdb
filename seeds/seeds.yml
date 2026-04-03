@@ -1,0 +1,314 @@
+version: 2
+
+seeds:
+  - name: ods_ranch
+    config:
+      column_types:
+        id: bigint
+        status: bigint
+        tenant_id: bigint
+        employees_num: bigint
+        adcode: bigint
+        phone: varchar
+
+  - name: ods_psi_commodity
+    config:
+      column_types:
+        id: bigint
+        type: bigint
+        status: bigint
+        remark: varchar
+        tenant_id: bigint
+        printgroup: bigint
+        class_id: bigint
+        unitweight: bigint
+        autosecond: bigint
+        enable: bigint
+        trgaddress: bigint
+        kpt_id: bigint
+        needbegin: bigint
+        sort: bigint
+        if_alert: bigint
+        allow_offset_weight: double
+
+  - name: ods_psi_recipe
+    config:
+      column_types:
+        id: bigint
+        commodity_id: bigint
+        weight_begin: bigint
+        weight_end: bigint
+        plan_days: bigint
+        day_age: bigint
+        tenant_id: bigint
+        remark: varchar
+        sort: bigint
+        enable: bigint
+        measure: double
+        feed_num: bigint
+
+  - name: ods_psi_sample_weight
+    config:
+      column_types:
+        id: varchar
+        livestock_id: varchar
+        weight: double
+        weight_day_age: bigint
+        weight_days: bigint
+        stall_id: bigint
+        code: varchar
+        tenant_id: bigint
+        investor_id: bigint
+        type: bigint
+
+  - name: ods_ranch_stall
+    config:
+      column_types:
+        id: bigint
+        recipe_id: bigint
+        tenant_id: bigint
+        real_count: bigint
+        area_id: bigint
+        auto_second: bigint
+        enable: bigint
+        weight: double
+        auto_zone: double
+        system_cattle_num: bigint
+        total_weight: double
+        noon_one_value: double
+        morning_one_value: double
+        night_one_value: double
+        recipe_total_weight: double
+        type: bigint
+        night_one_weight: double
+        morning_one_weight: double
+        noon_one_weight: double
+        deleted: bigint
+        investor_id: bigint
+
+  - name: ods_psi_cattle_grow_config
+    config:
+      column_types:
+        id: varchar
+        start_weight: double
+        end_weight: double
+        plan_weight_add: double
+        feed_meat_ratio: double
+        tenant_id: bigint
+        days: bigint
+        measure_max_weight: double
+        measure_min_weight: double
+        commodity_id: bigint
+        measure_normal_weight: double
+
+  - name: ods_psi_cattle_feed_detail
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_hth_daily_rpt
+    config:
+      column_types:
+        id: bigint
+        stall_num: bigint
+        cattle_num: bigint
+        sick_num: bigint
+        sick_ratio: double
+        env_qualify_num: bigint
+        env_qualify_ratio: double
+        hth_qualify_num: bigint
+        hth_qualify_ratio: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_price
+    config:
+      column_types:
+        id: varchar
+        commodity_id: bigint
+        price: double
+        tenant_id: bigint
+        start_weight: double
+        end_weight: double
+        sku_id: bigint
+
+  - name: ods_psi_cattle_purchase
+    config:
+      column_types:
+        id: bigint
+        customer_id: bigint
+        quantity: bigint
+        purchase_cost: double
+        investor_id: bigint
+        tenant_id: bigint
+        status: bigint
+
+  - name: ods_psi_cattle_return
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        return_weight: double
+        return_price: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_sell
+    config:
+      column_types:
+        id: bigint
+        ranch_id: bigint
+        customer_id: bigint
+        quantity: bigint
+        sell_cost: double
+        tenant_id: bigint
+        status: bigint
+
+  - name: ods_psi_feed_formula
+    config:
+      column_types:
+        id: bigint
+        commodity_id: bigint
+        ranch_id: bigint
+        feed_count: bigint
+        tenant_id: bigint
+
+  - name: ods_psi_livestock_consume
+    config:
+      column_types:
+        id: bigint
+        ranch_id: bigint
+        stall_id: bigint
+        recipe_id: bigint
+        commodity_id: bigint
+        plan_day_consume: double
+        act_day_consume: double
+        investor_id: bigint
+        warehouse_id: bigint
+        tenant_id: bigint
+
+  - name: ods_psi_stall_daily_report
+    config:
+      column_types:
+        id: bigint
+        stall_id: bigint
+        avg_measure: double
+        recipe_id: bigint
+        feed_meat_ratio: double
+        scope_ratio: double
+        tenant_id: bigint
+        cattle_count: bigint
+        actual_feed_quantity: double
+        act_cattle_dry_matter: double
+        cattle_weight_add: double
+        recipe_dry_matter_min: double
+        real_cattle_count: bigint
+        plan_feed_quantity: double
+        recipe_dry_matter_max: double
+        system_cattle_count: bigint
+        estimated_weight: double
+        avg_estimated_weight: double
+        commodity_id: bigint
+        system_cattle_dry_matter: double
+        act_cattle_cost: double
+        act_cattle_feed_quantity: double
+        plan_cattle_feed_quantity: double
+        actual_feed_cost: double
+        plan_feed_cost: double
+        default_measure: double
+        plan_cattle_dry_matter: double
+        total_cattle_value: double
+        recipe_dry_matter_normal: double
+        manager_cost: double
+        cattle_price: double
+
+  - name: ods_ranch_onstall
+    config:
+      column_types:
+        id: bigint
+        stall_id: bigint
+        weight: double
+        price: double
+        commodity_id: bigint
+        status: bigint
+        investor_id: bigint
+        latest_weight: double
+        tenant_id: bigint
+        estimated_weight: double
+        total_loan_money: double
+        real_price: double
+        is_loan: bigint
+        weight_add: double
+        is_lock: bigint
+        repay_amount: double
+        purchase_id: bigint
+        loan_count: bigint
+        funding_id: bigint
+        if_sick: bigint
+        other1_loan_money: double
+        other2_loan_money: double
+        in_stall_loan_money: double
+        weight_add_loan_money: double
+        total_feed_cost: double
+
+  - name: ods_ranch_onstall_history
+    config:
+      column_types:
+        id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        customer_id: bigint
+        livestock_id: bigint
+        ranch_id: bigint
+        investor_id: bigint
+        total_loan_money: double
+        real_price: double
+        estimated_weight: double
+        is_loan: bigint
+        weight_add: double
+        feed_quantity: double
+        feed_dry_quantity: double
+        funding_id: bigint
+        other1_loan_money: double
+        other2_loan_money: double
+        in_stall_loan_money: double
+        weight_add_loan_money: double
+        if_sick: bigint
+        plan_feed_quantity: double
+        total_feed_cost: double
+        feed_cost: double
+        purchase_id: bigint
+
+  - name: ods_ranch_install
+    config:
+      column_types:
+        id: bigint
+        purchase_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        weight: double
+        price: double
+        total_price: double
+        tenant_id: bigint
+        ai_score: double
+        color: bigint
+        offline_gather: bigint
+
+  - name: ods_ranch_outstall
+    config:
+      column_types:
+        id: bigint
+        sell_id: bigint
+        livestock_id: bigint
+        weight: double
+        price: double
+        loan_money: double
+        out_type: bigint
+        tenant_id: bigint
+        investor_id: bigint
+        commodity_id: bigint
+        status: bigint
