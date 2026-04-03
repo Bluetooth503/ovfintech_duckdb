@@ -261,9 +261,8 @@ seeds:
         id: bigint
         stall_id: bigint
         commodity_id: bigint
-        customer_id: bigint
         livestock_id: bigint
-        ranch_id: bigint
+        tenant_id: bigint
         investor_id: bigint
         total_loan_money: double
         real_price: double
