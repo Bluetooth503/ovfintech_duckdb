@@ -7,9 +7,8 @@ profiling/
 macros/
 jeecg-boot/
 glossary/
-seeds/
+seeds/*.csv
 docs/
-export_doris_to_csv.py
 
 # Python
 __pycache__/
