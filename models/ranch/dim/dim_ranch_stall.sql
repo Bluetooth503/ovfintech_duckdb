@@ -29,6 +29,7 @@ WITH source_stall AS (
         noon_one_weight AS noon_feed_weight,
         night_one_weight AS night_feed_weight,
         recipe_total_weight,
+        CAST(system_cattle_num AS BIGINT) AS system_cattle_count,
         deleted,
         create_time,
         update_time,
@@ -83,6 +84,7 @@ stall_with_recipe AS (
         s.noon_feed_weight,
         s.night_feed_weight,
         s.recipe_total_weight,
+        s.system_cattle_count,
         s.deleted,
         s.create_time,
         s.update_time,
@@ -124,6 +126,7 @@ SELECT
     noon_feed_weight,                   -- 午饲喂量
     night_feed_weight,                  -- 晚饲喂量
     recipe_total_weight,                -- 配方总重量
+    system_cattle_count,                -- 系统牛只数（预期容量）
     -- 配方维度信息
     recipe_sku_id,                      -- 配方SKU ID（配方对应的饲料类型）
     recipe_sku_name,                    -- 配方SKU名称

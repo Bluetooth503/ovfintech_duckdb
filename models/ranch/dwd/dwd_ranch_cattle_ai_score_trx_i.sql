@@ -17,8 +17,8 @@ WITH src_ai_score AS (
         cattle_code,                                    -- 牛只编号
         CAST(weight AS DOUBLE) AS weight,               -- 当前体重
         score,                                          -- 综合评分
-        hair,                                           -- 毛发评分
-        muscle,                                         -- 肌肉评分
+        CAST(hair AS DOUBLE) AS hair,                   -- 毛发评分
+        CAST(muscle AS DOUBLE) AS muscle,               -- 肌肉评分
         variety_name,                                   -- 品类名称
         CAST(out_stall_weight AS DOUBLE) AS out_stall_weight,  -- 预估出栏体重
         CAST(feed_ratio AS DOUBLE) AS feed_ratio,       -- 料肉比

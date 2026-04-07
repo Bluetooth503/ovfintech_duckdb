@@ -13,25 +13,52 @@
     tags=['ranch', 'dws', 'agg', 'cattle', 'balance', 'daily']
 ) }}
 
-WITH cattle_state AS (
+WITH cattle_latest_snap AS (
+    -- 获取每头牛的最新快照
     SELECT
-        cattle_id,
+        livestock_id AS cattle_id,
         stall_id,
         ranch_id,
         sku_id,
         customer_id,
-        status,
-        current_weight,
-        install_weight,
+        estimated_weight AS current_weight,
         weight_add,
         total_loan_money,
-        estimated_value,
+        real_price,
         total_feed_cost,
         is_loan,
         if_sick,
-        install_date,
-        update_time
-    FROM {{ ref('dws_ranch_cattle_state_f') }}
+        snap_date,
+        ROW_NUMBER() OVER (PARTITION BY livestock_id ORDER BY snap_date DESC) AS rn
+    FROM {{ ref('dwd_ranch_cattle_onstall_trx_i') }}
+),
+
+cattle_state AS (
+    -- 关联维度表获取基础属性
+    SELECT
+        s.cattle_id,
+        s.stall_id,
+        s.ranch_id,
+        s.sku_id,
+        s.customer_id,
+        d.cattle_status AS status,
+        s.current_weight,
+        d.in_stall_weight AS install_weight,
+        s.weight_add,
+        s.total_loan_money,
+        -- 计算预估价值：当前体重 * 实际单价
+        CASE WHEN s.current_weight > 0 AND s.real_price > 0
+             THEN s.current_weight * s.real_price
+             ELSE NULL
+        END AS estimated_value,
+        s.total_feed_cost,
+        s.is_loan,
+        s.if_sick,
+        d.in_stall_date AS install_date,
+        d.update_time
+    FROM cattle_latest_snap s
+    INNER JOIN {{ ref('dim_ranch_cattle') }} d ON s.cattle_id = d.cattle_id AND d.is_current = '1'
+    WHERE s.rn = 1  -- 只取最新快照
 ),
 
 -- 按牧场+栏舍+SKU维度聚合

@@ -40,11 +40,7 @@ purchase_agg AS (
         SUM(COALESCE(total_price, 0)) AS total_amount,          -- 总金额
 
         -- 单价统计
-        CASE
-            WHEN SUM(weight) > 0
-            THEN SUM(total_price) / SUM(weight)
-            ELSE NULL
-        END AS avg_unit_price,                                  -- 平均单价(元/斤)
+        CASE WHEN SUM(weight) > 0 THEN SUM(total_price) / SUM(weight) ELSE NULL END AS avg_unit_price,                                  -- 平均单价(元/斤)
 
         CURRENT_TIMESTAMP AS dw_update_time
 
@@ -66,6 +62,6 @@ SELECT
 FROM purchase_agg p
 LEFT JOIN {{ ref('dim_ranch') }} r ON p.ranch_id = r.ranch_id
 
-{% if is_incremental() %}
-WHERE p.stat_date > (SELECT COALESCE(MAX(stat_date), '1900-01-01') FROM {{ this }})
-{% endif %}
+-- {% if is_incremental() %}
+-- WHERE p.stat_date > (SELECT COALESCE(MAX(stat_date), '1900-01-01') FROM {{ this }})
+-- {% endif %}

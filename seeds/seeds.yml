@@ -318,3 +318,35 @@ seeds:
         cattle_code: varchar
         score_record_count: bigint
         gender: bigint
+
+  - name: ods_psi_region_ai_data
+    config:
+      column_types:
+        id: varchar
+        region_id: varchar
+        region_name: varchar
+        value: bigint
+        cattle_count: bigint
+        ratio: double
+        date: timestamp
+        remark: varchar
+        tenant_id: bigint
+        alert_status: bigint
+
+  - name: ods_psi_stall_region
+    config:
+      column_types:
+        id: varchar
+        stall_id: varchar
+        region_id: varchar
+        tenant_id: bigint
+
+  - name: ods_psi_region
+    config:
+      column_types:
+        id: varchar
+        type: bigint
+        name: varchar
+        level: bigint
+        tenant_id: bigint
+        cattle_check: bigint

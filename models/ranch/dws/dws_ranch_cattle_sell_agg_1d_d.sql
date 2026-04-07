@@ -44,11 +44,7 @@ sell_agg AS (
         SUM(COALESCE(loan_amount, 0)) AS total_loan_repay,     -- 总还款金额
 
         -- 单价统计
-        CASE
-            WHEN SUM(weight) > 0
-            THEN SUM(total_amount) / SUM(weight)
-            ELSE NULL
-        END AS avg_unit_price,                                 -- 平均单价(元/斤)
+        CASE WHEN SUM(weight) > 0 THEN SUM(total_amount) / SUM(weight) ELSE NULL END AS avg_unit_price,                                 -- 平均单价(元/斤)
 
         -- 出栏类型分布
         SUM(CASE WHEN out_type = 1 THEN 1 ELSE 0 END) AS normal_sell_count,    -- 正常销售
@@ -79,6 +75,6 @@ SELECT
 FROM sell_agg s
 LEFT JOIN {{ ref('dim_ranch') }} r ON s.ranch_id = r.ranch_id
 
-{% if is_incremental() %}
-WHERE s.stat_date > (SELECT COALESCE(MAX(stat_date), '1900-01-01') FROM {{ this }})
-{% endif %}
+-- {% if is_incremental() %}
+-- WHERE s.stat_date > (SELECT COALESCE(MAX(stat_date), '1900-01-01') FROM {{ this }})
+-- {% endif %}

@@ -300,8 +300,33 @@ def model(dbt, session):
     # 读取数据
     df = dbt.ref("dws_ranch_cattle_adg_agg_i").to_df()
 
+    # 定义输出列（用于空 DataFrame）
+    OUTPUT_COLUMNS = [
+        # 标识信息
+        "cattle_id", "sku_id", "sku_name",
+        # 群体曲线信息
+        "breed_model", "breed_n_obs", "breed_aic", "breed_rmse",
+        # 群体曲线参数（动态字段，使用通用字段）
+        "breed_param_a", "breed_param_b", "breed_param_c", "breed_param_w0", "breed_param_k",
+        # 个体校正信息
+        "individual_n_obs", "individual_r2", "individual_rmse", "correction_factor",
+        # 个体观测范围
+        "obs_age_min", "obs_age_max", "obs_weight_min", "obs_weight_max",
+        # 当前状态
+        "current_age_days", "current_weight", "current_stage",
+        # 可靠性评级
+        "reliability",
+        # 预测结果
+        "predict_target_age", "predict_target_weight", "predict_days_ahead",
+        # 元数据
+        "dw_update_time"
+    ]
+
     if df.empty:
-        return pd.DataFrame()
+        # 返回带有正确列结构的空 DataFrame
+        empty_df = pd.DataFrame(columns=OUTPUT_COLUMNS)
+        empty_df["dw_update_time"] = pd.Timestamp.now()
+        return empty_df
 
     # 确保必要列存在
     required_cols = [CATTLE_COL, SKU_COL, SKU_NAME_COL, X_COL, Y_COL]
@@ -409,7 +434,29 @@ def model(dbt, session):
                 results.append(record)
 
     if not results:
-        return pd.DataFrame()
+        # 返回带有正确列结构的空 DataFrame
+        empty_df = pd.DataFrame(columns=[
+            # 标识信息
+            "cattle_id", "sku_id", "sku_name",
+            # 群体曲线信息
+            "breed_model", "breed_n_obs", "breed_aic", "breed_rmse",
+            # 群体曲线参数（动态字段，使用通用字段）
+            "breed_param_a", "breed_param_b", "breed_param_c", "breed_param_w0", "breed_param_k",
+            # 个体校正信息
+            "individual_n_obs", "individual_r2", "individual_rmse", "correction_factor",
+            # 个体观测范围
+            "obs_age_min", "obs_age_max", "obs_weight_min", "obs_weight_max",
+            # 当前状态
+            "current_age_days", "current_weight", "current_stage",
+            # 可靠性评级
+            "reliability",
+            # 预测结果
+            "predict_target_age", "predict_target_weight", "predict_days_ahead",
+            # 元数据
+            "dw_update_time"
+        ])
+        empty_df["dw_update_time"] = pd.Timestamp.now()
+        return empty_df
 
     df_result = pd.DataFrame(results)
     df_result["dw_update_time"] = pd.Timestamp.now()
