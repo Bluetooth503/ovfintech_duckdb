@@ -16,7 +16,7 @@
     incremental_strategy='append',
     partition_by=['stats_date'],
     description='牧场域牛只ADG区间汇总表，计算区间ADG和料肉比基础指标（增量更新）',
-    tags=['ranch', 'dws', 'adg', 'fcr', 'agg', 'incremental']
+    tags=['ranch', 'dws', 'adg', 'fcr', 'agg', 'daily', 'incremental']
 ) }}
 
 -- ============================================

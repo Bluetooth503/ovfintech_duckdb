@@ -9,7 +9,8 @@
 {{ config(
     materialized='incremental',
     unique_key='id',
-    description='活牛价格事务表，记录价格调整历史'
+    description='活牛价格事务表，记录价格调整历史',
+    tags=['ranch', 'dwd', 'trx', 'cattle', 'price']
 ) }}
 
 -- 源数据 CTE

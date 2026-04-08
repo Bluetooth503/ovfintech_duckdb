@@ -151,10 +151,7 @@ def _fit_model(t: np.ndarray, y: np.ndarray, model_name: str) -> Dict:
 
     try:
         popt, _ = curve_fit(func, t, y, p0=p0, bounds=bounds, maxfev=MAXFEV)
-        result.update({
-            "success": True,
-            "params": dict(zip(param_names, [float(v) for v in popt]))
-        })
+        result.update({"success": True, "params": dict(zip(param_names, [float(v) for v in popt]))})
     except Exception as e:
         result["error"] = str(e)
 
@@ -195,12 +192,7 @@ def _fit_breed_curve(df_breed: pd.DataFrame) -> Dict:
 
             if aic < best_aic:
                 best_aic = aic
-                best_result = {
-                    **result,
-                    "n_obs": int(len(t)),
-                    "aic": float(aic),
-                    "rmse": float(np.sqrt(rss / n))
-                }
+                best_result = {**result, "n_obs": int(len(t)), "aic": float(aic), "rmse": float(np.sqrt(rss / n))}
 
     if best_result is None:
         return {"success": False, "error": "所有模型拟合失败"}
@@ -281,11 +273,7 @@ def _predict_future_weight(
     for age in target_ages:
         if age > current_age:
             predicted_weight = func(np.array([age]), *params)[0] * correction_factor
-            predictions.append({
-                "predict_age": age,
-                "predict_weight": float(predicted_weight),
-                "days_from_now": age - current_age
-            })
+            predictions.append({"predict_age": age, "predict_weight": float(predicted_weight),"days_from_now": age - current_age})
 
     return predictions
 
@@ -294,7 +282,7 @@ def model(dbt, session):
     dbt.config(
         materialized="table",
         description="牧场牛只生长曲线非线性拟合结果（群体曲线+个体校正）",
-        tags=["ranch", "ads", "growth_curve", "python", "curve_fitting", "breed_level"]
+        tags=["ranch", "ads", "report", "growth_curve", "python", "curve_fitting", "breed_level"]
     )
 
     # 读取数据
@@ -356,9 +344,7 @@ def model(dbt, session):
             latest = df_cattle.sort_values("stats_date").iloc[-1]
 
             # 计算个体校正
-            correction = _calculate_individual_correction(
-                df_cattle, breed_params, model_name
-            )
+            correction = _calculate_individual_correction(df_cattle, breed_params, model_name)
 
             if not correction["success"]:
                 continue

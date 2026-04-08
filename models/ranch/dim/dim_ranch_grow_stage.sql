@@ -6,7 +6,8 @@
 -- =============================================
 {{ config(
     materialized='table',
-    description='生长阶段维度表，记录不同体重阶段的生长目标和料肉比目标（SCD Type 2）'
+    description='生长阶段维度表，记录不同体重阶段的生长目标和料肉比目标（SCD Type 2）',
+    tags=['ranch', 'dim']
 ) }}
 
 WITH source_grow_config AS (

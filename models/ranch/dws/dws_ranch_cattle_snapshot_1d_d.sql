@@ -21,7 +21,7 @@
     incremental_strategy='append',
     partition_by=['stats_date'],
     description='牧场牛只每日快照宽表，整合牛只的体重、月龄、品种、ADG、价格等多维度指标',
-    tags=['ranch', 'dws', 'cattle', 'snapshot', 'incremental']
+    tags=['ranch', 'dws', 'cattle', 'snapshot', 'daily', 'incremental']
 ) }}
 
 WITH

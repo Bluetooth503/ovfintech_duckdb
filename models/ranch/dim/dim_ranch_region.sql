@@ -6,7 +6,8 @@
 -- =============================================
 {{ config(
     materialized='table',
-    description='区域维度表，记录牧场区域的基本信息和关联的栏位信息'
+    description='区域维度表，记录牧场区域的基本信息和关联的栏位信息',
+    tags=['ranch', 'dim']
 ) }}
 
 WITH source_region AS (

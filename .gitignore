@@ -5,10 +5,14 @@ logs/
 dbt_cloud_provider/
 profiling/
 macros/
-jeecg-boot/
-glossary/
 seeds/*.csv
+
+# enlai
+glossary/
 docs/
+jeecg-boot/
+orchid_wms/
+
 
 # Python
 __pycache__/

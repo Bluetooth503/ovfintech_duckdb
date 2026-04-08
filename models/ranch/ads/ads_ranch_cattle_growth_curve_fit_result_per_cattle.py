@@ -96,7 +96,11 @@ def _fit_single_cattle(df_cattle: pd.DataFrame) -> List[Dict]:
 
 
 def model(dbt, session):
-    dbt.config(materialized="table", description="牧场牛只生长曲线非线性拟合结果", tags=["ranch", "ads", "growth_curve", "python", "curve_fitting"])
+    dbt.config(
+        materialized="table", 
+        description="牧场牛只生长曲线非线性拟合结果", 
+        tags=["ranch", "ads", "report", "growth_curve", "python", "curve_fitting"]
+    )
 
     df = dbt.ref("dws_ranch_cattle_adg_agg_i").to_df()
 

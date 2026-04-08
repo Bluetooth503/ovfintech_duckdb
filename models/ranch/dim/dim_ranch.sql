@@ -6,7 +6,8 @@
 -- =============================================
 {{ config(
     materialized='table',
-    description='牧场维度表，记录牧场的基本信息和历史变更（SCD Type 2）。合并 sys_tenant（主表）和 ranch（信息表）'
+    description='牧场维度表，记录牧场的基本信息和历史变更（SCD Type 2）。合并 sys_tenant（主表）和 ranch（信息表）',
+    tags=['ranch', 'dim']
 ) }}
 
 WITH

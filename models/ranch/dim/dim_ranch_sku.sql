@@ -6,7 +6,8 @@
 -- =============================================
 {{ config(
     materialized='table',
-    description='牧场SKU商品维度表，记录牧场相关商品（饲料、牛只、物资等）的基本信息和属性（SCD Type 2）'
+    description='牧场SKU商品维度表，记录牧场相关商品（饲料、牛只、物资等）的基本信息和属性（SCD Type 2）',
+    tags=['ranch', 'dim']
 ) }}
 
 WITH source_commodity AS (

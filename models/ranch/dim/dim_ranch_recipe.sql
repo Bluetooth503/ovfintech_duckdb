@@ -6,7 +6,8 @@
 -- =============================================
 {{ config(
     materialized='table',
-    description='饲料配方维度表，记录饲料配方的基本信息和料肉比目标（SCD Type 2）'
+    description='饲料配方维度表，记录饲料配方的基本信息和料肉比目标（SCD Type 2）',
+    tags=['ranch', 'dim']
 ) }}
 
 WITH source_recipe AS (

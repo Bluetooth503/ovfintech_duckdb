@@ -1,0 +1,337 @@
+-- =============================================
+-- 模型名称：ads_ranch_operation_dashboard_td
+-- 模型描述：牧场运营看板，提供牧场整体运营核心指标（累计至今）
+-- 作者：dbt
+-- 创建时间：2026-04-07
+-- 更新方式：全量刷新
+-- 粒度：牧场
+-- 说明：
+--   - 数据源：DWS层各类汇总表
+--   - 统计范围：累计至今（To Date）
+--   - 适用场景：牧场运营总览、管理驾驶舱
+-- =============================================
+{{ config(
+    materialized='table',
+    description='牧场运营看板，提供牧场整体运营核心指标（在栏情况、采购销售、生长绩效、金融风控等）',
+    tags=['ranch', 'ads', 'dashboard', 'operation', 'td']
+) }}
+
+WITH latest_date AS (
+    -- 获取最新统计日期
+    SELECT COALESCE(MAX(stat_date), CURRENT_DATE) AS max_date
+    FROM {{ ref('dws_ranch_cattle_balance_agg_1d_d') }}
+),
+
+-- ====================
+-- 1. 在栏牛只概况（最新日期）
+-- ====================
+cattle_overview AS (
+    SELECT
+        ranch_id,
+        SUM(total_cattle_count) AS total_cattle_count,           -- 总在栏牛只数
+        SUM(instock_count) AS instock_count,                     -- 实际在栏数
+        SUM(loan_cattle_count) AS loan_cattle_count,             -- 质押牛只数
+        SUM(sick_cattle_count) AS sick_cattle_count,             -- 病牛数
+        SUM(total_current_weight) AS total_current_weight,       -- 当前总重量
+        AVG(avg_current_weight) AS avg_current_weight,           -- 平均体重
+        SUM(total_install_weight) AS total_install_weight,       -- 入栏总重量
+        SUM(total_weight_add) AS total_weight_add,               -- 总增重
+        SUM(total_estimated_value) AS total_estimated_value,     -- 总预估价值
+        SUM(total_loan_money) AS total_loan_money,               -- 总贷款余额
+        SUM(total_feed_cost) AS total_feed_cost,                 -- 总饲料成本
+        AVG(weight_add_ratio) AS avg_weight_add_ratio,           -- 平均增重率
+        AVG(feed_cost_per_kg) AS avg_feed_cost_per_kg            -- 平均公斤增重成本
+    FROM {{ ref('dws_ranch_cattle_balance_agg_1d_d') }}
+    WHERE stat_date = (SELECT max_date FROM latest_date)
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 2. 栏舍概况
+-- ====================
+stall_overview AS (
+    SELECT
+        ranch_id,
+        COUNT(DISTINCT stall_id) AS total_stall_count,           -- 总栏舍数
+        SUM(total_cattle_count) AS total_capacity,               -- 总容量
+        SUM(total_current_weight) AS total_stall_weight          -- 栏舍总载重
+    FROM {{ ref('dws_ranch_stall_capacity_agg_1d_d') }}
+    WHERE stat_date = (SELECT max_date FROM latest_date)
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 3. 今日采购概况
+-- ====================
+today_purchase AS (
+    SELECT
+        ranch_id,
+        SUM(purchase_count) AS today_purchase_count,             -- 今日采购头数
+        SUM(total_weight) AS today_purchase_weight,              -- 今日采购重量
+        SUM(total_amount) AS today_purchase_amount               -- 今日采购金额
+    FROM {{ ref('dws_ranch_cattle_purchase_agg_1d_d') }}
+    WHERE stat_date = (SELECT max_date FROM latest_date)
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 4. 今日销售概况
+-- ====================
+today_sell AS (
+    SELECT
+        ranch_id,
+        SUM(sell_count) AS today_sell_count,                     -- 今日销售头数
+        SUM(total_weight) AS today_sell_weight,                  -- 今日销售重量
+        SUM(total_amount) AS today_sell_amount                   -- 今日销售金额
+    FROM {{ ref('dws_ranch_cattle_sell_agg_1d_d') }}
+    WHERE stat_date = (SELECT max_date FROM latest_date)
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 5. 累计采购概况（本月）
+-- ====================
+month_purchase AS (
+    SELECT
+        ranch_id,
+        SUM(purchase_count) AS month_purchase_count,             -- 本月累计采购头数
+        SUM(total_weight) AS month_purchase_weight,              -- 本月累计采购重量
+        SUM(total_amount) AS month_purchase_amount               -- 本月累计采购金额
+    FROM {{ ref('dws_ranch_cattle_purchase_agg_1d_d') }}
+    WHERE stat_date >= DATE_TRUNC('month', (SELECT max_date FROM latest_date))
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 6. 累计销售概况（本月）
+-- ====================
+month_sell AS (
+    SELECT
+        ranch_id,
+        SUM(sell_count) AS month_sell_count,                     -- 本月累计销售头数
+        SUM(total_weight) AS month_sell_weight,                  -- 本月累计销售重量
+        SUM(total_amount) AS month_sell_amount                   -- 本月累计销售金额
+    FROM {{ ref('dws_ranch_cattle_sell_agg_1d_d') }}
+    WHERE stat_date >= DATE_TRUNC('month', (SELECT max_date FROM latest_date))
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 7. 生长绩效指标（最新日期）
+-- ====================
+growth_performance AS (
+    SELECT
+        ranch_id,
+        AVG(avg_period_adg) AS avg_adg,                          -- 平均日增重
+        AVG(herd_fcr) AS avg_fcr,                                -- 平均料肉比
+        AVG(feed_cost_per_kg) AS feed_cost_per_kg,               -- 公斤增重饲料成本
+        AVG(avg_current_weight) AS avg_cattle_weight             -- 平均牛只体重
+    FROM {{ ref('dws_ranch_stall_performance_agg_1d_d') }}
+    WHERE stats_date = (SELECT max_date FROM latest_date)
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 8. AI盘点概况（最新日期）
+-- ====================
+ai_inventory AS (
+    SELECT
+        ranch_id,
+        SUM(ai_cattle_count) AS ai_cattle_count,                 -- AI盘点牛只数
+        AVG(inventory_accuracy) AS avg_inventory_accuracy        -- 平均盘点准确率
+    FROM {{ ref('dws_ranch_ai_inventory_agg_1d_d') }}
+    WHERE stat_date = (SELECT max_date FROM latest_date)
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 9. AI评分概况（最新日期）
+-- ====================
+ai_score AS (
+    SELECT
+        ranch_id,
+        AVG(avg_weight) AS ai_avg_weight,                        -- AI平均体重
+        AVG(avg_score) AS ai_avg_score,                          -- AI平均评分
+        AVG(avg_muscle) AS ai_avg_muscle,                        -- AI平均肌肉度
+        SUM(grade_a_count) AS grade_a_count                      -- A级牛只数
+    FROM {{ ref('dws_ranch_ai_score_agg_1d_d') }}
+    WHERE stat_date = (SELECT max_date FROM latest_date)
+    GROUP BY ranch_id
+),
+
+-- ====================
+-- 10. 汇总所有指标
+-- ====================
+dashboard_data AS (
+    SELECT
+        (SELECT max_date FROM latest_date) AS stat_date,
+        c.ranch_id,
+        r.ranch_name,
+
+        -- ====================
+        -- 在栏概况
+        -- ====================
+        COALESCE(c.total_cattle_count, 0) AS total_cattle_count,
+        COALESCE(c.instock_count, 0) AS instock_count,
+        COALESCE(c.loan_cattle_count, 0) AS loan_cattle_count,
+        COALESCE(c.sick_cattle_count, 0) AS sick_cattle_count,
+
+        -- 健康率：健康牛只数 / 总在栏数
+        CASE WHEN c.total_cattle_count > 0 THEN ROUND((c.total_cattle_count - c.sick_cattle_count) / c.total_cattle_count * 100, 2) ELSE NULL END AS health_rate,
+
+        -- 生病率：病牛数 / 总在栏数
+        CASE WHEN c.total_cattle_count > 0 THEN ROUND(c.sick_cattle_count / c.total_cattle_count * 100, 2) ELSE NULL END AS sick_rate,
+
+        -- 质押率：质押牛只数 / 总在栏数
+        CASE WHEN c.total_cattle_count > 0 THEN ROUND(c.loan_cattle_count / c.total_cattle_count * 100, 2) ELSE NULL END AS loan_cattle_ratio,
+
+        -- ====================
+        -- 体重概况
+        -- ====================
+        ROUND(c.total_current_weight, 2) AS total_current_weight,
+        ROUND(c.avg_current_weight, 2) AS avg_current_weight,
+        ROUND(c.total_install_weight, 2) AS total_install_weight,
+        ROUND(c.total_weight_add, 2) AS total_weight_add,
+        ROUND(c.avg_weight_add_ratio, 2) AS avg_weight_add_ratio,
+
+        -- ====================
+        -- 栏舍概况
+        -- ====================
+        COALESCE(s.total_stall_count, 0) AS total_stall_count,
+        COALESCE(s.total_capacity, 0) AS total_capacity,
+
+        -- 栏舍利用率：在栏牛只数 / 栏舍总容量
+        CASE WHEN s.total_capacity > 0 THEN ROUND(c.total_cattle_count / s.total_capacity * 100, 2) ELSE NULL END AS stall_utilization_rate,
+
+        -- ====================
+        -- 今日交易
+        -- ====================
+        COALESCE(tp.today_purchase_count, 0) AS today_purchase_count,
+        ROUND(tp.today_purchase_weight, 2) AS today_purchase_weight,
+        ROUND(tp.today_purchase_amount, 2) AS today_purchase_amount,
+        COALESCE(ts.today_sell_count, 0) AS today_sell_count,
+        ROUND(ts.today_sell_weight, 2) AS today_sell_weight,
+        ROUND(ts.today_sell_amount, 2) AS today_sell_amount,
+
+        -- ====================
+        -- 本月累计交易
+        -- ====================
+        COALESCE(mp.month_purchase_count, 0) AS month_purchase_count,
+        ROUND(mp.month_purchase_weight, 2) AS month_purchase_weight,
+        ROUND(mp.month_purchase_amount, 2) AS month_purchase_amount,
+        COALESCE(ms.month_sell_count, 0) AS month_sell_count,
+        ROUND(ms.month_sell_weight, 2) AS month_sell_weight,
+        ROUND(ms.month_sell_amount, 2) AS month_sell_amount,
+
+        -- ====================
+        -- 金融概况
+        -- ====================
+        ROUND(c.total_estimated_value, 2) AS total_estimated_value,
+        ROUND(c.total_loan_money, 2) AS total_loan_money,
+
+        -- 整体质押率：贷款余额 / 预估总价值
+        CASE WHEN c.total_estimated_value > 0 THEN ROUND(c.total_loan_money / c.total_estimated_value * 100, 2) ELSE NULL END AS pledge_ratio,
+
+        ROUND(c.total_feed_cost, 2) AS total_feed_cost,
+
+        -- ====================
+        -- 生长绩效
+        -- ====================
+        ROUND(g.avg_adg, 3) AS avg_adg,
+        ROUND(g.avg_fcr, 2) AS avg_fcr,
+        ROUND(g.feed_cost_per_kg, 2) AS feed_cost_per_kg,
+
+        -- ====================
+        -- AI监控
+        -- ====================
+        COALESCE(ai.ai_cattle_count, 0) AS ai_cattle_count,
+        ROUND(ai.avg_inventory_accuracy, 2) AS ai_inventory_accuracy,
+        ROUND(ai_s.ai_avg_weight, 2) AS ai_avg_weight,
+        ROUND(ai_s.ai_avg_score, 2) AS ai_avg_score,
+        ROUND(ai_s.ai_avg_muscle, 2) AS ai_avg_muscle,
+        COALESCE(ai_s.grade_a_count, 0) AS grade_a_count,
+
+        -- ====================
+        -- 元数据
+        -- ====================
+        CURRENT_TIMESTAMP AS dw_update_time
+
+    FROM cattle_overview c
+    LEFT JOIN {{ ref('dim_ranch') }} r ON c.ranch_id = r.ranch_id
+    LEFT JOIN stall_overview s ON c.ranch_id = s.ranch_id
+    LEFT JOIN today_purchase tp ON c.ranch_id = tp.ranch_id
+    LEFT JOIN today_sell ts ON c.ranch_id = ts.ranch_id
+    LEFT JOIN month_purchase mp ON c.ranch_id = mp.ranch_id
+    LEFT JOIN month_sell ms ON c.ranch_id = ms.ranch_id
+    LEFT JOIN growth_performance g ON c.ranch_id = g.ranch_id
+    LEFT JOIN ai_inventory ai ON c.ranch_id = ai.ranch_id
+    LEFT JOIN ai_score ai_s ON c.ranch_id = ai_s.ranch_id
+)
+
+SELECT
+    stat_date,
+    ranch_id,
+    ranch_name,
+
+    -- ==================== 在栏概况 ====================
+    total_cattle_count,
+    instock_count,
+    loan_cattle_count,
+    sick_cattle_count,
+    health_rate,
+    sick_rate,
+    loan_cattle_ratio,
+
+    -- ==================== 体重概况 ====================
+    total_current_weight,
+    avg_current_weight,
+    total_install_weight,
+    total_weight_add,
+    avg_weight_add_ratio,
+
+    -- ==================== 栏舍概况 ====================
+    total_stall_count,
+    total_capacity,
+    stall_utilization_rate,
+
+    -- ==================== 今日交易 ====================
+    today_purchase_count,
+    today_purchase_weight,
+    today_purchase_amount,
+    today_sell_count,
+    today_sell_weight,
+    today_sell_amount,
+
+    -- ==================== 本月累计交易 ====================
+    month_purchase_count,
+    month_purchase_weight,
+    month_purchase_amount,
+    month_sell_count,
+    month_sell_weight,
+    month_sell_amount,
+
+    -- ==================== 金融概况 ====================
+    total_estimated_value,
+    total_loan_money,
+    pledge_ratio,
+    total_feed_cost,
+
+    -- ==================== 生长绩效 ====================
+    avg_adg,
+    avg_fcr,
+    feed_cost_per_kg,
+
+    -- ==================== AI监控 ====================
+    ai_cattle_count,
+    ai_inventory_accuracy,
+    ai_avg_weight,
+    ai_avg_score,
+    ai_avg_muscle,
+    grade_a_count,
+
+    -- ==================== 元数据 ====================
+    dw_update_time
+
+FROM dashboard_data
+
+ORDER BY total_cattle_count DESC

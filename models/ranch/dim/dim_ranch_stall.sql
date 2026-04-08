@@ -6,7 +6,8 @@
 -- =============================================
 {{ config(
     materialized='table',
-    description='栏舍维度表，记录牛舍栏位的基本信息和配方变更历史（SCD Type 2）'
+    description='栏舍维度表，记录牛舍栏位的基本信息和配方变更历史（SCD Type 2）',
+    tags=['ranch', 'dim']
 ) }}
 
 WITH source_stall AS (
