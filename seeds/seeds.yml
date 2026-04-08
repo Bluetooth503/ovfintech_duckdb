@@ -350,3 +350,152 @@ seeds:
         level: bigint
         tenant_id: bigint
         cattle_check: bigint
+
+  # WMS 仓储业务源表
+  - name: ods_warehouse
+    config:
+      column_types:
+        id: varchar
+        code: varchar
+        name: varchar
+        type: varchar
+        attribute: varchar
+        use: varchar
+        address: varchar
+        contact_name: varchar
+        contact_phone: varchar
+        area: varchar
+        status: varchar
+        is_deleted: varchar
+        quick_pda: varchar
+        remarks: varchar
+        creator_id: varchar
+        creator_name: varchar
+        create_time: varchar
+        org_id: varchar
+        org_name: varchar
+        province: varchar
+        city: varchar
+        county: varchar
+        temperature_mode: varchar
+        construction: varchar
+        manager_member_id: varchar
+        manager_org_id: varchar
+        batch_manage_type: varchar
+        pledge_type: varchar
+        supervise_type: varchar
+        is_open_position: varchar
+        negative_inventory: varchar
+        warehouse_type: varchar
+        supervise_area: varchar
+        inbound_approval: varchar
+        outbound_approval: varchar
+        device_enabled: varchar
+        self_support_type: varchar
+        auto_truck: varchar
+        is_weighting: varchar
+        error_range: varchar
+        work_range: varchar
+        expiration_enable: varchar
+        is_create_report: varchar
+        fund_org_id: varchar
+        fund_org_name: varchar
+        inventory_forewarn_days: varchar
+        prophylactic_type: varchar
+        is_update_bar_code_inventory: varchar
+        alarm_deal_type: varchar
+        alarm_frequency: varchar
+
+  - name: ods_warehouse_area
+    config:
+      column_types:
+        id: varchar
+        warehouse_id: varchar
+        code: varchar
+        name: varchar
+        is_deleted: varchar
+        status: varchar
+        remarks: varchar
+        creator_id: varchar
+        creator: varchar
+        create_time: varchar
+        updator_id: varchar
+        updator: varchar
+        update_time: varchar
+
+  - name: ods_warehouse_position
+    config:
+      column_types:
+        id: varchar
+        warehouse_area_id: varchar
+        code: varchar
+        name: varchar
+        is_deleted: varchar
+        status: varchar
+        remarks: varchar
+        creator_id: varchar
+        creator: varchar
+        create_time: varchar
+        updator_id: varchar
+        updator: varchar
+        update_time: varchar
+        x_sort: varchar
+        y_sort: varchar
+        position_type: varchar
+
+  - name: ods_warehouse_ext
+    config:
+      column_types:
+        id: varchar
+        warehouse_id: varchar
+        max_storeage: varchar
+        land_certificate: varchar
+        ownership_certificate: varchar
+        fire_control_certificate: varchar
+        has_insurance: varchar
+        member_provide: varchar
+        equipment_info: varchar
+        lot_equipment: varchar
+        lot_equipment_quantity: varchar
+        finance_type: varchar
+        corporation: varchar
+        master_empower: varchar
+        lastest_work_order_code: varchar
+        work_order_status: varchar
+        work_order_start: varchar
+        work_order_end: varchar
+        is_deleted: varchar
+        creator_id: varchar
+        creator_name: varchar
+        create_time: varchar
+        updator_id: varchar
+        updator: varchar
+        update_time: varchar
+        property: varchar
+        warehouse_device_url: varchar
+
+  - name: ods_sku
+    config:
+      column_types:
+        id: varchar
+        member_id: varchar
+        org_id: varchar
+        sku_id: varchar
+        sku_name: varchar
+        attr_values: varchar
+        batch_no: varchar
+        weight_num: varchar
+        charge_num: varchar
+        unit_translation: varchar
+        is_deleted: varchar
+        create_time: varchar
+        update_time: varchar
+
+  - name: ods_category
+    config:
+      column_types:
+        id: varchar
+        warehouse_id: varchar
+        category_id: varchar
+        business_id: varchar
+        business_name: varchar
