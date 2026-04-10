@@ -1,0 +1,68 @@
+dbt seed -s ods_psi_cattle_feed_detail
+dbt seed -s ods_psi_cattle_feed_detail_3
+dbt seed -s ods_psi_cattle_feed_detail_4
+dbt seed -s ods_psi_cattle_feed_detail_5
+dbt seed -s ods_psi_cattle_feed_detail_6
+dbt seed -s ods_psi_cattle_feed_detail_7
+dbt seed -s ods_psi_cattle_feed_detail_8
+dbt seed -s ods_psi_cattle_feed_detail_9
+dbt seed -s ods_psi_cattle_feed_detail_10
+dbt seed -s ods_psi_cattle_feed_detail_11
+dbt seed -s ods_psi_cattle_feed_detail_12
+dbt seed -s ods_psi_cattle_feed_detail_13
+dbt seed -s ods_psi_cattle_feed_detail_14
+dbt seed -s ods_psi_cattle_feed_detail_15
+dbt seed -s ods_psi_cattle_feed_detail_16
+dbt seed -s ods_psi_cattle_feed_detail_17
+dbt seed -s ods_psi_cattle_feed_detail_18
+dbt seed -s ods_psi_cattle_feed_detail_19
+dbt seed -s ods_psi_cattle_feed_detail_20
+dbt seed -s ods_psi_cattle_feed_detail_21
+dbt seed -s ods_psi_cattle_feed_detail_22
+dbt seed -s ods_psi_cattle_feed_detail_23
+dbt seed -s ods_psi_cattle_feed_detail_24
+dbt seed -s ods_psi_cattle_feed_detail_25
+dbt seed -s ods_psi_cattle_feed_detail_26
+dbt seed -s ods_psi_cattle_feed_detail_27
+dbt seed -s ods_psi_cattle_feed_detail_28
+dbt seed -s ods_psi_cattle_feed_detail_29
+dbt seed -s ods_psi_cattle_feed_detail_30
+dbt seed -s ods_psi_cattle_feed_detail_31
+dbt seed -s ods_psi_cattle_feed_detail_32
+dbt seed -s ods_psi_cattle_feed_detail_33
+dbt seed -s ods_psi_cattle_feed_detail_34
+dbt seed -s ods_psi_cattle_feed_detail_35
+dbt seed -s ods_psi_cattle_feed_detail_36
+dbt seed -s ods_psi_cattle_feed_detail_37
+dbt seed -s ods_psi_cattle_feed_detail_38
+dbt seed -s ods_psi_cattle_feed_detail_39
+dbt seed -s ods_psi_cattle_feed_detail_40
+dbt seed -s ods_psi_cattle_feed_detail_41
+dbt seed -s ods_psi_cattle_feed_detail_42
+dbt seed -s ods_psi_cattle_feed_detail_43
+dbt seed -s ods_psi_cattle_feed_detail_44
+dbt seed -s ods_psi_cattle_feed_detail_45
+dbt seed -s ods_psi_cattle_feed_detail_46
+dbt seed -s ods_psi_cattle_feed_detail_47
+
+
+dbt seed --full-refresh -s ods_ranch
+dbt seed --full-refresh -s ods_ranch_stall
+dbt seed --full-refresh -s ods_psi_recipe
+dbt seed --full-refresh -s ods_psi_commodity
+dbt seed --full-refresh -s ods_psi_feed_formula
+dbt seed --full-refresh -s ods_psi_cattle_grow_config
+dbt seed --full-refresh -s ods_ranch_onstall
+dbt seed --full-refresh -s ods_psi_cattle_price
+dbt seed --full-refresh -s ods_psi_sample_weight
+dbt seed --full-refresh -s ods_psi_cattle_purchase
+dbt seed --full-refresh -s ods_psi_cattle_sell
+dbt seed --full-refresh -s ods_psi_cattle_return
+dbt seed --full-refresh -s ods_psi_cattle_hth_daily_rpt
+dbt seed --full-refresh -s ods_psi_stall_daily_report
+dbt seed --full-refresh -s ods_psi_cattle_ai_score_result
+dbt seed --full-refresh -s ods_psi_region_ai_data
+dbt seed --full-refresh -s ods_psi_region
+
+dbt run --full-refresh --select dim_ranch
+dbt run --full-refresh --select dim_ranch_sku

@@ -112,6 +112,501 @@ seeds:
         act_cost: double
         tenant_id: bigint
 
+  - name: ods_psi_cattle_feed_detail_3
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_4
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_5
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_6
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_7
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_8
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_9
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_10
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_11
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_12
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_13
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_14
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_15
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_16
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_17
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_18
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_19
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_20
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_21
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_22
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_23
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_24
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_25
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_26
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_27
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_28
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_29
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_30
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_31
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_32
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_33
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_34
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_35
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_36
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_37
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_38
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_39
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_40
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_41
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_42
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_43
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_44
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_45
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_46
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
+  - name: ods_psi_cattle_feed_detail_47
+    config:
+      column_types:
+        id: bigint
+        livestock_id: bigint
+        stall_id: bigint
+        commodity_id: bigint
+        act_quantity: double
+        act_cost: double
+        tenant_id: bigint
+
   - name: ods_psi_cattle_hth_daily_rpt
     config:
       column_types:
@@ -491,11 +986,290 @@ seeds:
         create_time: varchar
         update_time: varchar
 
-  - name: ods_category
+  # WMS 出入库源表
+  - name: ods_order_inbound
     config:
       column_types:
         id: varchar
+        serial_no: varchar
+        inbound_no: varchar
+        order_type: varchar
         warehouse_id: varchar
+        warehouse_name: varchar
+        plan_date: varchar
+        customer_id: varchar
+        customer_name: varchar
+        order_status: varchar
+        storage_status: varchar
+        use_pda: varchar
+        is_deleted: varchar
+        remarks: varchar
+        creator_id: varchar
+        creator_name: varchar
+        create_time: varchar
+        over_time: varchar
+        reviewer_id: varchar
+        reviewer_name: varchar
+        reviewer_time: varchar
+        operator_id: varchar
+        operator_name: varchar
+        operator_time: varchar
+        org_id: varchar
+        org_name: varchar
+        provider_id: varchar
+        provider_name: varchar
+        checker_id: varchar
+        checker_name: varchar
+        driver: varchar
+        phone_number: varchar
+        number_plate: varchar
+        external_no: varchar
+        fund_agent_id: varchar
+        fund_agent_name: varchar
+        approve_type: varchar
+        external_system_no: varchar
+        factory_send_out: varchar
+        reserve_inbound_id: varchar
+        shipper_id: varchar
+        shipper_name: varchar
+        shipper_type: varchar
+        outbound_no: varchar
+        update_time: varchar
+        out_order_no: varchar
+
+  - name: ods_order_inbound_detail
+    config:
+      column_types:
+        id: varchar
+        inbound_id: varchar
+        in_inventory_id: varchar
+        sku_id: varchar
+        sku_name: varchar
+        plan_weight_num: varchar
+        actual_weight_num: varchar
+        recheck_weight_num: varchar
+        weight_unit: varchar
+        net_content: varchar
+        package_name: varchar
+        barcode: varchar
+        is_standard_product: varchar
+        charge_num: varchar
+        charge_unit: varchar
+        production_date: varchar
+        quality_days: varchar
+        inbound_price: varchar
+        batch_no: varchar
+        is_deleted: varchar
+        producer: varchar
         category_id: varchar
-        business_id: varchar
-        business_name: varchar
+        category_name: varchar
+        remarks: varchar
+        create_time: varchar
+        unit_translation: varchar
+        balance_num: varchar
+        plan_charge_num: varchar
+        warehouse_area_id: varchar
+        warehouse_area_name: varchar
+        warehouse_position_id: varchar
+        warehouse_position_name: varchar
+
+  - name: ods_order_outbound
+    config:
+      column_types:
+        id: varchar
+        serial_no: varchar
+        outbound_no: varchar
+        order_type: varchar
+        warehouse_id: varchar
+        warehouse_name: varchar
+        plan_date: varchar
+        customer_id: varchar
+        customer_name: varchar
+        order_status: varchar
+        storage_status: varchar
+        use_pda: varchar
+        is_deleted: varchar
+        remarks: varchar
+        creator_id: varchar
+        creator_name: varchar
+        create_time: varchar
+        over_time: varchar
+        reviewer_id: varchar
+        reviewer_name: varchar
+        reviewer_time: varchar
+        operator_id: varchar
+        operator_name: varchar
+        operator_time: varchar
+        org_id: varchar
+        org_name: varchar
+        receiver_id: varchar
+        receiver_name: varchar
+        checker_id: varchar
+        checker_name: varchar
+        pickup_unit: varchar
+        driver: varchar
+        phone_number: varchar
+        number_plate: varchar
+        driver_id_card: varchar
+        contact_name: varchar
+        contact_phone: varchar
+        total_balance_num: varchar
+        fund_agent_id: varchar
+        fund_agent_name: varchar
+        approve_type: varchar
+        outbound_rule: varchar
+        purchase_id: varchar
+        purchase_name: varchar
+        purchase_type: varchar
+        in_warehouse_id: varchar
+        in_warehouse_name: varchar
+        waybill_type: varchar
+        unload_address: varchar
+        update_time: varchar
+        out_order_no: varchar
+        handling_type: varchar
+        package_use_cnt: varchar
+        print_count: varchar
+        is_bind_outbound_notice: varchar
+        factory_send_out: varchar
+
+  - name: ods_order_outbound_detail
+    config:
+      column_types:
+        id: varchar
+        outbound_id: varchar
+        inventory_id: varchar
+        sku_id: varchar
+        sku_name: varchar
+        plan_weight_num: varchar
+        actual_weight_num: varchar
+        recheck_weight_num: varchar
+        weight_unit: varchar
+        net_content: varchar
+        package_name: varchar
+        barcode: varchar
+        charge_num: varchar
+        plan_charge_num: varchar
+        charge_unit: varchar
+        batch_no: varchar
+        outbound_price: varchar
+        is_deleted: varchar
+        category_id: varchar
+        category_name: varchar
+        remarks: varchar
+        create_time: varchar
+        balance_num: varchar
+        warehouse_area_id: varchar
+        warehouse_area_name: varchar
+        warehouse_position_id: varchar
+        warehouse_position_name: varchar
+
+  - name: ods_inventory
+    config:
+      column_types:
+        id: varchar
+        org_id: varchar
+        org_name: varchar
+        customer_id: varchar
+        customer_name: varchar
+        warehouse_id: varchar
+        warehouse_name: varchar
+        sku_id: varchar
+        sku_name: varchar
+        batch_no: varchar
+        barcode: varchar
+        net_content: varchar
+        package_name: varchar
+        production_date: varchar
+        quality_days: varchar
+        expiring_date: varchar
+        category_id: varchar
+        category_name: varchar
+        is_deleted: varchar
+        producer: varchar
+        is_standard_product: varchar
+        inbound_price: varchar
+        inbound_date: varchar
+        latest_price: varchar
+        remain_weight_num: varchar
+        frozen_weight_num: varchar
+        lock_weight_num: varchar
+        inner_lock_weight_num: varchar
+        order_lock_weight_num: varchar
+        weight_unit: varchar
+        unit_translation: varchar
+        remain_charge_num: varchar
+        frozen_charge_num: varchar
+        lock_charge_num: varchar
+        inner_lock_charge_num: varchar
+        order_lock_charge_num: varchar
+        charge_unit: varchar
+        create_time: varchar
+        frozen_time: varchar
+        warehouse_area_id: varchar
+        warehouse_area_name: varchar
+        warehouse_position_id: varchar
+        warehouse_position_name: varchar
+        assets_id: varchar
+        batch_remark: varchar
+
+  - name: ods_make_inventory
+    config:
+      column_types:
+        id: varchar
+        serial_no: varchar
+        inventory_no: varchar
+        warehouse_id: varchar
+        warehouse_name: varchar
+        plan_date: varchar
+        customer_id: varchar
+        customer_name: varchar
+        status: varchar
+        inventory_status: varchar
+        use_pda: varchar
+        is_deleted: varchar
+        remarks: varchar
+        creator_id: varchar
+        creator_name: varchar
+        create_time: varchar
+        over_time: varchar
+        reviewer_id: varchar
+        reviewer_name: varchar
+        reviewer_time: varchar
+        operator_id: varchar
+        operator_name: varchar
+        operator_time: varchar
+        org_id: varchar
+        org_name: varchar
+        checker_id: varchar
+        checker_name: varchar
+        make_type: varchar
+
+  - name: ods_make_inventory_detail
+    config:
+      column_types:
+        id: varchar
+        inventory_plan_id: varchar
+        inventory_id: varchar
+        sku_id: varchar
+        sku_name: varchar
+        plan_weight_num: varchar
+        actual_num: varchar
+        recheck_weight_num: varchar
+        profit_loss_weight_num: varchar
+        frozen_profit_loss_weight_num: varchar
+        profit_loss_num: varchar
+        frozen_profit_loss_charge_num: varchar
+        net_content: varchar
+        batch_no: varchar
+        is_deleted: varchar
+        producer: varchar
+        category_id: varchar
+        category_name: varchar
+        remarks: varchar
+        warehouse_area_id: varchar
+        warehouse_area_name: varchar
+        warehouse_position_id: varchar
+        warehouse_position_name: varchar
+        create_time: varchar
+        update_time: varchar

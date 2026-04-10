@@ -1,0 +1,181 @@
+-- =============================================
+-- 模型名称：dim_customer_personal
+-- 模型描述：个人会员维度表 - SCD Type 2
+-- 作者：dbt
+-- 创建时间：2026-04-09
+-- =============================================
+{{ config(
+    materialized='table',
+    description='个人会员维度表，记录个人会员基础信息及历史变更（SCD Type 2）',
+    tags=['customer', 'dim', 'personal', 'member']
+) }}
+
+WITH member_base AS (
+    SELECT
+        user_id,
+        member_id,
+        name AS member_name,
+        mobile AS mobile_phone,
+        idNo AS id_card_no,
+        idType AS id_card_type,
+        is_credit,
+        email,
+        gender,
+        birthday,
+        nationality,
+        education,
+        marital_status,
+        occupation,
+        work_unit,
+        position,
+        annual_income,
+        residence_address,
+        registered_address,
+        contact_phone,
+        contact_name,
+        qq,
+        wechat,
+        source,
+        status AS member_status,
+        is_deleted,
+        create_time,
+        update_time
+    FROM {{ ref('ods_mem_member') }}
+    WHERE is_deleted = '0' OR is_deleted = 'false'
+),
+
+member_certified AS (
+    SELECT
+        member_id,
+        id_no AS certified_id_no,
+        is_auth AS is_certified,
+        real_name AS certified_real_name,
+        mobile AS certified_mobile,
+        signature AS certified_signature
+    FROM {{ ref('ods_mem_certified') }}
+    WHERE is_deleted = '0' OR is_deleted = 'false'
+),
+
+member_expand AS (
+    SELECT
+        user_id,
+        member_id,
+        market_id,
+        org_id,
+        contact_phone AS expand_contact_phone,
+        bank_name,
+        acct_no AS bank_account_no,
+        deal_status,
+        creator_name,
+        create_time AS expand_create_time
+    FROM {{ ref('ods_mem_member_expand') }}
+    WHERE is_deleted = '0' OR is_deleted = 'false'
+),
+
+member_address AS (
+    SELECT
+        member_id,
+        type_code AS address_type,
+        province,
+        city,
+        area,
+        detailed_address,
+        is_default
+    FROM {{ ref('ods_mem_address_info') }}
+    WHERE (is_deleted = '0' OR is_deleted = 'false')
+      AND type_code IN ('registered', 'contact', 'residence')
+),
+
+member_bank AS (
+    SELECT
+        member_id,
+        open_bank,
+        bank_account,
+        bank_card_no,
+        type_code AS account_type,
+        is_default
+    FROM {{ ref('ods_mem_bank') }}
+    WHERE (is_deleted = '0' OR is_deleted = 'false')
+      AND is_default = '1'
+)
+
+SELECT
+    -- 主键
+    mb.user_id,                              -- 用户ID（主键）
+    mb.member_id,                            -- 会员ID
+
+    -- 基础信息
+    mb.member_name,                          -- 会员姓名
+    mb.mobile_phone,                         -- 手机号码
+    mb.id_card_no,                           -- 身份证号码
+    mb.id_card_type,                         -- 证件类型
+    mb.email,                                -- 邮箱地址
+    mb.gender,                               -- 性别
+    mb.birthday,                             -- 出生日期
+    mb.nationality,                          -- 国籍
+    mb.education,                            -- 学历
+    mb.marital_status,                       -- 婚姻状况
+    mb.occupation,                           -- 职业
+    mb.work_unit,                            -- 工作单位
+    mb.position,                             -- 职位
+    mb.annual_income,                        -- 年收入
+
+    -- 地址信息
+    mb.residence_address,                    -- 居住地址
+    mb.registered_address,                   -- 户籍地址
+    ma_reg.province AS registered_province,  -- 户籍省份
+    ma_reg.city AS registered_city,          -- 户籍城市
+    ma_reg.area AS registered_area,          -- 户籍区域
+    ma_con.province AS contact_province,     -- 联系省份
+    ma_con.city AS contact_city,             -- 联系城市
+    ma_con.area AS contact_area,             -- 联系区域
+    ma_con.detailed_address AS contact_address,  -- 联系详细地址
+
+    -- 联系信息
+    mb.contact_phone,                        -- 联系电话
+    mb.contact_name,                         -- 联系人姓名
+    mb.qq,                                   -- QQ号码
+    mb.wechat,                               -- 微信号
+
+    -- 实名认证信息
+    mc.certified_id_no,                      -- 认证身份证号
+    mc.is_certified,                         -- 是否实名认证（0/1）
+    mc.certified_real_name,                  -- 认证真实姓名
+    mc.certified_mobile,                     -- 认证手机号
+    mc.certified_signature,                  -- 认证签名
+
+    -- 信用相关
+    mb.is_credit,                            -- 是否开通信用
+
+    -- 银行账户信息
+    mbnk.open_bank,                          -- 开户银行
+    mbnk.bank_account,                       -- 银行账号
+    mbnk.bank_card_no,                       -- 银行卡号
+    mbnk.account_type,                       -- 账户类型
+
+    -- 扩展信息
+    me.market_id,                            -- 市场ID
+    me.org_id,                               -- 所属企业ID
+    me.expand_contact_phone,                 -- 扩展联系电话
+    me.bank_name,                            -- 银行名称
+    me.bank_account_no,                      -- 银行账号
+    me.deal_status,                          -- 成交状态
+
+    -- 状态信息
+    mb.member_status,                        -- 会员状态
+    mb.source,                               -- 来源渠道
+    mb.create_time,                          -- 创建时间
+    mb.update_time,                          -- 更新时间
+    me.expand_create_time,                   -- 扩展信息创建时间
+
+    -- SCD Type 2 字段
+    COALESCE(mb.update_time, mb.create_time) AS dw_effective_date,   -- 生效日期
+    CAST('9999-12-31 23:59:59' AS TIMESTAMP) AS dw_expiry_date,      -- 失效日期
+    TRUE AS is_current                                                       -- 是否当前记录
+
+FROM member_base mb
+LEFT JOIN member_certified mc ON mb.member_id = mc.member_id
+LEFT JOIN member_expand me ON mb.user_id = me.user_id
+LEFT JOIN member_address ma_reg ON mb.member_id = ma_reg.member_id AND ma_reg.address_type = 'registered'
+LEFT JOIN member_address ma_con ON mb.member_id = ma_con.member_id AND ma_con.address_type = 'contact' AND ma_con.is_default = '1'
+LEFT JOIN member_bank mbnk ON mb.member_id = mbnk.member_id

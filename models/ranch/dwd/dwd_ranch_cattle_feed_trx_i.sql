@@ -24,7 +24,726 @@ WITH src_feed AS (
         date AS create_time,                   -- 创建时间（使用投喂日期）
         date AS update_time                    -- 更新时间（使用投喂日期）
     FROM {{ ref('ods_psi_cattle_feed_detail') }}
-    -- 过滤无效数据（放宽条件：允许0值，只过滤完全无效的记录）
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_3') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_4') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_5') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_6') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_7') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_8') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_9') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_10') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_11') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_12') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_13') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_14') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_15') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_16') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_17') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_18') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_19') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_20') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_21') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_22') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_23') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_24') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_25') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_26') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_27') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_28') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_29') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_30') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_31') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_32') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_33') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_34') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_35') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_36') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_37') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_38') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_39') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_40') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_41') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_42') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_43') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_44') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_45') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_46') }}
+    WHERE date IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        id,
+        livestock_id AS cattle_id,
+        stall_id,
+        commodity_id AS feed_sku_id,
+        commodity_name AS feed_sku_name,
+        CAST(act_quantity AS DOUBLE) AS act_feed_quantity,
+        CAST(act_cost AS DOUBLE) AS act_feed_cost,
+        date::DATE AS feed_date,
+        date AS create_time,
+        date AS update_time
+    FROM {{ ref('ods_psi_cattle_feed_detail_47') }}
     WHERE date IS NOT NULL
 )
 

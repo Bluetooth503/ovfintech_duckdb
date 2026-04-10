@@ -12,7 +12,8 @@ glossary/
 docs/
 jeecg-boot/
 orchid_wms/
-
+orchid_member/
+nohup.out
 
 # Python
 __pycache__/
@@ -54,6 +55,8 @@ env/
 # Database
 *.db
 *.duckdb
+*.wal
+
 
 # OS
 .DS_Store
