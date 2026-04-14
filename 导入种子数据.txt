@@ -85,3 +85,6 @@ dbt seed --full-refresh -s ods_offline_loan
 
 dbt run --full-refresh --select models/ranch/dim
 dbt run --full-refresh --select models/ranch/dwd
+
+dbt run --full-refresh --select models/fund/dwd
+dbt run --full-refresh --select models/fund/dws

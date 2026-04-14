@@ -7,7 +7,7 @@
 {{ config(
     materialized='incremental',
     incremental_strategy='insert_overwrite',
-    partition_by=['bill_date'],
+    partition_by=['trx_date'],
     description='在线放款还款交易明细表，记录所有在线借贷流水',
     tags=['fund', 'dwd', 'trx', 'online_loan', 'loan']
 ) }}
@@ -20,7 +20,6 @@ SELECT
     -- 时间信息
     bill_time AS trx_time,                                         -- 交易时间
     CAST(bill_time AS DATE) AS trx_date,                           -- 交易日期
-    CAST(bill_time AS DATE) AS bill_date,                          -- 业务日期（分区字段）
 
     -- 交易类型
     bill_type AS loan_repay_type,                                  -- 借款还款类型（1-借款, 2-还款）
@@ -28,7 +27,7 @@ SELECT
     -- 客户信息
     member_id AS customer_id,                                       -- 客户ID
     member_name AS customer_name,                                   -- 客户名称
-    member_type,                                                    -- 会员类型
+    member_type AS customer_type,                                   -- 客户类型
 
     -- 金额信息
     bill_quota AS bill_amount,                                      -- 账单金额

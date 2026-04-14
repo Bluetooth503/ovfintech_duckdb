@@ -313,7 +313,7 @@ SELECT
     -- ====================
     stats_date,                              -- 统计日期（称重日期）
     cattle_id,                               -- 牛只ID
-    cattle_code,                              -- 牛只编号
+    cattle_code,                             -- 牛只编号
     ranch_id,                                -- 牧场ID
     ranch_name,                              -- 牧场名称
     stall_id,                                -- 栏舍ID
