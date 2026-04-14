@@ -16,7 +16,6 @@ warnings.filterwarnings("ignore")
 
 # ---------- 数据质量控制 ----------
 MIN_CATTLE_PER_STALL = 20              # 栏位最小样本数
-MIN_CATTLE_PER_CUSTOMER = 500          # 投资方最小样本数
 MIN_OBS_PER_CATTLE = 3                 # 单头牛最小观测数（3参数模型数学要求）
 
 # ---------- 性能控制 ----------
@@ -113,14 +112,10 @@ def prepare_nlme_data(df: pd.DataFrame) -> Optional[Dict]:
         df['stage_name'] = 'unknown_stage'
         stage_info = {'available': False, 'n_stages': 0}
 
-    # 筛选有效栏位和投资方
+    # 筛选有效栏位
     valid_stalls = df.groupby('stall_id')['cattle_id'].nunique().pipe(lambda s: s[s >= MIN_CATTLE_PER_STALL]).index
     df = df[df['stall_id'].isin(valid_stalls)]
     print(f"筛选有效栏位(≥{MIN_CATTLE_PER_STALL}头): {len(valid_stalls)} 个栏位")
-
-    valid_customers = df.groupby('customer_id')['cattle_id'].nunique().pipe(lambda s: s[s >= MIN_CATTLE_PER_CUSTOMER]).index
-    df = df[df['customer_id'].isin(valid_customers)]
-    print(f"筛选有效投资方(≥{MIN_CATTLE_PER_CUSTOMER}头): {len(valid_customers)} 个投资方")
 
     if len(df) == 0:
         print("错误：过滤后没有剩余数据")
