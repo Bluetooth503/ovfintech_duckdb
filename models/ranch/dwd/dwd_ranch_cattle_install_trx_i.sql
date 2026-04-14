@@ -25,7 +25,7 @@ WITH src_install AS (
         birth_date::DATE AS birth_date,                 -- 出生日期
         install_date::DATE AS install_date,             -- 入栏日期
         color,                                          -- 毛色
-        CAST(ai_score AS DOUBLE) AS ai_score,           -- AI评分
+        ai_score,                                       -- AI评分
         tenant_id,                                      -- 租户ID
         create_time::timestamp AS create_time,          -- 创建时间
         COALESCE(update_time::timestamp, create_time::timestamp) AS update_time  -- 更新时间

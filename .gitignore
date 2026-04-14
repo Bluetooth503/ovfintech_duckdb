@@ -6,6 +6,8 @@ dbt_cloud_provider/
 profiling/
 macros/
 seeds/*.csv
+seeds/*.zip
+
 
 # enlai
 glossary/
@@ -13,7 +15,9 @@ docs/
 jeecg-boot/
 orchid_wms/
 orchid_member/
+orchid_fund/
 nohup.out
+.claude/
 
 # Python
 __pycache__/

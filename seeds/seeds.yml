@@ -640,7 +640,7 @@ seeds:
         code: varchar
         vice_code: varchar
         commodity_id: bigint
-        snap_date: date
+        snap_date: timestamp
         investor_id: bigint
         livestock_id: varchar
         tenant_id: bigint
@@ -743,7 +743,7 @@ seeds:
   - name: ods_ranch_onstall
     config:
       column_types:
-        id: bigint
+        id: varchar
         stall_id: bigint
         weight: double
         price: double
@@ -773,23 +773,37 @@ seeds:
     config:
       column_types:
         id: bigint
+        create_by: varchar
+        create_time: timestamp
+        update_by: varchar
+        update_time: timestamp
         purchase_id: bigint
         stall_id: bigint
         commodity_id: bigint
+        code: varchar
+        vice_code: varchar
         weight: double
         price: double
+        birth_date: timestamp
+        install_date: timestamp
+        color: varchar
         total_price: double
         tenant_id: bigint
-        ai_score: double
-        color: bigint
+        file_two: varchar
+        file_one: varchar
+        file_three: varchar
+        ai_score: varchar
+        file_four: varchar
         offline_gather: bigint
+      strict_mode: false
+      ignore_errors: true
 
   - name: ods_ranch_outstall
     config:
       column_types:
         id: bigint
         sell_id: bigint
-        livestock_id: bigint
+        livestock_id: varchar
         weight: double
         price: double
         loan_money: double
@@ -1273,3 +1287,216 @@ seeds:
         warehouse_position_name: varchar
         create_time: varchar
         update_time: varchar
+
+  # 会员相关表
+  - name: ods_mem_member
+    config:
+      column_types:
+        id: bigint
+        user_id: bigint
+        name: varchar
+        mem_code: varchar
+        name_pinyin: varchar
+        head: varchar
+        country: bigint
+        province: bigint
+        city: bigint
+        area: bigint
+        address: varchar
+        zip_code: varchar
+        nation: bigint
+        mobile: varchar
+        idNo: varchar
+        idType: bigint
+        effective_start: varchar
+        effective_end: varchar
+        gender: bigint
+        birthday: varchar
+        marriage: bigint
+        is_credit: bigint
+        sign_status: bigint
+        email: varchar
+        is_enabled: bigint
+        is_deleted: bigint
+        creator_id: bigint
+        create_time: timestamp
+        update_time: timestamp
+        remarks: varchar
+        label_id: bigint
+        edu: varchar
+        job: varchar
+        industry: varchar
+        nature: varchar
+        job_no: varchar
+        customer_id: bigint
+        credit_time: timestamp
+        auth_status: bigint
+        ca_status: bigint
+        ca_customer_id: bigint
+
+  - name: ods_mem_certified
+    config:
+      column_types:
+        id: bigint
+        member_id: bigint
+        name: varchar
+        id_type: bigint
+        id_no: varchar
+        sex: bigint
+        nation: varchar
+        birthday: varchar
+        address: varchar
+        sign_org: varchar
+        sign_date: varchar
+        expire_date: varchar
+        is_auth: bigint
+        open_bank: varchar
+        bank_card_no: varchar
+        type: bigint
+        mobile: varchar
+        signature: varchar
+        create_time: timestamp
+        update_time: timestamp
+
+  - name: ods_mem_member_expand
+    config:
+      column_types:
+        id: bigint
+        user_id: bigint
+        member_id: bigint
+        market_id: bigint
+        deal_status: bigint
+        org_id: bigint
+        contact_phone: varchar
+        contact_name: varchar
+        member_card: varchar
+        bank_no: varchar
+        bank_name: varchar
+        acct_nm: varchar
+        acct_no: varchar
+        create_time: timestamp
+
+  - name: ods_mem_address_info
+    config:
+      column_types:
+        id: bigint
+        member_id: bigint
+        organization_id: bigint
+        type_code: bigint
+        province: varchar
+        city: varchar
+        area: varchar
+        address: varchar
+        is_default: bigint
+        contacts: varchar
+        contact_number: varchar
+        remarks: varchar
+        creator_id: bigint
+        create_time: timestamp
+        update_time: timestamp
+        is_deleted: bigint
+        zipcode: varchar
+
+  - name: ods_mem_bank
+    config:
+      column_types:
+        id: bigint
+        member_id: bigint
+        organization_id: bigint
+        open_name: varchar
+        open_bank: varchar
+        bank_account: varchar
+        bank_card_no: varchar
+        mobile: varchar
+        type_code: bigint
+        is_enabled: bigint
+        is_deleted: bigint
+        creator_id: bigint
+        create_time: timestamp
+        update_time: timestamp
+        remarks: varchar
+
+  - name: ods_mem_company
+    config:
+      column_types:
+        id: bigint
+        pid: bigint
+        comp_name: varchar
+        short_name: varchar
+        comp_pinyin: varchar
+        comp_code: varchar
+        capital: double
+        currency_type: bigint
+        found_date: varchar
+        staff_size: bigint
+        industry: bigint
+        type: bigint
+        nature: varchar
+        idNo: varchar
+        idType: bigint
+        corp_mobile: varchar
+        linkman: varchar
+        user_id: bigint
+        business_scope: varchar
+        business_term: varchar
+        telephone: varchar
+        mailbox: varchar
+        merchant_type: bigint
+        creator_id: bigint
+        create_time: timestamp
+        update_time: timestamp
+        is_org: bigint
+        is_enabled: bigint
+        is_deleted: bigint
+        credit_time: timestamp
+        is_credit: bigint
+        credit_way: bigint
+        credit_updator: varchar
+        sign_status: bigint
+        company_customer_id: bigint
+        seal_status: bigint
+        bus_seal_status: bigint
+        remarks: varchar
+        primary_title: varchar
+        secondary_title: varchar
+        logo: varchar
+        label_id: bigint
+        province: bigint
+        city: bigint
+        area: bigint
+        corporation: varchar
+        corp_card_type: bigint
+        corporation_idCard: varchar
+        cooperate_type: varchar
+        ukey_activation: bigint
+        hull_serial_no: varchar
+        finance_mobile: varchar
+        is_signed: bigint
+        cst_acct_no: varchar
+        pay_limits: varchar
+        referrer: varchar
+        org_type_name: varchar
+        merchant_auth_status: bigint
+        pay_sign_status: bigint
+        bank_link_name: varchar
+        bank_link_phone: varchar
+        pay_sign_remark: varchar
+        source_type: bigint
+        ca_status: bigint
+        ca_customer_id: bigint
+        is_core: bigint
+        core_way: bigint
+        core_updator: varchar
+        core_time: timestamp
+
+  - name: ods_psi_cattle_purchase
+    config:
+      column_types:
+        id: bigint
+        customer_id: bigint
+        quantity: bigint
+        investor_id: bigint
+        tenant_id: bigint
+        status: bigint
+        purchase_cost: double
+        additional_cost: double

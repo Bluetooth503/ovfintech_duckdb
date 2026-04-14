@@ -14,7 +14,7 @@ DORIS_DATABASE = 'ods'          # Doris数据库名
 SEEDS_DIR = './seeds'           # 数据导出目录
 TABLE_MAPPING = {
     # 维度
-    'ods_sys_tenant': 'ods_ranch_sys_tenant',
+    # 'ods_sys_tenant': 'ods_ranch_sys_tenant',
     # 'ods_ranch': 'ods_ranch_ranch',
     # 'ods_ranch_stall': 'ods_ranch_ranch_stall',
     # 'ods_psi_recipe': 'ods_ranch_psi_recipe',
@@ -24,9 +24,9 @@ TABLE_MAPPING = {
 
     # 入栏, 出栏, 在栏
     # 'ods_ranch_onstall': 'ods_ranch_ranch_onstall',
-    'ods_ranch_onstall_history': 'ods_ranch_ranch_onstall_history',
-    'ods_ranch_install': 'ods_ranch_ranch_install',
-    'ods_ranch_outstall': 'ods_ranch_ranch_outstall',
+    # 'ods_ranch_onstall_history': 'ods_ranch_ranch_onstall_history',
+    # 'ods_ranch_install': 'ods_ranch_ranch_install',
+    # 'ods_ranch_outstall': 'ods_ranch_ranch_outstall',
 
     # 喂养
     # 'ods_psi_cattle_feed_detail_3': 'ods_ranch_psi_cattle_feed_detail_3',
@@ -91,7 +91,7 @@ TABLE_MAPPING = {
     # 'ods_psi_cattle_ai_score_result': 'ods_ranch_psi_cattle_ai_score_result', 
     # 'ods_psi_region_ai_data': 'ods_ranch_psi_region_ai_data',
     # 'ods_psi_region': 'ods_ranch_psi_region',
-    'ods_psi_stall_region': 'ods_ranch_psi_stall_region',
+    # 'ods_psi_stall_region': 'ods_ranch_psi_stall_region',
 }
 
 # 日志配置

@@ -45,14 +45,18 @@ dbt seed -s ods_psi_cattle_feed_detail_45
 dbt seed -s ods_psi_cattle_feed_detail_46
 dbt seed -s ods_psi_cattle_feed_detail_47
 
-
 dbt seed --full-refresh -s ods_ranch
+dbt seed --full-refresh -s ods_ranch_sys_tenant
 dbt seed --full-refresh -s ods_ranch_stall
 dbt seed --full-refresh -s ods_psi_recipe
 dbt seed --full-refresh -s ods_psi_commodity
 dbt seed --full-refresh -s ods_psi_feed_formula
 dbt seed --full-refresh -s ods_psi_cattle_grow_config
 dbt seed --full-refresh -s ods_ranch_onstall
+dbt seed --full-refresh -s ods_ranch_onstall_history
+dbt seed --full-refresh -s ods_ranch_install
+dbt seed --full-refresh -s ods_ranch_outstall
+
 dbt seed --full-refresh -s ods_psi_cattle_price
 dbt seed --full-refresh -s ods_psi_sample_weight
 dbt seed --full-refresh -s ods_psi_cattle_purchase
@@ -63,6 +67,21 @@ dbt seed --full-refresh -s ods_psi_stall_daily_report
 dbt seed --full-refresh -s ods_psi_cattle_ai_score_result
 dbt seed --full-refresh -s ods_psi_region_ai_data
 dbt seed --full-refresh -s ods_psi_region
+dbt seed --full-refresh -s ods_psi_stall_region
 
-dbt run --full-refresh --select dim_ranch
-dbt run --full-refresh --select dim_ranch_sku
+
+dbt seed --full-refresh -s ods_mem_member
+dbt seed --full-refresh -s ods_mem_company
+dbt seed --full-refresh -s ods_mem_certified
+dbt seed --full-refresh -s ods_mem_member_expand
+dbt seed --full-refresh -s ods_mem_address_info
+dbt seed --full-refresh -s ods_mem_bank
+
+dbt seed --full-refresh -s ods_fund_billing
+dbt seed --full-refresh -s ods_offline_loan
+
+
+
+
+dbt run --full-refresh --select models/ranch/dim
+dbt run --full-refresh --select models/ranch/dwd

@@ -14,16 +14,10 @@ DORIS_DATABASE = 'ods'          # Doris数据库名
 SEEDS_DIR = './seeds'           # 数据导出目录
 TABLE_MAPPING = {
     # 已全量提取
-    # 'ods_mem_company': 'ods_mem_company',
-    # 'ods_mem_member': 'ods_mem_member',
-    # 'ods_customer_tag_assign': 'ods_customer_tag_assign',
-    # 'ods_mem_address_info': 'ods_mem_address_info',
-    # 'ods_market_participant': 'ods_market_participant',
+    'ods_market': 'ods_market',
 
     # 尚未提取
-    'ods_mem_certified': 'ods_mem_certified',
-    'ods_mem_member_expand': 'ods_mem_member_expand',
-    'ods_mem_bank': 'ods_mem_bank',
+
 }
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
