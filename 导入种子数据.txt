@@ -46,7 +46,7 @@ dbt seed -s ods_psi_cattle_feed_detail_46
 dbt seed -s ods_psi_cattle_feed_detail_47
 
 dbt seed --full-refresh -s ods_ranch
-dbt seed --full-refresh -s ods_ranch_sys_tenant
+dbt seed --full-refresh -s ods_sys_tenant
 dbt seed --full-refresh -s ods_ranch_stall
 dbt seed --full-refresh -s ods_psi_recipe
 dbt seed --full-refresh -s ods_psi_commodity
@@ -88,3 +88,5 @@ dbt run --full-refresh --select models/ranch/dwd
 
 dbt run --full-refresh --select models/fund/dwd
 dbt run --full-refresh --select models/fund/dws
+
+nohup dbt run --full-refresh -s ads_ranch_cattle_gompertz_nlme_pymc &

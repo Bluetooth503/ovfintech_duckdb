@@ -48,14 +48,20 @@ WITH src_onstall AS (
 ),
 
 -- 获取入栏当天的快照数据（入栏体重、入栏单价）
+-- 注意：ods_ranch_onstall_history 同一 livestock_id + snap_date 可能存在重复记录，需去重
 lkp_install_snapshot AS (
     SELECT
         livestock_id,
         snap_date,
         CAST(estimated_weight AS DOUBLE) AS in_stall_weight,
         CAST(real_price AS DOUBLE) AS in_stall_price
-    FROM {{ ref('ods_ranch_onstall_history') }}
-    WHERE snap_date IS NOT NULL
+    FROM (
+        SELECT *,
+            ROW_NUMBER() OVER (PARTITION BY livestock_id, DATE(snap_date) ORDER BY id) AS rn
+        FROM {{ ref('ods_ranch_onstall_history') }}
+        WHERE snap_date IS NOT NULL
+    )
+    WHERE rn = 1
 ),
 
 -- SKU 维度关联

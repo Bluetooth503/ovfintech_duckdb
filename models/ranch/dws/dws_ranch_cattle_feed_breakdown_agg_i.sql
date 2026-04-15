@@ -106,8 +106,10 @@ stall_recipe AS (
 
 -- ============================================
 -- 理论配方匹配（按品种 + 体重区间 + 牧场）
+-- 注意：dim_ranch_recipe 中同一 sku+ranch 下可能存在体重区间重叠，
+--      因此用 ROW_NUMBER 去重，优先保留与栏舍当前配方一致的记录
 -- ============================================
-matched_recipe AS (
+matched_recipe_raw AS (
     SELECT
         b.cattle_id,
         b.stats_date,
@@ -115,10 +117,28 @@ matched_recipe AS (
         r.recipe_name AS matched_recipe_name,
         r.feed_meat_ratio AS recipe_target_fcr,
         -- 配方匹配标记
-        CASE WHEN s.stall_recipe_id::VARCHAR = r.recipe_id::VARCHAR THEN '1' ELSE '0' END AS recipe_match_flag
+        CASE WHEN s.stall_recipe_id::VARCHAR = r.recipe_id::VARCHAR THEN '1' ELSE '0' END AS recipe_match_flag,
+        ROW_NUMBER() OVER (
+            PARTITION BY b.cattle_id, b.stats_date
+            ORDER BY CASE WHEN s.stall_recipe_id::VARCHAR = r.recipe_id::VARCHAR THEN 0 ELSE 1 END,
+                     r.weight_end - r.weight_begin,
+                     r.recipe_id
+        ) AS rn
     FROM base_interval b
     LEFT JOIN stall_recipe s ON b.stall_id::VARCHAR = s.stall_id::VARCHAR
     LEFT JOIN {{ ref('dim_ranch_recipe') }} r ON b.sku_id::VARCHAR = r.recipe_sku_id::VARCHAR AND b.current_weight >= r.weight_begin AND b.current_weight < r.weight_end AND b.ranch_id::VARCHAR = r.ranch_id::VARCHAR AND r.is_current = '1'
+),
+
+matched_recipe AS (
+    SELECT
+        cattle_id,
+        stats_date,
+        matched_recipe_id,
+        matched_recipe_name,
+        recipe_target_fcr,
+        recipe_match_flag
+    FROM matched_recipe_raw
+    WHERE rn = 1
 ),
 
 -- ============================================

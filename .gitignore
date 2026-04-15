@@ -11,7 +11,6 @@ seeds/*.zip
 
 # enlai
 glossary/
-docs/
 jeecg-boot/
 orchid_wms/
 orchid_member/

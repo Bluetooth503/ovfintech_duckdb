@@ -111,7 +111,7 @@ integrated_data AS (
         -- ====================
         -- 组织维度
         -- ====================
-        COALESCE(w.customer_id, c.customer_id) AS customer_id,
+        COALESCE(w.customer_id, c.customer_id::VARCHAR) AS customer_id,
         c.ranch_id,
         c.ranch_name,
         COALESCE(w.stall_id, c.stall_id) AS stall_id,
