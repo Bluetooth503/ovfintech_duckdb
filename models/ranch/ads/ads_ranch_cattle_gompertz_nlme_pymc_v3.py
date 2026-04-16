@@ -1,10 +1,16 @@
 """
-ads_ranch_cattle_gompertz_nlme_pymc - Gompertz NLME 多维度生长曲线混合效应模型（PyMC 贝叶斯版）
+ads_ranch_cattle_gompertz_nlme_pymc_v3 - Gompertz NLME v3: 两参数随机效应 (A, C)
 
-基于 dws_ranch_cattle_adg_agg_i 数据，使用 PyMC 实现贝叶斯 NLME
-固定效应：品种(sku_name)、牧场(ranch_name)、饲料结构特征；随机效应：个体层面 A/B/C 参数偏差
+v2 问题: 三参数随机效应 (A, B, C) 导致参数空间过大，
+        u_C 方差失控 (21277, sd≈146天)，ESS_min=7, Rhat=1.54，模型未收敛。
+
+v3 优化:
+  1. 砍掉 B 的随机效应 → B 仅由固定效应决定（品种+牧场+饲料）
+  2. 保留 (A, C) 两参数随机效应 + LKJ 2×2 协方差
+  3. 参数空间从 ~630 降到 ~430，降低采样难度
 """
 import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 from typing import Dict, Optional
 import numpy as np
 import pandas as pd
@@ -13,34 +19,38 @@ pytensor.config.mode = 'NUMBA'
 import pymc as pm
 import arviz as az
 
-warnings.filterwarnings("ignore")
 
 # ---------- 数据质量控制 ----------
-MIN_OBS_PER_CATTLE = 4                 # 单头牛最小观测数（提高数据密度，改善参数可识别性）
+MIN_OBS_PER_CATTLE = 3                 # 单头牛最小观测数（3参数模型数学要求）
 MONO_TOLERANCE_KG = 10                 # 单调性容差（kg），允许小幅测量误差
 
-# ---------- 性能控制 ----------
-MAX_CATTLE_FOR_MODELING = 500          # 最大建模牛只数, 充分利用 32C/128G
+# ---------- 拐点优先采样控制 ----------
+MAX_CATTLE_FOR_MODELING = 200          # 最大建模牛只数
+INFLECTION_AGE_RANGE = (100, 300)      # 拐点区间日龄范围（天）
 
 # ---------- MCMC 采样参数 ----------
-N_DRAWS = 1000                         # 采样次数
-N_TUNE = 500                           # 预烧期次数
-TARGET_ACCEPT = 0.95                   # 目标接受率（提高以减少divergences并改善混合）
-CHAINS = 8                             # MCMC 链数量（多链并行，提高CPU利用率+R-hat可靠性）
-N_JOBS = 8                             # 并行作业数（8链×8核=满载，留余给系统）
-MAX_TREE_DEPTH = 15                    # NUTS最大树深度（默认12，提高以改善ESS）
+N_DRAWS = 500                          # 采样次数
+N_TUNE = 1000                          # 预烧期次数
+TARGET_ACCEPT = 0.9                    # 目标接受率
+CHAINS = 4                             # MCMC 链数量
+N_JOBS = 4                             # 并行作业数
+MAX_TREE_DEPTH = 10                    # NUTS最大树深度
 
 # ---------- 模型先验超参数（基于中国肉牛文献优化） ----------
-# 参考文献:
-#   [1] 段星海等(2021) 中国肉用西门塔尔牛生长曲线参数的全基因组关联分析, 畜牧兽医学报 52(5):1267-1277
-#   [2] 梁永虎等(2018) 肉用西门塔尔牛群体生长曲线拟合, 畜牧兽医学报 49(3):497-506
-PRIOR_A_MU = np.log(650)               # 成熟体重先验均值（650kg，文献[1]西门塔尔牛629±89kg）
-PRIOR_A_SIGMA = 1.0                    # 成熟体重先验标准差（对数尺度，收敛后验）
-PRIOR_B_MU = np.log(0.015)             # 生长速率先验均值（0.015/day，文献典型范围0.005-0.03中值）
-PRIOR_B_SIGMA = 0.5                    # 生长速率先验标准差（对数尺度，95%CI≈[0.006,0.029]）
-PRIOR_C_MU = 225                       # 拐点日龄先验均值（225天，文献[1]194天/文献[2]254天均值）
-PRIOR_C_SIGMA = 30                     # 拐点日龄先验标准差（30天，反映品种间差异）
-LKJ_ETA = 1.0                          # LKJ 相关系数先验（1.0=均匀先验，弱信息性）
+PRIOR_A_MU = np.log(650)
+PRIOR_A_SIGMA = 1.0
+PRIOR_B_MU = np.log(0.015)
+PRIOR_B_SIGMA = 0.5
+PRIOR_C_MU = 225
+PRIOR_C_SIGMA = 30
+LKJ_ETA = 1.0
+
+# ---------- 随机效应先验 ----------
+# v3: 只保留 A 和 C 的随机效应
+# A: HalfNormal sigma=1.25 (宽松)
+# C: HalfNormal sigma=30 (紧约束，个体拐点偏差 ±30 天)
+RE_SD_SIGMA = [1.25, 30]
+N_RANDOM_EFFECTS = 2
 
 # ---------- 饲料特征列 ----------
 FEED_FEATURES = [
@@ -55,12 +65,12 @@ def validate_and_adjust_config(n_observations: int, n_individuals: int) -> Dict:
     """根据数据规模自动调整 MCMC 配置"""
     config = {'n_draws': N_DRAWS, 'n_tune': N_TUNE, 'max_cattle': MAX_CATTLE_FOR_MODELING, 'chains': CHAINS}
     if n_observations < 1000:
-        config.update({'n_tune': max(N_TUNE, 500), 'chains': max(CHAINS // 4, 4)})
+        config.update({'n_draws': max(N_DRAWS // 2, 500), 'n_tune': max(N_TUNE // 2, 500), 'chains': max(CHAINS // 4, 4)})
     return config
 
 
 def log_model_diagnostics(trace, data: Dict) -> Dict:
-    """提取 MCMC 采样诊断指标（按变量逐个计算，避免全量 to_array 内存爆炸）"""
+    """提取 MCMC 采样诊断指标"""
     try:
         stats = trace.sample_stats
         var_names = ['beta_log_A', 'beta_log_B', 'beta_C', 'Sigma']
@@ -87,13 +97,89 @@ def log_model_diagnostics(trace, data: Dict) -> Dict:
         return {}
 
 
+def _inflection_priority_sample(df: pd.DataFrame, max_n: int) -> pd.DataFrame:
+    """拐点优先采样：优先选择拐点区间有观测的牛只，补充到 max_n 头"""
+    inf_lo, inf_hi = INFLECTION_AGE_RANGE
+
+    # 统计每头牛在拐点区间的观测数
+    cattle_inf = df.groupby('cattle_id').agg(
+        inf_n=('age_days', lambda x: ((x >= inf_lo) & (x <= inf_hi)).sum()),
+        n_obs=('cattle_id', 'size')
+    ).reset_index()
+
+    cattle_inf_only = cattle_inf[cattle_inf['inf_n'] > 0]['cattle_id'].tolist()
+    cattle_no_inf = cattle_inf[cattle_inf['inf_n'] == 0]['cattle_id'].tolist()
+
+    n_inf = len(cattle_inf_only)
+    n_no_inf = len(cattle_no_inf)
+    print(f"  拐点区间[{inf_lo}-{inf_hi}天]有观测: {n_inf} 头, 无观测: {n_no_inf} 头")
+
+    sampled_ids = []
+
+    if n_inf >= max_n:
+        # 拐点有观测的牛只超过配额，按品种×牧场分层采样
+        cattle_meta = df[['cattle_id', 'sku_name', 'ranch_name']].drop_duplicates()
+        pool = cattle_meta[cattle_meta['cattle_id'].isin(cattle_inf_only)]
+        stratum_counts = pool.groupby(['sku_name', 'ranch_name']).size().reset_index(name='n')
+        total = stratum_counts['n'].sum()
+        stratum_counts['quota'] = (stratum_counts['n'] / total * max_n).round().astype(int).clip(lower=1)
+        diff = int(max_n - stratum_counts['quota'].sum())
+        if diff > 0:
+            idx = stratum_counts['quota'].idxmax()
+            stratum_counts.loc[idx, 'quota'] += diff
+        elif diff < 0:
+            for _ in range(abs(diff)):
+                eligible = stratum_counts[stratum_counts['quota'] > 1]
+                if len(eligible) == 0:
+                    break
+                idx = eligible['quota'].idxmax()
+                stratum_counts.loc[idx, 'quota'] -= 1
+        for _, row in stratum_counts.iterrows():
+            p = pool[(pool['sku_name'] == row['sku_name']) & (pool['ranch_name'] == row['ranch_name'])]
+            n_sample = min(int(row['quota']), len(p))
+            sampled_ids.extend(p['cattle_id'].sample(n=n_sample, random_state=42).tolist())
+        print(f"  从 {n_inf} 头拐点覆盖牛只中分层采样 {len(sampled_ids)} 头")
+    else:
+        # 拐点有观测的不足配额，全部纳入，再从无拐点观测的补充
+        sampled_ids = list(cattle_inf_only)
+        remaining = max_n - len(sampled_ids)
+        if remaining > 0 and n_no_inf > 0:
+            cattle_meta = df[['cattle_id', 'sku_name', 'ranch_name']].drop_duplicates()
+            pool = cattle_meta[cattle_meta['cattle_id'].isin(cattle_no_inf)]
+            stratum_counts = pool.groupby(['sku_name', 'ranch_name']).size().reset_index(name='n')
+            total = stratum_counts['n'].sum()
+            stratum_counts['quota'] = (stratum_counts['n'] / total * remaining).round().astype(int).clip(lower=1)
+            diff = int(remaining - stratum_counts['quota'].sum())
+            if diff > 0:
+                idx = stratum_counts['quota'].idxmax()
+                stratum_counts.loc[idx, 'quota'] += diff
+            elif diff < 0:
+                for _ in range(abs(diff)):
+                    eligible = stratum_counts[stratum_counts['quota'] > 1]
+                    if len(eligible) == 0:
+                        break
+                    idx = eligible['quota'].idxmax()
+                    stratum_counts.loc[idx, 'quota'] -= 1
+            for _, row in stratum_counts.iterrows():
+                p = pool[(pool['sku_name'] == row['sku_name']) & (pool['ranch_name'] == row['ranch_name'])]
+                n_sample = min(int(row['quota']), len(p))
+                sampled_ids.extend(p['cattle_id'].sample(n=n_sample, random_state=42).tolist())
+        print(f"  全部 {n_inf} 头拐点覆盖 + {len(sampled_ids)-n_inf} 头补充 = {len(sampled_ids)} 头")
+
+    # 统计采样结果
+    sampled_inf_n = sum(1 for cid in sampled_ids if cid in set(cattle_inf_only))
+    print(f"  采样结果: {sampled_inf_n}/{len(sampled_ids)} 头有拐点区间观测 ({sampled_inf_n*100/len(sampled_ids):.1f}%)")
+
+    return df[df['cattle_id'].isin(sampled_ids)]
+
+
 def prepare_nlme_data(df_adg: pd.DataFrame, df_feed: Optional[pd.DataFrame] = None) -> Optional[Dict]:
-    """准备 NLME 建模数据，清洗并构建设计矩阵"""
+    """准备 NLME 建模数据，拐点优先采样"""
     df = df_adg.copy()
     df = df[(df['current_weight'] > 0) & df['cattle_id'].notna()]
     print(f"初始数据规模: {len(df)} 条记录, {df['cattle_id'].nunique()} 头牛")
 
-    # 时间维度：优先 age_days（覆盖率>50%），缺失时用 days_since_entry
+    # 时间维度
     age_coverage = df['age_days'].notna().mean()
     entry_coverage = df['days_since_entry'].notna().mean()
     if age_coverage > 0.5:
@@ -117,8 +203,7 @@ def prepare_nlme_data(df_adg: pd.DataFrame, df_feed: Optional[pd.DataFrame] = No
     df = df[df['cattle_id'].isin(valid_cattle)]
     print(f"筛选观测数≥{MIN_OBS_PER_CATTLE}的牛只: {df['cattle_id'].nunique()} 头")
 
-    # Gompertz 模型要求体重单调递增，排除有大幅体重下降的牛只
-    # 允许 MONO_TOLERANCE_KG 以内的测量误差波动
+    # 近似单调性过滤
     def is_approx_monotonic(g: pd.DataFrame) -> bool:
         w = g.sort_values('time_variable')['current_weight'].values
         return bool(np.all(np.diff(w) >= -MONO_TOLERANCE_KG))
@@ -144,36 +229,11 @@ def prepare_nlme_data(df_adg: pd.DataFrame, df_feed: Optional[pd.DataFrame] = No
         print("错误：过滤后没有剩余数据")
         return None
 
-    # 限制建模规模：按品种+牧场分层采样，保证固定效应维度多样性
+    # ====== 拐点优先采样 ======
     if df['cattle_id'].nunique() > MAX_CATTLE_FOR_MODELING:
-        cattle_meta = df[['cattle_id', 'sku_name', 'ranch_name']].drop_duplicates()
-        stratum_counts = cattle_meta.groupby(['sku_name', 'ranch_name']).size().reset_index(name='n')
-        total = stratum_counts['n'].sum()
-
-        # 按比例分配配额，每层至少保留1头
-        stratum_counts['quota'] = (stratum_counts['n'] / total * MAX_CATTLE_FOR_MODELING).round().astype(int).clip(lower=1)
-
-        # 微调使总和严格等于 MAX_CATTLE_FOR_MODELING
-        diff = int(MAX_CATTLE_FOR_MODELING - stratum_counts['quota'].sum())
-        if diff > 0:
-            idx = stratum_counts['quota'].idxmax()
-            stratum_counts.loc[idx, 'quota'] += diff
-        elif diff < 0:
-            for _ in range(abs(diff)):
-                eligible = stratum_counts[stratum_counts['quota'] > 1]
-                if len(eligible) == 0:
-                    break
-                idx = eligible['quota'].idxmax()
-                stratum_counts.loc[idx, 'quota'] -= 1
-
-        sampled_ids = []
-        for _, row in stratum_counts.iterrows():
-            pool = cattle_meta[(cattle_meta['sku_name'] == row['sku_name']) & (cattle_meta['ranch_name'] == row['ranch_name'])]
-            n_sample = min(int(row['quota']), len(pool))
-            sampled_ids.extend(pool['cattle_id'].sample(n=n_sample, random_state=42).tolist())
-
-        df = df[df['cattle_id'].isin(sampled_ids)]
-        print(f"分层采样到 {df['cattle_id'].nunique()} 头牛，覆盖 {df['sku_name'].nunique()} 品种 × {df['ranch_name'].nunique()} 牧场")
+        print(f"[v3] 拐点优先采样（从 {df['cattle_id'].nunique()} 头中选 {MAX_CATTLE_FOR_MODELING} 头）:")
+        df = _inflection_priority_sample(df, MAX_CATTLE_FOR_MODELING)
+        print(f"[v3] 采样完成: {df['cattle_id'].nunique()} 头牛，覆盖 {df['sku_name'].nunique()} 品种 × {df['ranch_name'].nunique()} 牧场")
     else:
         print(f"保留全部 {df['cattle_id'].nunique()} 头牛")
 
@@ -196,25 +256,24 @@ def prepare_nlme_data(df_adg: pd.DataFrame, df_feed: Optional[pd.DataFrame] = No
         before_merge = len(df)
         df = pd.merge(df, df_feed_sub, left_on=['cattle_id', 'stats_date'], right_on=['cattle_id', 'stats_date'], how='left')
         if len(df) != before_merge:
-            print(f"警告：merge 后行数变化 {before_merge} -> {len(df)}，可能存在重复键，执行去重")
+            print(f"警告：merge 后行数变化 {before_merge} -> {len(df)}，执行去重")
             df = df.drop_duplicates(subset=['cattle_id', 'stats_date'])
         print(f"关联饲料数据: {before_merge} -> {len(df)} 条记录")
         available_features = [c for c in FEED_FEATURES if c in df.columns]
         for c in available_features:
             df[c] = df[c].fillna(0)
         feed_info = {'available': True, 'features': available_features, 'scaling': {}}
-        print(f"✅ 饲料特征维度: {', '.join(available_features)}")
+        print(f"  饲料特征维度: {', '.join(available_features)}")
     else:
-        print("⚠️ 无饲料数据，固定效应仅包含品种+牧场")
+        print("  无饲料数据，固定效应仅包含品种+牧场")
 
-    # 固定效应设计矩阵：品种 + 牧场 + 饲料特征（饲料连续特征做 z-score 标准化）
+    # 固定效应设计矩阵
     sku_dummies = pd.get_dummies(df['sku_name'], prefix='sku', drop_first=True).astype(int)
     ranch_dummies = pd.get_dummies(df['ranch_name'], prefix='ranch', drop_first=True).astype(int)
     X_parts = [pd.DataFrame({'intercept': 1}, index=df.index), sku_dummies, ranch_dummies]
     available_feed_features = [c for c in FEED_FEATURES if c in df.columns]
     if available_feed_features:
         feed_df = df[available_feed_features].astype(float)
-        # 对饲料连续特征做 z-score 标准化
         for c in available_feed_features:
             mean_v = feed_df[c].mean()
             std_v = feed_df[c].std()
@@ -225,7 +284,7 @@ def prepare_nlme_data(df_adg: pd.DataFrame, df_feed: Optional[pd.DataFrame] = No
                 feed_info['scaling'][c] = {'mean': float(mean_v), 'std': 1.0}
         X_parts.append(feed_df)
     X_fixed = pd.concat(X_parts, axis=1)
-    print(f"✅ 固定效应：品种({len(sku_dummies.columns)}) + 牧场({len(ranch_dummies.columns)}) + 饲料({len(available_feed_features)})")
+    print(f"  固定效应：品种({len(sku_dummies.columns)}) + 牧场({len(ranch_dummies.columns)}) + 饲料({len(available_feed_features)})")
 
     cattle_ids = df['cattle_id'].astype('category').cat.codes.values
     n_cattle = df['cattle_id'].nunique()
@@ -243,37 +302,31 @@ def prepare_nlme_data(df_adg: pd.DataFrame, df_feed: Optional[pd.DataFrame] = No
 
 
 def fit_gompertz_nlme_pymc(data: Dict, n_draws: int = N_DRAWS, n_tune: int = N_TUNE, target_accept: float = TARGET_ACCEPT, chains: int = CHAINS) -> Dict:
-    """使用 PyMC 拟合 Gompertz NLME 模型"""
+    """使用 PyMC 拟合 Gompertz NLME 模型（v3: 两参数随机效应 A+C）"""
     with pm.Model() as nlme_model:
         n_fixed = data['X'].shape[1]
 
-        # 固定效应先验：intercept 用先验均值，其余系数用 0
-        mu_A = np.zeros(n_fixed)
-        mu_A[0] = PRIOR_A_MU
+        # 固定效应先验
+        mu_A = np.zeros(n_fixed); mu_A[0] = PRIOR_A_MU
         beta_A = pm.Normal('beta_log_A', mu=mu_A, sigma=PRIOR_A_SIGMA, shape=n_fixed)
 
-        mu_B = np.zeros(n_fixed)
-        mu_B[0] = PRIOR_B_MU
+        mu_B = np.zeros(n_fixed); mu_B[0] = PRIOR_B_MU
         beta_B = pm.Normal('beta_log_B', mu=mu_B, sigma=PRIOR_B_SIGMA, shape=n_fixed)
 
-        mu_C = np.zeros(n_fixed)
-        mu_C[0] = PRIOR_C_MU
+        mu_C = np.zeros(n_fixed); mu_C[0] = PRIOR_C_MU
         beta_C = pm.Normal('beta_C', mu=mu_C, sigma=PRIOR_C_SIGMA, shape=n_fixed)
 
-        # 随机效应（非中心参数化，加速收敛并减少 divergences）
-        # A/b 用 Exponential 先验（宽松），C 用 HalfNormal(sigma=30) 紧约束
-        # LKJCholeskyCov 的 sd_dist 要求单个分布变量，这里用 C 的紧约束覆盖全部，
-        # 再通过 LKJ eta 控制相关性。A/b 的个体偏差仍由数据驱动。
-        chol, _, _ = pm.LKJCholeskyCov('chol_cov', n=3, eta=LKJ_ETA,
-                                       sd_dist=pm.HalfNormal.dist(sigma=[1.25, 1.25, 30], shape=3))
+        # 随机效应（非中心参数化）— v3: 只保留 (A, C) 两参数
+        chol, _, _ = pm.LKJCholeskyCov('chol_cov', n=N_RANDOM_EFFECTS, eta=LKJ_ETA,
+                                       sd_dist=pm.HalfNormal.dist(sigma=RE_SD_SIGMA, shape=N_RANDOM_EFFECTS))
         Sigma = pm.Deterministic('Sigma', chol @ chol.T)
-        z = pm.Normal('z', mu=0, sigma=1, shape=(data['n_cattle'], 3))
+        z = pm.Normal('z', mu=0, sigma=1, shape=(data['n_cattle'], N_RANDOM_EFFECTS))
         u = pm.Deterministic('u', z @ chol.T)
 
-        # 参数组合：固定效应 + 随机效应
+        # 参数组合 — v3: B 无随机效应，仅固定效应
         log_A = pm.math.dot(data['X'], beta_A) + u[data['cattle_idx'], 0]
-        log_B = pm.math.dot(data['X'], beta_B) + u[data['cattle_idx'], 1]
-        C = pm.math.dot(data['X'], beta_C) + u[data['cattle_idx'], 2]
+        log_B = pm.math.dot(data['X'], beta_B)
+        C = pm.math.dot(data['X'], beta_C) + u[data['cattle_idx'], 1]
         A = pm.math.exp(log_A)
         B = pm.math.exp(log_B)
 
@@ -284,17 +337,12 @@ def fit_gompertz_nlme_pymc(data: Dict, n_draws: int = N_DRAWS, n_tune: int = N_T
         pm.Normal('y_obs', mu=mu, sigma=sigma, observed=data['weight'])
 
         trace = pm.sample(
-            draws=n_draws,
-            tune=n_tune,
-            chains=chains,
-            cores=N_JOBS,
-            target_accept=target_accept,
-            return_inferencedata=True,
-            progressbar=True,
-            max_treedepth=MAX_TREE_DEPTH,
+            draws=n_draws, tune=n_tune, chains=chains, cores=N_JOBS,
+            target_accept=target_accept, return_inferencedata=True,
+            progressbar=True, max_treedepth=MAX_TREE_DEPTH,
         )
 
-    return {'trace': trace, 'data': data, 'model_type': 'pymc'}
+    return {'trace': trace, 'data': data, 'model_type': 'pymc_v3'}
 
 
 def extract_nlme_results(results: Dict) -> pd.DataFrame:
@@ -315,17 +363,18 @@ def extract_nlme_results(results: Dict) -> pd.DataFrame:
                 'ci_lower': float(np.percentile(post[:, :, i], 2.5)), 'ci_upper': float(np.percentile(post[:, :, i], 97.5))
             })
 
-    # 方差分解
+    # 方差分解 — v3: 2×2 Sigma (A, C)
     Sigma_post = trace.posterior['Sigma'].values
-    for name, idx in [('u_log_A_variance', 0), ('u_log_B_variance', 1), ('u_C_variance', 2)]:
+    for name, idx in [('u_log_A_variance', 0), ('u_C_variance', 1)]:
         rows.append({'result_type': 'variance', 'parameter': name, 'estimate': float(np.mean(Sigma_post[:, :, idx, idx]))})
+    # A-C 协方差
+    rows.append({'result_type': 'covariance', 'parameter': 'u_A_C_covariance', 'estimate': float(np.mean(Sigma_post[:, :, 0, 1]))})
 
-    # 随机效应（前100头）
+    # 随机效应（前100头）— v3: u[:,0]=A, u[:,1]=C
     u_post = trace.posterior['u'].values
     for i, cattle_id in enumerate(data['cattle_ids'][:100]):
         rows.append({'result_type': 'random_effect', 'parameter': 'u_log_A', 'cattle_id': cattle_id, 'estimate': float(np.mean(u_post[:, :, i, 0])), 'std_error': float(np.std(u_post[:, :, i, 0]))})
-        rows.append({'result_type': 'random_effect', 'parameter': 'u_log_B', 'cattle_id': cattle_id, 'estimate': float(np.mean(u_post[:, :, i, 1])), 'std_error': float(np.std(u_post[:, :, i, 1]))})
-        rows.append({'result_type': 'random_effect', 'parameter': 'u_C', 'cattle_id': cattle_id, 'estimate': float(np.mean(u_post[:, :, i, 2])), 'std_error': float(np.std(u_post[:, :, i, 2]))})
+        rows.append({'result_type': 'random_effect', 'parameter': 'u_C', 'cattle_id': cattle_id, 'estimate': float(np.mean(u_post[:, :, i, 1])), 'std_error': float(np.std(u_post[:, :, i, 1]))})
 
     return pd.DataFrame(rows)
 
@@ -334,8 +383,8 @@ def model(dbt, session):
     """DBT Python 模型主入口"""
     dbt.config(
         materialized="table",
-        description="Gompertz NLME 多维度生长曲线混合效应模型结果（PyMC 贝叶斯版，含饲料维度）",
-        tags=["ranch", "ads", "model", "nlme", "gompertz", "growth_curve", "python", "feed", "pymc"]
+        description="Gompertz NLME v3: 拐点优先采样 + 两参数随机效应(A,C) + B仅固定效应",
+        tags=["ranch", "ads", "model", "nlme", "gompertz", "growth_curve", "python", "feed", "pymc", "v3"]
     )
 
     df_input = dbt.ref("dws_ranch_cattle_adg_agg_i").to_df()
@@ -350,7 +399,6 @@ def model(dbt, session):
         print(f"错误：缺少必需字段: {', '.join(missing_fields)}")
         return pd.DataFrame({'model_status': ['missing_fields'], 'result_type': ['error'], 'message': [f'Missing: {", ".join(missing_fields)}']})
 
-    # 读取饲料结构数据
     try:
         df_feed = dbt.ref("dws_ranch_cattle_feed_breakdown_agg_i").to_df()
         print(f"饲料数据规模: {len(df_feed)} 条记录")
