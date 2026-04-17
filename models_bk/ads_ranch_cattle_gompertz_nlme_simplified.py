@@ -14,11 +14,11 @@ from scipy.optimize import curve_fit
 warnings.filterwarnings("ignore")
 
 # ---------- 数据质量控制 ----------
-MIN_CATTLE_PER_STALL = 20              # 栏位最小样本数
-MIN_OBS_PER_CATTLE = 3                 # 单头牛最小观测数（3参数模型数学要求）
+MIN_CATTLE_PER_STALL = 10              # 栏位最小样本数
+MIN_OBS_PER_CATTLE = 5                 # 单头牛最小观测数（3参数模型数学要求，≥4避免过拟合）
 
 # ---------- 性能控制 ----------
-MAX_CATTLE_FOR_MODELING = 200          # 最大建模牛只数, 默认2000
+MAX_CATTLE_FOR_MODELING = 1000         # 最大建模牛只数，simplified 版计算快可适当放宽
 
 # ---------- 饲料特征列 ----------
 FEED_FEATURES = [
@@ -155,7 +155,7 @@ def fit_gompertz_nlme_simplified(data: Dict) -> Dict:
         b_init = max(0.001, min(0.1, group['period_adg'].mean() / max(y.max(), 1))) if data['performance_info'].get('adg_available') else 0.01
         a_upper = group['stage_end_weight'].max() * 1.5 if group['stage_end_weight'].notna().any() else max(y) * 1.5
         try:
-            popt, _ = curve_fit(gompertz, t, y, p0=[max(y) * 1.2, b_init, np.median(t)], bounds=([0, 0, -np.inf], [a_upper, np.inf, np.inf]), maxfev=10000)
+            popt, _ = curve_fit(gompertz, t, y, p0=[max(y) * 1.2, b_init, 200], bounds=([0, 0, 50], [a_upper, 0.1, 500]), maxfev=10000)
             individual_params[cattle_id] = {
                 'A': popt[0], 'B': popt[1], 'C': popt[2],
                 'log_A': np.log(popt[0]), 'log_B': np.log(popt[1]),

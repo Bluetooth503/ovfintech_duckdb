@@ -56,7 +56,6 @@ dbt seed --full-refresh -s ods_ranch_onstall
 dbt seed --full-refresh -s ods_ranch_onstall_history
 dbt seed --full-refresh -s ods_ranch_install
 dbt seed --full-refresh -s ods_ranch_outstall
-
 dbt seed --full-refresh -s ods_psi_cattle_price
 dbt seed --full-refresh -s ods_psi_sample_weight
 dbt seed --full-refresh -s ods_psi_cattle_purchase
