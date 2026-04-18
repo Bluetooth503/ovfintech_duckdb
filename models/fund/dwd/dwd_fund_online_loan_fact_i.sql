@@ -5,11 +5,11 @@
 -- 粒度：trx_id
 -- 说明：
 --   - 数据源：ods_fund_billing（资金账单表）
---   - 增量策略：按 trx_date 分区，insert_overwrite
+--   - 增量策略：按 trx_date 分区，append
 -- =============================================
 {{ config(
     materialized='incremental',
-    incremental_strategy='insert_overwrite',
+    incremental_strategy='append',
     partition_by=['trx_date'],
     description='在线放款还款交易明细表，记录所有在线借贷流水',
     tags=['fund', 'dwd', 'trx', 'online_loan', 'loan']

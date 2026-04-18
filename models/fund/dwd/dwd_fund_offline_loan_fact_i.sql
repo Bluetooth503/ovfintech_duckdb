@@ -5,11 +5,11 @@
 -- 粒度：trx_id
 -- 说明：
 --   - 数据源：ods_offline_loan（线下放款表）
---   - 增量策略：按 trx_date 分区，insert_overwrite
+--   - 增量策略：按 trx_date 分区，append
 -- =============================================
 {{ config(
     materialized='incremental',
-    incremental_strategy='insert_overwrite',
+    incremental_strategy='append',
     partition_by=['trx_date'],
     description='线下放款还款交易明细表，记录所有线下放款流水',
     tags=['fund', 'dwd', 'trx', 'offline_loan', 'loan']
