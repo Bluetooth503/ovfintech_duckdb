@@ -1,12 +1,13 @@
 -- =============================================
 -- 模型名称：dws_ranch_cattle_feed_breakdown_agg_i
 -- 模型描述：牛只饲料结构区间汇总表（增量），按称重区间聚合饲料组成、配方关联信息
--- 作者：dbt
--- 创建时间：2026-04-15
+-- Dbt更新方式：增量（事件级）
+-- 粒度：每头牛每个称重区间一条记录
 -- 说明：
---   - 粒度：每头牛每个称重区间一条记录
---   - 与 dws_ranch_cattle_adg_agg_i 对齐，增加饲料结构分层和配方维度
---   - 增量策略：增量追加（append）
+--   - 数据源：dws_ranch_cattle_adg_fcr_i（ADG区间汇总）+ dwd_ranch_cattle_feed_fact_i（DWD层饲料明细）+ ods_psi_commodity（商品维度表）+ dim_ranch_stall（栏舍维度表）+ dim_ranch_recipe（配方维度表）
+--   - 增量策略：事件级追加
+--   - 统计指标：饲料消耗量、饲料成本、精料/粗料/添加剂/药品消耗及占比、配方匹配、料肉比等指标
+--   - 聚合逻辑：与dws_ranch_cattle_adg_fcr_i对齐，按称重区间汇总饲料结构分层，关联栏舍配方和理论配方
 -- =============================================
 {{ config(
     materialized='incremental',
@@ -33,7 +34,7 @@ WITH base_interval AS (
         prev_weight_date,
         interval_days,
         period_weight_gain
-    FROM {{ ref('dws_ranch_cattle_adg_agg_i') }}
+    FROM {{ ref('dws_ranch_cattle_adg_fcr_i') }}
     WHERE stats_date IS NOT NULL
 ),
 
@@ -63,7 +64,7 @@ classified_feed AS (
         f.act_feed_quantity,
         f.act_feed_cost,
         c.feed_type
-    FROM {{ ref('dwd_ranch_cattle_feed_trx_i') }} f
+    FROM {{ ref('dwd_ranch_cattle_feed_fact_i') }} f
     LEFT JOIN feed_category c ON f.feed_sku_id::VARCHAR = c.feed_sku_id::VARCHAR
     WHERE f.feed_date IS NOT NULL
 ),
@@ -118,12 +119,7 @@ matched_recipe_raw AS (
         r.feed_meat_ratio AS recipe_target_fcr,
         -- 配方匹配标记
         CASE WHEN s.stall_recipe_id::VARCHAR = r.recipe_id::VARCHAR THEN '1' ELSE '0' END AS recipe_match_flag,
-        ROW_NUMBER() OVER (
-            PARTITION BY b.cattle_id, b.stats_date
-            ORDER BY CASE WHEN s.stall_recipe_id::VARCHAR = r.recipe_id::VARCHAR THEN 0 ELSE 1 END,
-                     r.weight_end - r.weight_begin,
-                     r.recipe_id
-        ) AS rn
+        ROW_NUMBER() OVER (PARTITION BY b.cattle_id, b.stats_date ORDER BY CASE WHEN s.stall_recipe_id::VARCHAR = r.recipe_id::VARCHAR THEN 0 ELSE 1 END, r.weight_end - r.weight_begin, r.recipe_id) AS rn
     FROM base_interval b
     LEFT JOIN stall_recipe s ON b.stall_id::VARCHAR = s.stall_id::VARCHAR
     LEFT JOIN {{ ref('dim_ranch_recipe') }} r ON b.sku_id::VARCHAR = r.recipe_sku_id::VARCHAR AND b.current_weight >= r.weight_begin AND b.current_weight < r.weight_end AND b.ranch_id::VARCHAR = r.ranch_id::VARCHAR AND r.is_current = '1'

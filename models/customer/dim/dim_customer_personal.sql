@@ -1,8 +1,10 @@
 -- =============================================
 -- 模型名称：dim_customer_personal
--- 模型描述：个人会员维度表 - SCD Type 2
--- 作者：dbt
--- 创建时间：2026-04-09
+-- 模型描述：个人会员维度表，记录个人会员基础信息及历史变更（SCD Type 2）
+-- 粒度：customer_id
+-- 说明：
+--   - 数据源：ods_mem_member（个人会员表）、dim_customer_scene_rel（客户场景关系）、dim_scene（场景维度）
+--   - 关联逻辑：LEFT JOIN 场景关系取最新子类ID，LEFT JOIN 场景维度获取层级信息
 -- =============================================
 {{ config(
     materialized='table',

@@ -1,8 +1,10 @@
 -- =============================================
 -- 模型名称：dim_ranch_cattle
--- 模型描述：牧场牛只维度表（SCD Type 2）
--- 作者：dbt
--- 创建时间：2026-04-02
+-- 模型描述：牧场牛只维度表，记录牛只基础属性、入栏信息、贷款信息等维度属性（SCD Type 2）
+-- 粒度：cattle_id
+-- 说明：
+--   - 数据源：ods_ranch_onstall（在栏牛只表）、ods_ranch_onstall_history（历史快照）、dim_ranch_stall、dim_ranch_sku
+--   - 关联逻辑：LEFT JOIN 历史快照获取入栏体重/单价，LEFT JOIN 栏舍维度获取牧场和配方信息
 -- =============================================
 {{ config(
     materialized='table',

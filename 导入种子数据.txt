@@ -54,8 +54,8 @@ dbt seed --full-refresh -s ods_psi_feed_formula
 dbt seed --full-refresh -s ods_psi_cattle_grow_config
 dbt seed --full-refresh -s ods_ranch_onstall
 dbt seed --full-refresh -s ods_ranch_onstall_history
-dbt seed --full-refresh -s ods_ranch_install
-dbt seed --full-refresh -s ods_ranch_outstall
+dbt seed --full-refresh -s ods_ranch_install      -- doris源头数据有脏数据, 本地csv已经修复了脏数据, 一定不要再次full-refresh
+dbt seed --full-refresh -s ods_ranch_outstall     -- doris源头数据有脏数据, 本地csv已经修复了脏数据, 一定不要再次full-refresh
 dbt seed --full-refresh -s ods_psi_cattle_price
 dbt seed --full-refresh -s ods_psi_sample_weight
 dbt seed --full-refresh -s ods_psi_cattle_purchase

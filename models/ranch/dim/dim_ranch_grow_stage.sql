@@ -1,8 +1,10 @@
 -- =============================================
 -- 模型名称：dim_ranch_grow_stage
--- 模型描述：生长阶段维度表 - SCD Type 2（含日增重目标）
--- 作者：dbt
--- 创建时间：2026-04-02
+-- 模型描述：生长阶段维度表，记录不同体重阶段的生长目标和料肉比目标（SCD Type 2）
+-- 粒度：stage_id
+-- 说明：
+--   - 数据源：ods_psi_cattle_grow_config（生长阶段配置表）、dim_ranch_sku
+--   - 关联逻辑：LEFT JOIN SKU维度获取品种名称
 -- =============================================
 {{ config(
     materialized='table',
@@ -33,9 +35,7 @@ WITH source_grow_config AS (
         CAST('9999-12-31 23:59:59' AS TIMESTAMP) AS dw_expiry_date,
         '1' AS is_current
     FROM {{ ref('ods_psi_cattle_grow_config') }} AS g
-    LEFT JOIN {{ ref('dim_ranch_sku') }} AS s
-        ON g.commodity_id::VARCHAR = s.sku_id::VARCHAR
-        AND s.is_current = '1'
+    LEFT JOIN {{ ref('dim_ranch_sku') }} AS s ON g.commodity_id::VARCHAR = s.sku_id::VARCHAR AND s.is_current = '1'
 )
 
 SELECT

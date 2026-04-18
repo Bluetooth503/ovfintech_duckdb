@@ -27,7 +27,7 @@
 | 模型名称 | 粒度 | 更新策略 | 核心用途 |
 |---------|------|---------|---------|
 | `dws_ranch_cattle_feed_breakdown_agg_i` | 牛只 × 称重区间 | 增量追加 | **NLME 饲料维度分析**、个体饲料画像 |
-| `dws_ranch_stall_feed_daily_agg_1d_d` | 栏舍 × 日期 | 增量追加 | **栏舍投喂执行监控**、计划完成率/剩料率分析 |
+| `dws_ranch_stall_feed_agg_1d_d` | 栏舍 × 日期 | 增量追加 | **栏舍投喂执行监控**、计划完成率/剩料率分析 |
 | `dws_ranch_recipe_performance_agg_1m_m` | 配方 × 月度 | 增量追加 | **配方效果评估**、料肉比/单位增重成本对标 |
 
 ---
@@ -128,7 +128,7 @@
 
 ---
 
-## 四、模型二：dws_ranch_stall_feed_daily_agg_1d_d
+## 四、模型二：dws_ranch_stall_feed_agg_1d_d
 
 ### 4.1 模型定位
 
@@ -217,7 +217,7 @@
 - 栏舍配方绑定：`ods_ranch_stall`
 - 牛只生长绩效：`dws_ranch_cattle_adg_agg_i`
 - 饲料消耗：`dws_ranch_cattle_feed_breakdown_agg_i` 或 `dwd_ranch_cattle_feed_trx_i`
-- 栏舍日消耗：`dws_ranch_stall_feed_daily_agg_1d_d`
+- 栏舍日消耗：`dws_ranch_stall_feed_agg_1d_d`
 
 ### 5.3 核心字段设计
 
@@ -304,7 +304,7 @@ ods_psi_commodity ─────────────┼──► dwd_ranch_
                                │    （配方×月度效果评估）
                                │
 ods_psi_livestock_consume ─────┤
-ods_ranch_stall ───────────────┼──► dws_ranch_stall_feed_daily_agg_1d_d
+ods_ranch_stall ───────────────┼──► dws_ranch_stall_feed_agg_1d_d
 dws_ranch_cattle_snapshot_1d_d─┘    （栏舍×日期投喂执行）
 ```
 
@@ -316,7 +316,7 @@ dws_ranch_cattle_snapshot_1d_d─┘    （栏舍×日期投喂执行）
 |------|------|---------|------|
 | **第 1 周** | 数据准备 | 完成 `ods_psi_commodity` 饲料分类映射字典；梳理 `ods_psi_livestock_consume` 与现有模型的关联逻辑 | 分类字典定稿 |
 | **第 2 周** | 模型一开发 | 开发 `dws_ranch_cattle_feed_breakdown_agg_i`，完成饲料结构分层聚合和配方关联 | 模型一上线 |
-| **第 3 周** | 模型二三开发 | 开发 `dws_ranch_stall_feed_daily_agg_1d_d` 和 `dws_ranch_recipe_performance_agg_1m_m` | 模型二三上线 |
+| **第 3 周** | 模型二三开发 | 开发 `dws_ranch_stall_feed_agg_1d_d` 和 `dws_ranch_recipe_performance_agg_1m_m` | 模型二三上线 |
 | **第 4 周** | 验证与打通 | 验证三张表的数据质量；与 `dws_ranch_cattle_adg_agg_i` 和 NLME 模型打通 | 全链路跑通 |
 
 ---
@@ -353,7 +353,7 @@ dws_ranch_cattle_snapshot_1d_d─┘    （栏舍×日期投喂执行）
 本方案设计了 3 张饲料相关 DWS 表，形成了"**个体 → 栏舍 → 配方**"的三级饲料分析体系：
 
 - **`dws_ranch_cattle_feed_breakdown_agg_i`**：向下穿透到每头牛的饲料结构和配方匹配，**直接支撑 NLME 饲料维度分析**
-- **`dws_ranch_stall_feed_daily_agg_1d_d`**：聚焦栏舍级投喂执行质量，**支撑专题三的栏舍运营效率监控**
+- **`dws_ranch_stall_feed_agg_1d_d`**：聚焦栏舍级投喂执行质量，**支撑专题三的栏舍运营效率监控**
 - **`dws_ranch_recipe_performance_agg_1m_m`**：上升到配方级别的成本效益评估，**支撑专题三的配方优化决策**
 
 三张表之间通过 `cattle_id` → `stall_id` → `recipe_id` 的血缘关联，构成了饲料成本优化分析的完整数据底座。

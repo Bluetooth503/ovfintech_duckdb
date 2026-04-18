@@ -1,8 +1,10 @@
 -- =============================================
 -- 模型名称：dim_wms_warehouse
--- 模型描述：仓库维度表 - SCD Type 2
--- 作者：dbt
--- 创建时间：2026-04-08
+-- 模型描述：仓库维度表，记录仓库基础信息及历史变更（SCD Type 2）
+-- 粒度：warehouse_id
+-- 说明：
+--   - 数据源：ods_warehouse（仓库表）、ods_warehouse_ext（仓库扩展表）
+--   - 关联逻辑：LEFT JOIN 仓库扩展表
 -- =============================================
 {{ config(
     materialized='table',
@@ -68,7 +70,7 @@ SELECT
     wb.creator,                      -- 创建人
     wb.create_time AS dw_effective_date,                                          -- 生效日期
     CAST('9999-12-31 23:59:59' AS TIMESTAMP) AS dw_expiry_date,                   -- 失效日期
-    TRUE AS is_current               -- 是否当前记录
+    '1' AS is_current                  -- 是否当前记录
 
 FROM warehouse_base AS wb
 LEFT JOIN warehouse_ext AS we ON wb.warehouse_id = we.warehouse_id
