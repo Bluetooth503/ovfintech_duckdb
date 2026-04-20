@@ -94,7 +94,20 @@ finish_info AS (
 ),
 
 -- ============================================
--- 5. 育肥周期内饲料消耗汇总（来自ADG区间表）
+-- 5. 采购成本汇总（来自DWD采购明细）
+-- ============================================
+purchase_cost AS (
+    SELECT
+        cattle_code,
+        SUM(total_price) AS total_purchase_cost,
+        SUM(weight) AS total_purchase_weight,
+        AVG(price) AS avg_purchase_unit_price
+    FROM {{ ref('dwd_ranch_cattle_purchase_fact_i') }}
+    GROUP BY cattle_code
+),
+
+-- ============================================
+-- 6. 育肥周期内饲料消耗汇总（来自ADG区间表）
 -- ============================================
 fatten_feed AS (
     SELECT
@@ -113,7 +126,7 @@ fatten_feed AS (
 ),
 
 -- ============================================
--- 6. 整合计算
+-- 7. 整合计算
 -- ============================================
 integrated AS (
     SELECT
@@ -133,6 +146,9 @@ integrated AS (
         -- 饲料消耗汇总
         ff.total_feed_consumption, ff.total_feed_cost, ff.sum_period_weight_gain, ff.weigh_event_count, ff.avg_period_adg, ff.min_period_adg, ff.max_period_adg, ff.avg_period_fcr AS avg_period_feed_meat_ratio,
 
+        -- 采购成本信息
+        pc.total_purchase_cost, pc.total_purchase_weight, pc.avg_purchase_unit_price,
+
         -- 料肉比（基于总增重）
         CASE WHEN (f.end_weight - b.in_stall_weight) > 0 AND ff.total_feed_consumption IS NOT NULL THEN ff.total_feed_consumption / (f.end_weight - b.in_stall_weight) ELSE NULL END AS feed_meat_ratio,
 
@@ -148,6 +164,7 @@ integrated AS (
     FROM cattle_base b
     INNER JOIN finish_info f ON CAST(b.cattle_id AS VARCHAR) = CAST(f.cattle_id AS VARCHAR)
     LEFT JOIN fatten_feed ff ON CAST(b.cattle_id AS VARCHAR) = CAST(ff.cattle_id AS VARCHAR)
+    LEFT JOIN purchase_cost pc ON b.cattle_no = pc.cattle_code
 )
 
 -- ============================================
@@ -179,6 +196,9 @@ SELECT
     in_stall_date,                           -- 入栏日期
     in_stall_weight,                         -- 入栏体重
     in_stall_price,                          -- 入栏单价
+    total_purchase_cost,                     -- 采购总成本
+    total_purchase_weight,                   -- 采购总重量
+    avg_purchase_unit_price,                 -- 平均采购单价
 
     -- 融资标识
     is_loan,                                 -- 是否融资
