@@ -17,6 +17,7 @@ orchid_member/
 orchid_fund/
 nohup.out
 .claude/
+config.ini
 
 # Python
 __pycache__/

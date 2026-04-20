@@ -40,8 +40,7 @@ feed_monthly AS (
         SUM(act_feed_quantity) AS month_feed_quantity,
         SUM(total_feed_cost) AS month_feed_cost,
         SUM(concentrate_quantity) AS month_concentrate_quantity,
-        SUM(roughage_quantity) AS month_roughage_quantity,
-        SUM(CASE WHEN total_cattle_count > 0 THEN total_feed_cost / total_cattle_count ELSE 0 END) AS sum_daily_feed_cost_per_cattle
+        SUM(roughage_quantity) AS month_roughage_quantity
     FROM {{ ref('dws_ranch_stall_feed_agg_di') }}
     WHERE stats_date IS NOT NULL
     GROUP BY 1, 2
@@ -54,7 +53,7 @@ sell_cost_recovery AS (
     SELECT
         natural_month,
         ranch_id,
-        SUM(sell_total_amount) AS month_sell_revenue,
+        SUM(sell_total_amount) AS month_sell_revenue,  -- 出栏收入（用于成本回收分析）
         COUNT(DISTINCT cattle_sku_id) AS month_sell_sku_count,
         SUM(sell_count) AS month_sell_count,
         SUM(sell_total_weight) AS month_sell_weight

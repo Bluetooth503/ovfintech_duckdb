@@ -56,12 +56,6 @@ feed_cost AS (
     GROUP BY cattle_id
 ),
 
-feed_cost_distinct AS (
-    -- 确保 feed_cost 结果唯一（防止 GROUP BY 产生重复）
-    SELECT DISTINCT *
-    FROM feed_cost
-),
-
 -- ============================================
 -- 3. 出栏信息（用于最终状态判定）
 -- ============================================
@@ -103,6 +97,16 @@ integrated AS (
         b.in_stall_weight,
         b.in_stall_price,
 
+        -- 预计算采购成本
+        CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
+             THEN b.in_stall_weight * b.in_stall_price
+             ELSE 0 END AS calc_purchase_cost,
+
+        -- 预计算总成本
+        CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
+             THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
+             ELSE COALESCE(fc.cumulative_feed_cost, 0) END AS calc_total_cost,
+
         -- 状态判定
         CASE WHEN s.cattle_id IS NOT NULL THEN '已出栏'
              WHEN r.cattle_id IS NOT NULL THEN '已退回'
@@ -110,9 +114,7 @@ integrated AS (
              ELSE '其他' END AS cattle_status,
 
         -- 采购成本（直接从基础档案计算，避免 JOIN 导致重复）
-        CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-             THEN b.in_stall_weight * b.in_stall_price
-             ELSE 0 END AS purchase_cost,
+        calc_purchase_cost AS purchase_cost,
         b.in_stall_weight AS purchase_weight,
         b.in_stall_price AS avg_purchase_unit_price,
 
@@ -128,39 +130,22 @@ integrated AS (
         0 AS additional_cost,
 
         -- 计算指标：总成本
-        CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-             THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-             ELSE COALESCE(fc.cumulative_feed_cost, 0) END AS total_cost,
+        calc_total_cost AS total_cost,
 
         -- 计算指标：在栏天数
         DATE_DIFF('day', b.in_stall_date, COALESCE(s.sell_date, r.return_date, CURRENT_DATE)) AS days_on_stall,
 
         -- 计算指标：头均日成本
         CASE WHEN b.in_stall_date IS NOT NULL
-             THEN (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END) /
-                  NULLIF(DATE_DIFF('day', b.in_stall_date, COALESCE(s.sell_date, r.return_date, CURRENT_DATE)), 0)
+             THEN calc_total_cost / NULLIF(DATE_DIFF('day', b.in_stall_date, COALESCE(s.sell_date, r.return_date, CURRENT_DATE)), 0)
              ELSE NULL END AS avg_daily_cost_per_cattle,
 
         -- 成本结构占比
-        CASE WHEN (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END) > 0
-             THEN CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price)
-                   ELSE 0 END /
-                  (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END)
+        CASE WHEN calc_total_cost > 0
+             THEN calc_purchase_cost / calc_total_cost
              ELSE NULL END AS purchase_cost_ratio,
-        CASE WHEN (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END) > 0
-             THEN COALESCE(fc.cumulative_feed_cost, 0) /
-                  (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END)
+        CASE WHEN calc_total_cost > 0
+             THEN COALESCE(fc.cumulative_feed_cost, 0) / calc_total_cost
              ELSE NULL END AS feed_cost_ratio,
 
         -- 饲料成本内部结构
@@ -177,33 +162,24 @@ integrated AS (
 
         -- 计算指标：盈亏分析
         CASE WHEN s.sell_revenue IS NOT NULL
-             THEN s.sell_revenue - (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END)
+             THEN s.sell_revenue - calc_total_cost
              ELSE NULL END AS profit_loss_amount,
-        CASE WHEN s.sell_revenue IS NOT NULL AND (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END) > 0
-             THEN (s.sell_revenue - (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END)) /
-                  (CASE WHEN b.in_stall_weight IS NOT NULL AND b.in_stall_price IS NOT NULL
-                   THEN (b.in_stall_weight * b.in_stall_price) + COALESCE(fc.cumulative_feed_cost, 0)
-                   ELSE COALESCE(fc.cumulative_feed_cost, 0) END) * 100
+        CASE WHEN s.sell_revenue IS NOT NULL AND calc_total_cost > 0
+             THEN (s.sell_revenue - calc_total_cost) / calc_total_cost * 100
              ELSE NULL END AS profit_loss_rate,
 
         fc.latest_feed_date
 
     FROM cattle_base b
-    LEFT JOIN feed_cost_distinct fc ON CAST(b.cattle_id AS VARCHAR) = CAST(fc.cattle_id AS VARCHAR)
-    LEFT JOIN sell_info s ON CAST(b.cattle_id AS VARCHAR) = CAST(s.cattle_id AS VARCHAR)
-    LEFT JOIN return_info r ON CAST(b.cattle_id AS VARCHAR) = CAST(r.cattle_id AS VARCHAR)
+    LEFT JOIN feed_cost fc ON b.cattle_id::VARCHAR = fc.cattle_id::VARCHAR
+    LEFT JOIN sell_info s ON b.cattle_id::VARCHAR = s.cattle_id::VARCHAR
+    LEFT JOIN return_info r ON b.cattle_id::VARCHAR = r.cattle_id::VARCHAR
 )
 
 -- ============================================
 -- 最终 SELECT
 -- ============================================
-SELECT DISTINCT ON (cattle_id)
+SELECT
     -- 标识维度
     cattle_id,                               -- 牛只ID
     cattle_no,                               -- 牛只编号
