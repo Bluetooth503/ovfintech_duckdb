@@ -14,8 +14,12 @@ DORIS_DATABASE = 'ods'          # Doris数据库名
 SEEDS_DIR = './seeds'           # 数据导出目录
 TABLE_MAPPING = {
     # 已全量提取
-    'ods_fund_billing': 'ods_fund_billing',
-    'ods_offline_loan': 'ods_offline_loan',
+    # 'ods_fund_billing': 'ods_fund_billing',
+    # 'ods_offline_loan': 'ods_offline_loan',
+    # 'ods_fund_debt': 'ods_fund_debt',
+    # 'ods_fund_debt_apply': 'ods_fund_debt_apply',
+    'ods_fund_member_credit': 'ods_fund_member_credit',
+    'ods_fund_member_credit_apply': 'ods_fund_member_credit_apply',
 
 
     # 尚未提取

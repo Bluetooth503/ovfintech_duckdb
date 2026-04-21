@@ -185,17 +185,17 @@ all_customers AS (
 
 SELECT
     -- 主键
-    customer_id,                                                                             -- 客户ID（主键）
+    ac.customer_id,                                                                          -- 客户ID（主键）
     customer_code,                                                                           -- 客户编码
     -- 客户分类
     customer_type,                                                                           -- 客户类型（personal/company）
     -- 基础信息
     customer_name,                                                                           -- 客户名称
-    contact_mobile,                                                                         -- 联系手机
-    contact_email,                                                                          -- 联系邮箱
+    contact_mobile,                                                                          -- 联系手机
+    contact_email,                                                                           -- 联系邮箱
     id_no,                                                                                   -- 证件号码
     id_type,                                                                                 -- 证件类型
-    register_address,                                                                       -- 注册地址
+    register_address,                                                                        -- 注册地址
     -- 个人特有信息
     gender,                                                                                  -- 性别
     birthday,                                                                                -- 出生日期
@@ -227,13 +227,18 @@ SELECT
     regulatory_agency_org_id,                                                                -- 监管机构ID
     regulatory_agency_name,                                                                  -- 监管机构名称
     -- 状态信息
-    customer_status,                                                                         -- 客户状态
-    is_credit_flag,                                                                          -- 是否开通信用
-    create_time,                                                                             -- 创建时间
-    update_time,                                                                             -- 更新时间
+    ac.customer_status,                                                                      -- 客户状态
+    ac.is_credit_flag,                                                                       -- 是否开通信用
+    ac.create_time,                                                                          -- 创建时间
+    ac.update_time,                                                                          -- 更新时间
+    -- 贷款信息
+    COALESCE(lb.is_loan_customer, '0') AS is_loan_customer,                                  -- 是否贷款客户（T-1日贷款余额>0）
+    COALESCE(lb.total_loan_balance, 0) AS loan_balance,                                      -- 贷款余额（单位：元）
     -- SCD Type 2 字段
-    COALESCE(update_time, create_time) AS dw_effective_date,                                 -- 生效日期
+    COALESCE(ac.update_time, ac.create_time) AS dw_effective_date,                           -- 生效日期
     CAST('9999-12-31 23:59:59' AS TIMESTAMP) AS dw_expiry_date,                              -- 失效日期
     '1' AS is_current                                                                        -- 是否当前记录
 
-FROM all_customers
+FROM all_customers ac
+LEFT JOIN {{ ref('dws_fund_customer_loan_balance_df') }} lb
+    ON CAST(ac.customer_id AS VARCHAR) = CAST(lb.customer_id AS VARCHAR)

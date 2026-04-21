@@ -1,3 +1,4 @@
+------------------------------------------------------- 牧场主题域 -------------------------------------------------------
 dbt seed -s ods_psi_cattle_feed_detail
 dbt seed -s ods_psi_cattle_feed_detail_3
 dbt seed -s ods_psi_cattle_feed_detail_4
@@ -69,6 +70,7 @@ dbt seed --full-refresh -s ods_psi_region
 dbt seed --full-refresh -s ods_psi_stall_region
 
 
+------------------------------------------------------- 客户主题域 -------------------------------------------------------
 dbt seed --full-refresh -s ods_mem_member
 dbt seed --full-refresh -s ods_mem_company
 dbt seed --full-refresh -s ods_mem_certified
@@ -76,16 +78,20 @@ dbt seed --full-refresh -s ods_mem_member_expand
 dbt seed --full-refresh -s ods_mem_address_info
 dbt seed --full-refresh -s ods_mem_bank
 
+
+------------------------------------------------------- 资金主题域 -------------------------------------------------------
 dbt seed --full-refresh -s ods_fund_billing
 dbt seed --full-refresh -s ods_offline_loan
+dbt seed --full-refresh -s ods_fund_debt
+dbt seed --full-refresh -s ods_fund_debt_apply
+dbt seed --full-refresh -s ods_fund_member_credit
+dbt seed --full-refresh -s ods_fund_member_credit_apply
 
 
 
-
+------------------------------------------------------- 其他命令 -------------------------------------------------------
 dbt run --full-refresh --select models/ranch/dim
 dbt run --full-refresh --select models/ranch/dwd
-
 dbt run --full-refresh --select models/fund/dwd
 dbt run --full-refresh --select models/fund/dws
-
 nohup dbt run --full-refresh -s ads_ranch_cattle_gompertz_nlme_pymc &

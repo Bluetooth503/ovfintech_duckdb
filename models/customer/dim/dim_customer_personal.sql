@@ -123,6 +123,9 @@ SELECT
     mb.customer_status,                                                                        -- 客户状态
     mb.create_time,                                                                            -- 创建时间
     mb.update_time,                                                                            -- 更新时间
+    -- 贷款信息
+    COALESCE(lb.is_loan_customer, '0') AS is_loan_customer,                                    -- 是否贷款客户（T-1日贷款余额>0）
+    COALESCE(lb.total_loan_balance, 0) AS loan_balance,                                       -- 贷款余额（单位：元）
     -- SCD Type 2 字段
     COALESCE(mb.update_time, mb.create_time) AS dw_effective_date,                             -- 生效日期
     CAST('9999-12-31 23:59:59' AS TIMESTAMP) AS dw_expiry_date,                                -- 失效日期
@@ -131,3 +134,4 @@ SELECT
 FROM customer_base mb
 LEFT JOIN customer_scene_rel csr ON mb.customer_id = csr.customer_id
 LEFT JOIN scene_info si ON csr.scene_id = si.scene_id
+LEFT JOIN {{ ref('dws_fund_customer_loan_balance_df') }} lb ON CAST(mb.customer_id AS VARCHAR) = CAST(lb.customer_id AS VARCHAR)

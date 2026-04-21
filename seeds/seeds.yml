@@ -1500,3 +1500,39 @@ seeds:
         status: bigint
         purchase_cost: double
         additional_cost: double
+
+  # 资金域 - 会员授信申请表
+  - name: ods_fund_member_credit_apply
+    config:
+      column_types:
+        id: bigint
+        member_id: bigint
+        member_type: bigint
+        member_name: varchar
+        contact_name: varchar
+        store_id: bigint
+        store_name: varchar
+        market_ids: varchar
+        financial_product_id: bigint
+        financial_product_name: varchar
+        fund_org_id: bigint
+        apply_quota: double
+        apply_free_time: bigint
+        fund_org_name: varchar
+        area_id: varchar
+        area_name: varchar
+        create_time: timestamp
+        org_id: bigint
+        org_name: varchar
+        business_no: varchar
+        bank_quota: double
+        manager_no: varchar
+        rate_float: double
+        base_rate: double
+        service_manager: varchar
+        status: bigint
+        apply_period: bigint
+        member_card: varchar
+        operator_org_id: bigint
+        operator_org_name: varchar
+        fund_manager: varchar

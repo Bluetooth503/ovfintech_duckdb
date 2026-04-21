@@ -17,8 +17,8 @@
 
 SELECT
     -- 主键
-    id AS trx_id,                                                   -- 交易ID（主键）
-    serial_no AS trx_sn,                                            -- 交易流水号
+    id AS trx_id,                                                  -- 交易ID（主键）
+    serial_no AS trx_sn,                                           -- 交易流水号
 
     -- 时间信息
     bill_time AS trx_time,                                         -- 交易时间
