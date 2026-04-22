@@ -22,12 +22,14 @@
 --   - 架构设计：核心客户汇总表，下游ADS层基础
 --   - 命名说明：_agg_df 表示日聚合，日全量刷新，保留历史
 -- =============================================
-{{ config(
-    materialized='table',
-    enabled=False,  -- 禁用此模型
-    description='@DEPRECATED - 已废弃，请使用 dws_fund_customer_loan_state_df',
-    tags=['fund', 'dws', 'agg', 'customer', 'daily']
-) }}
+{{
+    config(
+        materialized='table',
+        enabled=False,
+        description='@DEPRECATED - 已废弃，请使用 dws_fund_customer_loan_state_df',
+        tags=['fund', 'dws', 'agg', 'customer', 'daily']
+    )
+}}
 
 WITH customer_credit_daily AS (
     -- ============================================

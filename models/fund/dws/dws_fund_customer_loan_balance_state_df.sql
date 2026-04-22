@@ -26,12 +26,14 @@
 --   - 架构设计：与生产环境保持一致
 --   - 命名说明：_state_df 表示当前状态快照，日全量覆盖，不保留历史
 -- =============================================
-{{ config(
-    materialized='table',
-    enabled=False,  -- 禁用此模型
-    description='@DEPRECATED - 已废弃，请使用 dws_fund_customer_loan_state_df',
-    tags=['fund', 'dws', 'state', 'customer', 'loan_balance']
-) }}
+{{
+    config(
+        materialized='table',
+        enabled=False,
+        description='@DEPRECATED - 已废弃，请使用 dws_fund_customer_loan_state_df',
+        tags=['fund', 'dws', 'state', 'customer', 'loan_balance']
+    )
+}}
 
 WITH target_date AS (
     -- ============================================

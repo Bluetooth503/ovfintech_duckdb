@@ -20,12 +20,14 @@
 --   - 架构设计：基于现有数据源，待 dws_fund_customer_agg_df 实现后可优化
 --   - 命名说明：_snap_df 表示历史快照，保留历史数据
 -- =============================================
-{{ config(
-    materialized='table',
-    enabled=False,  -- 禁用此模型
-    description='@DEPRECATED - 已废弃，请使用 dws_fund_customer_loan_snap_df',
-    tags=['fund', 'dws', 'snap', 'customer', 'fund']
-) }}
+{{
+    config(
+        materialized='table',
+        enabled=False,
+        description='@DEPRECATED - 已废弃，请使用 dws_fund_customer_loan_snap_df',
+        tags=['fund', 'dws', 'snap', 'customer', 'fund']
+    )
+}}
 
 WITH all_dates AS (
     -- ============================================
