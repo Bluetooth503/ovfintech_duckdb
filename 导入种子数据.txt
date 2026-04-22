@@ -95,3 +95,5 @@ dbt run --full-refresh --select models/ranch/dwd
 dbt run --full-refresh --select models/fund/dwd
 dbt run --full-refresh --select models/fund/dws
 nohup dbt run --full-refresh -s ads_ranch_cattle_gompertz_nlme_pymc &
+
+dbt run --full-refresh --select models/customer/dim
