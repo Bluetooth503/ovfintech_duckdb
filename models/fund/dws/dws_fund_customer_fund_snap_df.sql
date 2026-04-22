@@ -1,4 +1,12 @@
 -- =============================================
+-- @DEPRECATED: 此模型已废弃，请使用以下新模型
+--   - dws_fund_customer_loan_state_df.sql（当前状态）
+--   - dws_fund_customer_loan_snap_df.sql（历史快照）
+--   - dws_fund_customer_loan_agg_df.sql（聚合汇总）
+-- 废弃日期: 2025-04-22
+-- 计划删除: 2025-05-22（30天后）
+-- =============================================
+-- =============================================
 -- 模型名称：dws_fund_customer_fund_snap_df
 -- 模型描述：客户资金每日快照表，记录每个客户在每天的资金状态
 -- Dbt更新方式：全量（保留历史）
@@ -14,7 +22,8 @@
 -- =============================================
 {{ config(
     materialized='table',
-    description='客户资金每日快照表，记录每个客户在每天的资金状态',
+    enabled=False,  -- 禁用此模型
+    description='@DEPRECATED - 已废弃，请使用 dws_fund_customer_loan_snap_df',
     tags=['fund', 'dws', 'snap', 'customer', 'fund']
 ) }}
 

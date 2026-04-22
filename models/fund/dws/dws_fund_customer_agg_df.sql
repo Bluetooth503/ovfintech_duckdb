@@ -1,4 +1,12 @@
 -- =============================================
+-- @DEPRECATED: 此模型已废弃，请使用以下新模型
+--   - dws_fund_customer_loan_state_df.sql（当前状态）
+--   - dws_fund_customer_loan_snap_df.sql（历史快照）
+--   - dws_fund_customer_loan_agg_df.sql（聚合汇总）
+-- 废弃日期: 2025-04-22
+-- 计划删除: 2025-05-22（30天后）
+-- =============================================
+-- =============================================
 -- 模型名称：dws_fund_customer_agg_df
 -- 模型描述：客户资金日汇总表，按客户和日期维度汇总客户资金指标
 -- Dbt更新方式：全量（保留历史）
@@ -16,7 +24,8 @@
 -- =============================================
 {{ config(
     materialized='table',
-    description='客户资金日汇总表，按客户和日期维度汇总客户资金指标',
+    enabled=False,  -- 禁用此模型
+    description='@DEPRECATED - 已废弃，请使用 dws_fund_customer_loan_state_df',
     tags=['fund', 'dws', 'agg', 'customer', 'daily']
 ) }}
 
