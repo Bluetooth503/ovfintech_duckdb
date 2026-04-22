@@ -1,0 +1,396 @@
+version: 2
+
+models:
+  - name: dwd_ranch_cattle_ai_score_fact_i
+    description: "牧场域牛只AI评分事务明细表，记录牛只AI评分数据（增量追加）"
+    columns:
+      - name: id
+        description: "事务ID"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: weight
+        description: "当前体重"
+      - name: score
+        description: "综合评分"
+      - name: hair
+        description: "毛发评分"
+      - name: muscle
+        description: "肌肉评分"
+      - name: variety_name
+        description: "品类名称"
+      - name: out_stall_weight
+        description: "预估出栏体重"
+      - name: feed_ratio
+        description: "料肉比"
+      - name: is_submit
+        description: "是否提交"
+      - name: score_record_count
+        description: "评分记录条数"
+      - name: gender
+        description: "性别"
+      - name: address
+        description: "地址"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_cattle_feed_fact_i
+    description: "牧场域牛只投喂事务明细表，记录牛只饲料投喂数据（增量追加）"
+    columns:
+      - name: id
+        description: "事务ID"
+      - name: cattle_id
+        description: "牛只ID"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: feed_sku_id
+        description: "商品ID（饲料）"
+      - name: feed_sku_name
+        description: "商品名称"
+      - name: feed_date
+        description: "投喂日期"
+      - name: act_feed_quantity
+        description: "实际投喂量"
+      - name: act_feed_cost
+        description: "实际投喂成本"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_cattle_install_fact_i
+    description: "牧场域牛只入栏事务明细表，记录牛只入栏数据（增量追加）"
+    columns:
+      - name: id
+        description: "事务ID"
+      - name: purchase_id
+        description: "采购单ID"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: vice_code
+        description: "副编号"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: sku_id
+        description: "商品ID"
+      - name: weight
+        description: "入栏重量"
+      - name: price
+        description: "单价"
+      - name: total_price
+        description: "总价"
+      - name: birth_date
+        description: "出生日期"
+      - name: install_date
+        description: "入栏日期"
+      - name: color
+        description: "毛色"
+      - name: ai_score
+        description: "AI评分"
+      - name: tenant_id
+        description: "租户ID"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_cattle_onstall_fact_di
+    description: "牧场域牛只在栏状态事务明细表，记录牛只每日状态快照数据（增量追加）"
+    columns:
+      - name: id
+        description: "事务ID (快照记录ID)"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: vice_code
+        description: "副编号"
+      - name: sku_id
+        description: "商品ID/品种"
+      - name: snap_date
+        description: "快照日期"
+      - name: customer_id
+        description: "客户ID"
+      - name: livestock_id
+        description: "牲畜ID"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: total_loan_money
+        description: "贷款总额"
+      - name: real_price
+        description: "实际单价"
+      - name: estimated_weight
+        description: "预估体重"
+      - name: weight_add
+        description: "增重"
+      - name: feed_quantity
+        description: "饲料采食量"
+      - name: feed_dry_quantity
+        description: "干物质采食量"
+      - name: is_loan
+        description: "是否贷款"
+      - name: if_sick
+        description: "是否生病"
+      - name: funding_id
+        description: "资金方ID"
+      - name: purchase_id
+        description: "采购单ID"
+      - name: other1_loan_money
+        description: "其他1贷款"
+      - name: other2_loan_money
+        description: "其他2贷款"
+      - name: in_stall_loan_money
+        description: "入栏贷款"
+      - name: weight_add_loan_money
+        description: "增重贷款"
+      - name: total_feed_cost
+        description: "总饲料成本"
+      - name: feed_cost
+        description: "饲料成本"
+      - name: dw_load_time
+        description: "数据加载时间"
+  - name: dwd_ranch_cattle_outstall_fact_i
+    description: "牧场域牛只出栏事务明细表，记录牛只出栏数据（增量追加）"
+    columns:
+      - name: id
+        description: "事务ID"
+      - name: sell_id
+        description: "销售单ID"
+      - name: cattle_id
+        description: "牛只ID"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: outstall_date
+        description: "出栏日期"
+      - name: weight
+        description: "出栏重量"
+      - name: price
+        description: "出栏单价"
+      - name: reason
+        description: "出栏原因"
+      - name: out_type
+        description: "出栏类型"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: loan_money
+        description: "贷款金额"
+      - name: customer_id
+        description: "客户ID"
+      - name: customer_name
+        description: "客户名称"
+      - name: sku_id
+        description: "商品ID"
+      - name: sku_name
+        description: "商品名称"
+      - name: status
+        description: "状态"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_cattle_price_fact_i
+    description: "活牛价格事务表，记录价格调整历史"
+    columns:
+      - name: id
+        description: "价格记录ID"
+      - name: sku_id
+        description: "SKU ID（商品ID/品种）"
+      - name: collect_price_sku_id
+        description: "采集价格SKU ID"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: unit_price
+        description: "单价（元/斤）"
+      - name: start_weight
+        description: "起始体重(Kg)"
+      - name: end_weight
+        description: "结束体重(Kg)"
+      - name: price_change_date
+        description: "价格变更日期"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_cattle_purchase_fact_i
+    description: "牧场域牛只采购事务明细表，通过关联采购单和入栏记录实现牛只级别明细（增量追加）"
+    columns:
+      - name: install_id
+        description: "入栏记录ID"
+      - name: purchase_id
+        description: "采购单ID"
+      - name: purchase_code
+        description: "采购单号"
+      - name: purchase_date
+        description: "采购日期"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: vice_code
+        description: "副编号"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: sku_id
+        description: "商品ID"
+      - name: weight
+        description: "入栏重量"
+      - name: price
+        description: "单价"
+      - name: total_price
+        description: "总价"
+      - name: install_date
+        description: "入栏日期"
+      - name: upstream_customer_id
+        description: "上游客户ID（供应商）"
+      - name: customer_id
+        description: "客户ID（投资人）"
+      - name: quantity
+        description: "采购数量（批次）"
+      - name: purchase_amount
+        description: "采购成本（批次）"
+      - name: ranch_id
+        description: "租户ID"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_cattle_return_fact_i
+    description: "牧场域牛只退回事务明细表，记录牛只退回数据（增量追加）"
+    columns:
+      - name: id
+        description: "事务ID"
+      - name: return_code
+        description: "退回单号"
+      - name: return_date
+        description: "退回日期"
+      - name: cattle_id
+        description: "牛只ID"
+      - name: return_weight
+        description: "退回重量"
+      - name: return_price
+        description: "退回价格"
+      - name: reason
+        description: "退回原因"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_cattle_sell_fact_i
+    description: "牧场域牛只销售事务明细表，通过关联销售单和出栏记录实现牛只级别明细（增量追加）"
+    columns:
+      - name: outstall_id
+        description: "出栏记录ID"
+      - name: sell_id
+        description: "销售单ID"
+      - name: sell_code
+        description: "销售单号"
+      - name: sell_date
+        description: "销售日期"
+      - name: cattle_id
+        description: "牛只ID"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: weight
+        description: "出栏重量"
+      - name: price
+        description: "销售单价"
+      - name: total_amount
+        description: "销售总额"
+      - name: downstream_customer_id
+        description: "客户ID（买家）"
+      - name: reason
+        description: "出栏原因"
+      - name: out_type
+        description: "出栏类型"
+      - name: quantity
+        description: "销售数量（批次）"
+      - name: sell_amount
+        description: "销售成本（批次）"
+      - name: sell_order_no
+        description: "工单号"
+      - name: loan_amount
+        description: "贷款金额"
+      - name: customer_id
+        description: "投资人ID"
+      - name: customer_name
+        description: "投资人名称"
+      - name: sku_id
+        description: "商品ID"
+      - name: sku_name
+        description: "商品名称"
+      - name: status
+        description: "状态"
+      - name: outstall_date
+        description: "出栏日期"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_cattle_weight_fact_i
+    description: "牧场域牛只体重测量事务明细表，记录每次体重测量事件的原子数据（增量追加）。入栏/出栏体重作为补充称重记录注入"
+    columns:
+      - name: id
+        description: "ID"
+      - name: cattle_id
+        description: "牛只ID"
+      - name: weight_date
+        description: "体重日期"
+      - name: weight
+        description: "体重"
+      - name: day_age
+        description: "日龄"
+      - name: weight_days
+        description: "称重天数"
+      - name: daily_gain
+        description: "日增重"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: measure_code
+        description: "测量代码"
+      - name: customer_id
+        description: "客户ID"
+      - name: measure_type
+        description: "测量类型"
+      - name: ai_score
+        description: "AI评分"
+      - name: remark
+        description: "备注"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dwd_ranch_region_ai_inventory_fact_i
+    description: "牧场域区域AI盘点事务明细表，记录区域AI盘点数据（增量追加）"
+    columns:
+      - name: id
+        description: "事务ID"
+      - name: region_id
+        description: "区域ID"
+      - name: region_name
+        description: "区域名称"
+      - name: inventory_count
+        description: "盘点数量"
+      - name: system_cattle_count
+        description: "系统牛只数量"
+      - name: inventory_ratio
+        description: "盘点率"
+      - name: inventory_time
+        description: "盘点时间"
+      - name: alert_status
+        description: "预警状态"
+      - name: remark
+        description: "备注"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: stats_date
+        description: "统计日期"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+      - name: dw_load_time
+        description: "数据加载时间"
+      - name: dw_update_time
+        description: "数据更新时间"

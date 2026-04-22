@@ -1,0 +1,340 @@
+version: 2
+
+models:
+  - name: dim_ranch
+    description: "牧场维度表，记录牧场的基本信息和历史变更（SCD Type 2）。合并 sys_tenant（主表）和 ranch（信息表）"
+    columns:
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: ranch_abbr_desc
+        description: "牧场简要描述"
+      - name: ranch_code
+        description: "牧场编码"
+      - name: ranch_address
+        description: "牧场地址"
+      - name: ranch_owner
+        description: "负责人"
+      - name: ranch_contact_phone_no
+        description: "联系电话"
+      - name: ranch_status
+        description: "牧场状态"
+      - name: ranch_remark
+        description: "备注"
+      - name: employees_count
+        description: "员工数量"
+      - name: adcode
+        description: "行政区划代码"
+      - name: map_position
+        description: "地图位置坐标"
+      - name: start_date
+        description: "开始日期"
+      - name: end_date
+        description: "结束日期"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+      - name: dw_effective_date
+        description: "生效日期"
+      - name: dw_expiry_date
+        description: "失效日期"
+      - name: is_current
+        description: "是否当前记录"
+  - name: dim_ranch_cattle
+    description: "牧场牛只维度表，记录牛只的基础属性、入栏信息、贷款信息等相对稳定的维度属性（SCD Type 2）。注意：每日变化的快照数据（如体重、增重、饲养天数等）应使用DWD快照表或DWS汇总表"
+    columns:
+      - name: cattle_id
+        description: "牛只ID"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: vice_code
+        description: "副编号"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: recipe_id
+        description: "配方ID"
+      - name: recipe_name
+        description: "配方名称"
+      - name: cattle_sku_id
+        description: "牛只SKU ID"
+      - name: cattle_sku_name
+        description: "牛只SKU 名称"
+      - name: brand_name
+        description: "品牌名称"
+      - name: in_stall_date
+        description: "入栏日期"
+      - name: birth_date
+        description: "出生日期"
+      - name: in_stall_weight
+        description: "入栏体重（来自历史快照）"
+      - name: in_stall_price
+        description: "入栏单价（来自历史快照）"
+      - name: color
+        description: "毛色"
+      - name: cattle_status
+        description: "牛只状态（0=在栏，其他=出栏）"
+      - name: out_stall_date
+        description: "出栏日期"
+      - name: customer_id
+        description: "客户ID"
+      - name: purchase_id
+        description: "采购ID"
+      - name: is_loan
+        description: "是否融资"
+      - name: loan_count
+        description: "贷款次数"
+      - name: funding_id
+        description: "资金方ID"
+      - name: last_loan_date
+        description: "最后贷款日期"
+      - name: total_loan_amount
+        description: "总贷款金额"
+      - name: in_stall_loan_amount
+        description: "入栏贷金额"
+      - name: weight_add_loan_amount
+        description: "增重贷金额"
+      - name: corn_silage_loan_amount
+        description: "青贮玉米贷金额"
+      - name: high_moisture_corn_loan_amount
+        description: "高湿玉米贷金额"
+      - name: repay_amount
+        description: "还款金额"
+      - name: is_lock
+        description: "是否锁定"
+      - name: if_sick
+        description: "是否病牛"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+      - name: dw_effective_date
+        description: "生效日期"
+      - name: dw_expiry_date
+        description: "失效日期"
+      - name: is_current
+        description: "是否当前记录"
+  - name: dim_ranch_grow_stage
+    description: "生长阶段维度表，记录不同体重阶段的生长目标和料肉比目标（SCD Type 2）"
+    columns:
+      - name: stage_id
+        description: "阶段ID"
+      - name: stage_name
+        description: "阶段名称"
+      - name: sku_id
+        description: "SKU ID（牛只品种）"
+      - name: sku_name
+        description: "SKU名称"
+      - name: brand_name
+        description: "品牌名称"
+      - name: start_weight
+        description: "阶段起始体重"
+      - name: end_weight
+        description: "阶段结束体重"
+      - name: plan_weight_add
+        description: "计划增重"
+      - name: feed_meat_ratio
+        description: "目标料肉比"
+      - name: days
+        description: "阶段天数"
+      - name: measure_max_weight
+        description: "测量最大体重"
+      - name: measure_min_weight
+        description: "测量最小体重"
+      - name: measure_normal_weight
+        description: "测量正常体重"
+      - name: customer_id
+        description: "客户ID"
+      - name: dw_effective_date
+        description: "生效日期"
+      - name: dw_expiry_date
+        description: "失效日期"
+      - name: is_current
+        description: "是否当前记录"
+  - name: dim_ranch_recipe
+    description: "饲料配方维度表，记录饲料配方的基本信息和料肉比目标（SCD Type 2）"
+    columns:
+      - name: recipe_id
+        description: "配方ID"
+      - name: recipe_name
+        description: "配方名称"
+      - name: recipe_sku_id
+        description: "配方SKU ID（饲料类型）"
+      - name: recipe_sku_name
+        description: "配方SKU名称"
+      - name: weight_begin
+        description: "适用体重起始"
+      - name: weight_end
+        description: "适用体重结束"
+      - name: plan_days
+        description: "计划天数"
+      - name: day_age
+        description: "日龄"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: owner_name
+        description: "负责人"
+      - name: color
+        description: "颜色标识"
+      - name: sort
+        description: "排序"
+      - name: is_enable
+        description: "是否启用"
+      - name: feed_meat_ratio
+        description: "目标料肉比"
+      - name: measure
+        description: "测量值"
+      - name: dry_matter_min
+        description: "干物质最小值"
+      - name: dry_matter_max
+        description: "干物质最大值"
+      - name: total_weight
+        description: "总重量"
+      - name: feed_count
+        description: "饲喂次数"
+      - name: dw_effective_date
+        description: "生效日期"
+      - name: dw_expiry_date
+        description: "失效日期"
+      - name: is_current
+        description: "是否当前记录"
+  - name: dim_ranch_region
+    description: "区域维度表，记录牧场区域的基本信息和关联的栏位信息"
+    columns:
+      - name: region_id
+        description: "区域ID"
+      - name: region_name
+        description: "区域名称"
+      - name: region_type
+        description: "区域类型"
+      - name: region_level
+        description: "区域级别"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: is_ai_inventory
+        description: "AI盘点标志"
+      - name: stall_count
+        description: "关联栏位数"
+      - name: create_time
+        description: "创建时间"
+      - name: update_time
+        description: "更新时间"
+  - name: dim_ranch_sku
+    description: "牧场SKU商品维度表，记录牧场相关商品（饲料、牛只、物资等）的基本信息和属性（SCD Type 2）"
+    columns:
+      - name: sku_id
+        description: "SKU ID"
+      - name: sku_code
+        description: "SKU编码"
+      - name: sku_name
+        description: "SKU名称"
+      - name: sku_type
+        description: "SKU类型（1-牛只，2-饲料，其他-物资）"
+      - name: brand_name
+        description: "品牌名称"
+      - name: spec
+        description: "规格"
+      - name: piece_unit
+        description: "件单位"
+      - name: quantity_unit
+        description: "数量单位"
+      - name: status
+        description: "状态"
+      - name: remark
+        description: "备注"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: class_id
+        description: "分类ID"
+      - name: unitweight
+        description: "单位重量"
+      - name: dry
+        description: "干物质"
+      - name: sort
+        description: "排序"
+      - name: unit_price
+        description: "单价"
+      - name: is_alert_enabled
+        description: "是否预警"
+      - name: allow_offset_weight
+        description: "允许误差重量"
+      - name: dw_effective_date
+        description: "生效日期"
+      - name: dw_expiry_date
+        description: "失效日期"
+      - name: is_current
+        description: "是否当前记录"
+  - name: dim_ranch_stall
+    description: "栏舍维度表，记录牛舍栏位的基本信息和配方变更历史（SCD Type 2）"
+    columns:
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: feeder_name
+        description: "饲养员"
+      - name: recipe_id
+        description: "当前配方ID"
+      - name: recipe_name
+        description: "当前配方名称"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: region_name
+        description: "区域名称"
+      - name: region_id
+        description: "区域ID"
+      - name: real_cattle_count
+        description: "实际存栏数"
+      - name: total_cattle_weight
+        description: "总重量"
+      - name: unit_weight
+        description: "单位重量"
+      - name: stall_type
+        description: "栏舍类型"
+      - name: customer_id
+        description: "客户ID"
+      - name: sort_order
+        description: "排序名称"
+      - name: morning_feed_weight
+        description: "早饲喂量"
+      - name: noon_feed_weight
+        description: "午饲喂量"
+      - name: night_feed_weight
+        description: "晚饲喂量"
+      - name: recipe_total_weight
+        description: "配方总重量"
+      - name: system_cattle_count
+        description: "系统牛只数（预期容量）"
+      - name: recipe_sku_id
+        description: "配方SKU ID（配方对应的饲料类型）"
+      - name: recipe_sku_name
+        description: "配方SKU名称"
+      - name: recipe_weight_begin
+        description: "配方适用体重起始"
+      - name: recipe_weight_end
+        description: "配方适用体重结束"
+      - name: recipe_feed_meat_ratio
+        description: "配方目标料肉比"
+      - name: recipe_plan_days
+        description: "配方计划天数"
+      - name: dw_effective_date
+        description: "生效日期"
+      - name: dw_expiry_date
+        description: "失效日期"
+      - name: is_current
+        description: "是否当前记录"

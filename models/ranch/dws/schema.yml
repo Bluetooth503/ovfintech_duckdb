@@ -1,0 +1,1169 @@
+version: 2
+
+models:
+  - name: dws_ranch_ai_inventory_agg_di
+    description: "AI盘点日统计表，按日期统计栏舍的AI盘点数据（盘点数量、盘点率、差异率等）"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: natural_week
+        description: "自然周"
+      - name: natural_month
+        description: "自然月"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: region_id
+        description: "区域ID"
+      - name: region_name
+        description: "区域名称"
+      - name: expected_cattle_count
+        description: "预期牛只数量"
+      - name: recorded_cattle_count
+        description: "记录牛只数量"
+      - name: actual_inventory_count
+        description: "实际库存数量"
+      - name: system_cattle_count
+        description: "系统牛只数量"
+      - name: inventory_coverage_pct
+        description: "盘点覆盖率"
+      - name: ai_inventory_ratio_pct
+        description: "AI盘点率"
+      - name: cattle_count_variance
+        description: "牛只数量差异"
+      - name: recorded_count_variance
+        description: "记录数量差异"
+      - name: variance_pct
+        description: "差异百分比"
+      - name: inventory_status_label
+        description: "盘点状态标签"
+      - name: variance_status_label
+        description: "差异状态标签"
+      - name: alert_status
+        description: "预警状态"
+      - name: alert_status_label
+        description: "预警状态标签"
+      - name: is_inventoried
+        description: "是否已盘点"
+      - name: is_complete_inventory
+        description: "是否完成盘点"
+      - name: is_alerted
+        description: "是否已预警"
+      - name: last_inventory_time
+        description: "最后盘点时间"
+      - name: remark
+        description: "备注"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_ai_score_agg_di
+    description: "AI评分日统计表，按日期统计牛只的AI评分指标（体况评分、等级分布等）"
+    columns:
+      - name: score_date
+        description: "评分日期"
+      - name: natural_week
+        description: "自然周"
+      - name: natural_month
+        description: "自然月"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: cattle_sku_id
+        description: "牛只商品ID"
+      - name: cattle_sku_name
+        description: "牛只商品名称"
+      - name: brand_name
+        description: "品牌名称"
+      - name: customer_id
+        description: "客户ID"
+      - name: total_scored_cattle
+        description: "总评分牛只数"
+      - name: avg_ai_score
+        description: "平均AI评分"
+      - name: min_ai_score
+        description: "最小AI评分"
+      - name: max_ai_score
+        description: "最大AI评分"
+      - name: stddev_ai_score
+        description: "AI评分标准差"
+      - name: count_score_a
+        description: "A级评分数量"
+      - name: count_score_b
+        description: "B级评分数量"
+      - name: count_score_c
+        description: "C级评分数量"
+      - name: count_score_d
+        description: "D级评分数量"
+      - name: count_score_e
+        description: "E级评分数量"
+      - name: pct_score_a
+        description: "A级评分占比"
+      - name: pct_score_b
+        description: "B级评分占比"
+      - name: pct_score_c
+        description: "C级评分占比"
+      - name: pct_score_d
+        description: "D级评分占比"
+      - name: pct_score_e
+        description: "E级评分占比"
+      - name: avg_hair_score
+        description: "平均毛发评分"
+      - name: min_hair_score
+        description: "最小毛发评分"
+      - name: max_hair_score
+        description: "最大毛发评分"
+      - name: count_hair_excellent
+        description: "毛发优秀数量"
+      - name: count_hair_good
+        description: "毛发良好数量"
+      - name: count_hair_fair
+        description: "毛发一般数量"
+      - name: count_hair_poor
+        description: "毛发较差数量"
+      - name: avg_muscle_score
+        description: "平均肌肉评分"
+      - name: min_muscle_score
+        description: "最小肌肉评分"
+      - name: max_muscle_score
+        description: "最大肌肉评分"
+      - name: count_muscle_excellent
+        description: "肌肉优秀数量"
+      - name: count_muscle_good
+        description: "肌肉良好数量"
+      - name: count_muscle_fair
+        description: "肌肉一般数量"
+      - name: count_muscle_poor
+        description: "肌肉较差数量"
+      - name: avg_out_stall_weight
+        description: "平均出栏栏舍重量"
+      - name: min_out_stall_weight
+        description: "最小出栏栏舍重量"
+      - name: max_out_stall_weight
+        description: "最大出栏栏舍重量"
+      - name: count_out_weight_under_400
+        description: "出栏体重小于400数量"
+      - name: count_out_weight_400_500
+        description: "出栏体重400-500数量"
+      - name: count_out_weight_500_600
+        description: "出栏体重500-600数量"
+      - name: count_out_weight_600_700
+        description: "出栏体重600-700数量"
+      - name: count_out_weight_over_700
+        description: "出栏体重大于700数量"
+      - name: avg_weight
+        description: "平均体重"
+      - name: total_weight
+        description: "总重量"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_adg_fcr_i
+    description: "牧场域牛只ADG区间汇总表，计算区间ADG和料肉比基础指标（增量更新）"
+    columns:
+      - name: stats_date
+        description: "统计日期（称重日期）"
+      - name: cattle_id
+        description: "牛只ID"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: customer_id
+        description: "投资方ID"
+      - name: sku_id
+        description: "SKU ID（品种）"
+      - name: sku_name
+        description: "SKU名称"
+      - name: brand_name
+        description: "品牌名称"
+      - name: birth_date
+        description: "出生日期"
+      - name: in_stall_weight
+        description: "入栏体重"
+      - name: in_stall_date
+        description: "入栏日期"
+      - name: age_days
+        description: "日龄"
+      - name: days_since_entry
+        description: "入栏后天数"
+      - name: prev_weight_date
+        description: "上次称重日期"
+      - name: interval_days
+        description: "称重间隔天数"
+      - name: prev_weight
+        description: "上次称重体重"
+      - name: current_weight
+        description: "本次称重体重"
+      - name: period_weight_gain
+        description: "区间增重"
+      - name: period_adg
+        description: "区间日均增重（实际ADG）"
+      - name: weigh_event_no
+        description: "称重事件序号"
+      - name: measure_code
+        description: "测量代码"
+      - name: measure_type
+        description: "测量类型"
+      - name: ai_score
+        description: "AI评分"
+      - name: period_feed_consumption
+        description: "区间饲料消耗量"
+      - name: period_feed_cost
+        description: "区间饲料成本"
+      - name: period_fcr
+        description: "区间料肉比（实际FCR = 饲料消耗/增重）"
+      - name: cumulative_gain
+        description: "累计增重（从入栏至今）"
+      - name: overall_adg
+        description: "整体ADG（从入栏至今）"
+      - name: stage_id
+        description: "生长阶段ID"
+      - name: stage_name
+        description: "生长阶段名称"
+      - name: stage_start_weight
+        description: "阶段起始体重"
+      - name: stage_end_weight
+        description: "阶段目标体重"
+      - name: plan_weight_add
+        description: "计划增重"
+      - name: stage_target_fcr
+        description: "阶段目标料肉比"
+      - name: stage_days
+        description: "阶段天数"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_balance_agg_di
+    description: "在栏牛只日统计表，按牧场、栏舍维度统计在栏牛只的数量、重量、价值等"
+    columns:
+      - name: stat_date
+        description: "统计日期"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: sku_id
+        description: "商品ID"
+      - name: sku_name
+        description: "商品名称"
+      - name: customer_id
+        description: "客户ID"
+      - name: total_cattle_count
+        description: "总牛只数量"
+      - name: instock_count
+        description: "在栏数量"
+      - name: loan_cattle_count
+        description: "贷款牛只数量"
+      - name: sick_cattle_count
+        description: "病牛数量"
+      - name: total_current_weight
+        description: "当前总重量"
+      - name: avg_current_weight
+        description: "平均当前体重"
+      - name: total_install_weight
+        description: "总入栏重量"
+      - name: total_weight_add
+        description: "总增重"
+      - name: avg_weight_add
+        description: "平均增重"
+      - name: total_estimated_value
+        description: "总预估价值"
+      - name: total_loan_money
+        description: "总贷款金额"
+      - name: total_feed_cost
+        description: "总饲料成本"
+      - name: weight_add_ratio
+        description: "增重率"
+      - name: feed_cost_per_kg
+        description: "每公斤增重成本"
+      - name: pledge_ratio
+        description: "质押率"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_feed_breakdown_agg_i
+    description: "牛只饲料结构区间汇总表，按称重区间聚合饲料组成和配方关联信息（增量更新）"
+    columns:
+      - name: stats_date
+        description: "统计日期（称重日期）"
+      - name: cattle_id
+        description: "牛只ID"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: customer_id
+        description: "投资方ID"
+      - name: sku_id
+        description: "品种ID"
+      - name: sku_name
+        description: "品种名称"
+      - name: prev_weight_date
+        description: "上次称重日期"
+      - name: current_weight
+        description: "当前称重体重"
+      - name: period_weight_gain
+        description: "区间增重"
+      - name: period_feed_consumption
+        description: "区间饲料总消耗量"
+      - name: period_feed_cost
+        description: "区间饲料总成本"
+      - name: period_avg_feed_intake
+        description: "区间平均饲料采食量"
+      - name: period_avg_feed_cost_per_day
+        description: "区间日均饲料成本"
+      - name: period_feed_unit_price
+        description: "周期饲料单位价格"
+      - name: period_concentrate_qty
+        description: "精料消耗量"
+      - name: period_roughage_qty
+        description: "粗料消耗量"
+      - name: period_additive_qty
+        description: "添加剂消耗量"
+      - name: period_medicine_qty
+        description: "药品消耗量"
+      - name: period_other_qty
+        description: "其他饲料消耗量"
+      - name: period_concentrate_cost
+        description: "精料成本"
+      - name: period_roughage_cost
+        description: "粗料成本"
+      - name: period_additive_cost
+        description: "添加剂成本"
+      - name: period_medicine_cost
+        description: "药品成本"
+      - name: period_other_cost
+        description: "其他饲料成本"
+      - name: concentrate_ratio
+        description: "比率"
+      - name: roughage_ratio
+        description: "比率"
+      - name: additive_ratio
+        description: "比率"
+      - name: medicine_ratio
+        description: "比率"
+      - name: feed_cost_per_kg_gain
+        description: "每公斤增重饲料成本"
+      - name: stall_recipe_id
+        description: "栏舍绑定配方ID"
+      - name: stall_recipe_name
+        description: "栏舍绑定配方名称"
+      - name: matched_recipe_id
+        description: "理论匹配配方ID"
+      - name: matched_recipe_name
+        description: "理论匹配配方名称"
+      - name: recipe_target_fcr
+        description: "配方目标料肉比"
+      - name: recipe_match_flag
+        description: "配方匹配标记"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_growth_agg_mi
+    description: "牧场牛只生长月统计表，按自然月统计牛只的生长指标（ADG、增重、体重分布等）"
+    columns:
+      - name: natural_month
+        description: "自然月"
+      - name: month_start_date
+        description: "月开始日期"
+      - name: month_end_date
+        description: "月结束日期"
+      - name: valid_days
+        description: "有效天数"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: cattle_sku_id
+        description: "牛只商品ID"
+      - name: cattle_sku_name
+        description: "牛只商品名称"
+      - name: brand_name
+        description: "品牌名称"
+      - name: customer_id
+        description: "客户ID"
+      - name: total_cattle_count
+        description: "总牛只数量"
+      - name: weighed_cattle_count
+        description: "已称重牛只数"
+      - name: weigh_coverage_rate
+        description: "称重覆盖率"
+      - name: avg_weight
+        description: "平均体重"
+      - name: min_weight
+        description: "最小体重"
+      - name: max_weight
+        description: "最大体重"
+      - name: stddev_weight
+        description: "标准差重量"
+      - name: count_weight_under_200
+        description: "体重小于200数量"
+      - name: count_weight_200_249
+        description: "体重200-249数量"
+      - name: count_weight_250_299
+        description: "体重250-299数量"
+      - name: count_weight_300_349
+        description: "体重300-349数量"
+      - name: count_weight_350_399
+        description: "体重350-399数量"
+      - name: count_weight_400_449
+        description: "体重400-449数量"
+      - name: count_weight_450_499
+        description: "体重450-499数量"
+      - name: count_weight_500_549
+        description: "体重500-549数量"
+      - name: count_weight_550_599
+        description: "体重550-599数量"
+      - name: count_weight_600_649
+        description: "体重600-649数量"
+      - name: count_weight_650_699
+        description: "体重650-699数量"
+      - name: count_weight_700_749
+        description: "体重700-749数量"
+      - name: count_weight_750_799
+        description: "体重750-799数量"
+      - name: count_weight_over_800
+        description: "体重大于800数量"
+      - name: avg_period_adg
+        description: "平均周期日增重"
+      - name: min_period_adg
+        description: "最小周期日增重"
+      - name: max_period_adg
+        description: "最大周期日增重"
+      - name: stddev_period_adg
+        description: "周期日增重标准差"
+      - name: count_adg_under_01
+        description: "日增重小于0.1数量"
+      - name: count_adg_01_03
+        description: "日增重0.1-0.3数量"
+      - name: count_adg_03_05
+        description: "日增重0.3-0.5数量"
+      - name: count_adg_05_07
+        description: "日增重0.5-0.7数量"
+      - name: count_adg_07_09
+        description: "日增重0.7-0.9数量"
+      - name: count_adg_09_11
+        description: "日增重0.9-1.1数量"
+      - name: count_adg_over_11
+        description: "日增重大于1.1数量"
+      - name: count_month_1
+        description: "月龄1数量"
+      - name: count_month_2
+        description: "月龄2数量"
+      - name: count_month_3
+        description: "月龄3数量"
+      - name: count_month_4
+        description: "月龄4数量"
+      - name: count_month_5
+        description: "月龄5数量"
+      - name: count_month_6
+        description: "月龄6数量"
+      - name: count_month_7
+        description: "月龄7数量"
+      - name: count_month_8
+        description: "月龄8数量"
+      - name: count_month_9
+        description: "月龄9数量"
+      - name: count_month_10
+        description: "月龄10数量"
+      - name: count_month_11
+        description: "月龄11数量"
+      - name: count_month_12
+        description: "月龄12数量"
+      - name: count_month_over_12
+        description: "月龄大于12数量"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_growth_agg_wi
+    description: "牧场牛只生长周统计表，按自然周统计牛只的生长指标（ADG、增重、体重分布等）"
+    columns:
+      - name: natural_week
+        description: "自然周"
+      - name: week_start_date
+        description: "周开始日期"
+      - name: week_end_date
+        description: "周结束日期"
+      - name: valid_days
+        description: "有效天数"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: cattle_sku_id
+        description: "牛只商品ID"
+      - name: cattle_sku_name
+        description: "牛只商品名称"
+      - name: brand_name
+        description: "品牌名称"
+      - name: customer_id
+        description: "客户ID"
+      - name: total_cattle_count
+        description: "总牛只数量"
+      - name: weighed_cattle_count
+        description: "已称重牛只数"
+      - name: weigh_coverage_rate
+        description: "称重覆盖率"
+      - name: avg_weight
+        description: "平均体重"
+      - name: min_weight
+        description: "最小体重"
+      - name: max_weight
+        description: "最大体重"
+      - name: stddev_weight
+        description: "标准差重量"
+      - name: count_weight_under_200
+        description: "体重小于200数量"
+      - name: count_weight_200_249
+        description: "体重200-249数量"
+      - name: count_weight_250_299
+        description: "体重250-299数量"
+      - name: count_weight_300_349
+        description: "体重300-349数量"
+      - name: count_weight_350_399
+        description: "体重350-399数量"
+      - name: count_weight_400_449
+        description: "体重400-449数量"
+      - name: count_weight_450_499
+        description: "体重450-499数量"
+      - name: count_weight_500_549
+        description: "体重500-549数量"
+      - name: count_weight_550_599
+        description: "体重550-599数量"
+      - name: count_weight_600_649
+        description: "体重600-649数量"
+      - name: count_weight_650_699
+        description: "体重650-699数量"
+      - name: count_weight_700_749
+        description: "体重700-749数量"
+      - name: count_weight_750_799
+        description: "体重750-799数量"
+      - name: count_weight_over_800
+        description: "体重大于800数量"
+      - name: avg_period_adg
+        description: "平均周期日增重"
+      - name: min_period_adg
+        description: "最小周期日增重"
+      - name: max_period_adg
+        description: "最大周期日增重"
+      - name: stddev_period_adg
+        description: "周期日增重标准差"
+      - name: count_adg_under_01
+        description: "日增重小于0.1数量"
+      - name: count_adg_01_03
+        description: "日增重0.1-0.3数量"
+      - name: count_adg_03_05
+        description: "日增重0.3-0.5数量"
+      - name: count_adg_05_07
+        description: "日增重0.5-0.7数量"
+      - name: count_adg_07_09
+        description: "日增重0.7-0.9数量"
+      - name: count_adg_09_11
+        description: "日增重0.9-1.1数量"
+      - name: count_adg_over_11
+        description: "日增重大于1.1数量"
+      - name: count_month_1
+        description: "月龄1数量"
+      - name: count_month_2
+        description: "月龄2数量"
+      - name: count_month_3
+        description: "月龄3数量"
+      - name: count_month_4
+        description: "月龄4数量"
+      - name: count_month_5
+        description: "月龄5数量"
+      - name: count_month_6
+        description: "月龄6数量"
+      - name: count_month_7
+        description: "月龄7数量"
+      - name: count_month_8
+        description: "月龄8数量"
+      - name: count_month_9
+        description: "月龄9数量"
+      - name: count_month_10
+        description: "月龄10数量"
+      - name: count_month_11
+        description: "月龄11数量"
+      - name: count_month_12
+        description: "月龄12数量"
+      - name: count_month_over_12
+        description: "月龄大于12数量"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_install_agg_mf
+    description: "牛只入栏月度聚合表，按牧场+栏舍+SKU+自然月统计入栏数量、总重量、平均重量"
+    columns:
+      - name: natural_month
+        description: "自然月"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: cattle_sku_id
+        description: "SKU ID"
+      - name: install_count
+        description: "入栏数量"
+      - name: install_total_weight
+        description: "入栏总重量"
+      - name: install_avg_weight
+        description: "入栏平均重量"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_inventory_snap_mf
+    description: "牛只在栏月度快照聚合表，按牧场+栏舍+SKU+自然月统计期初/期末在栏数量、平均体重、贷款总额、饲料成本"
+    columns:
+      - name: natural_month
+        description: "自然月"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: cattle_sku_id
+        description: "牛只商品ID"
+      - name: begin_cattle_count
+        description: "期初在栏数"
+      - name: begin_avg_weight
+        description: "期初平均体重"
+      - name: begin_total_loan
+        description: "期初贷款总额"
+      - name: end_cattle_count
+        description: "期末在栏数"
+      - name: end_avg_weight
+        description: "期末平均体重"
+      - name: end_total_loan
+        description: "期末贷款总额"
+      - name: end_avg_weight_add
+        description: "期末平均增重"
+      - name: end_total_feed_cost
+        description: "期末总饲料成本"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_price_snap_df
+    description: "活牛最新价格聚合表，按牧场+SKU汇总最新市场单价、价格生效日期及适用体重区间"
+    columns:
+      - name: ranch_id
+        description: "牧场ID"
+      - name: cattle_sku_id
+        description: "SKU ID"
+      - name: latest_unit_price
+        description: "最新市场单价(元/斤)"
+      - name: latest_price_date
+        description: "最新价格生效日期"
+      - name: price_start_weight
+        description: "适用起始体重"
+      - name: price_end_weight
+        description: "适用结束体重"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_purchase_agg_di
+    description: "牛只采购日统计表，按牧场维度统计每日采购情况"
+    columns:
+      - name: stat_date
+        description: "统计日期"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: purchase_count
+        description: "采购数量"
+      - name: supplier_count
+        description: "供应方数量"
+      - name: total_weight
+        description: "总重量"
+      - name: avg_weight
+        description: "平均体重"
+      - name: total_amount
+        description: "总金额"
+      - name: avg_unit_price
+        description: "平均单位价格"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_return_agg_df
+    description: "牛只退回聚合表，按牛只ID汇总退回日期、体重、价格及原因"
+    columns:
+      - name: cattle_id
+        description: "牛只ID"
+      - name: return_date
+        description: "退回日期"
+      - name: return_weight
+        description: "退回体重"
+      - name: return_price
+        description: "退回单价"
+      - name: return_reason
+        description: "退回原因"
+      - name: return_ranch_id
+        description: "退回牧场ID"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_return_agg_mf
+    description: "牛只退回月度聚合表，按牧场+栏舍+SKU+自然月统计退回数量、总重量"
+    columns:
+      - name: natural_month
+        description: "自然月"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: cattle_sku_id
+        description: "SKU ID"
+      - name: return_count
+        description: "退回数量"
+      - name: return_total_weight
+        description: "退回总重量"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_sell_agg_df
+    description: "牛只出栏聚合表，按牛只ID汇总出栏日期、体重、价格、金额及买家信息"
+    columns:
+      - name: cattle_id
+        description: "牛只ID"
+      - name: sell_date
+        description: "出栏日期"
+      - name: sell_weight
+        description: "出栏体重"
+      - name: sell_price
+        description: "销售单价"
+      - name: sell_total_amount
+        description: "销售总额"
+      - name: sell_buyer_id
+        description: "买家ID"
+      - name: sell_ranch_id
+        description: "出栏牧场ID"
+      - name: sell_stall_id
+        description: "出栏栏舍ID"
+      - name: sell_sku_id
+        description: "出栏SKU ID"
+      - name: out_type
+        description: "出栏类型"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_sell_agg_di
+    description: "牛只销售日统计表，按牧场维度统计每日销售情况"
+    columns:
+      - name: stat_date
+        description: "统计日期"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: sell_count
+        description: "销售数量"
+      - name: buyer_count
+        description: "购买方数量"
+      - name: total_weight
+        description: "总重量"
+      - name: avg_weight
+        description: "平均体重"
+      - name: total_sell_amount
+        description: "总销售金额"
+      - name: total_loan_repay
+        description: "总贷款还款"
+      - name: avg_unit_price
+        description: "平均单位价格"
+      - name: normal_sell_count
+        description: "normal销售数量"
+      - name: death_count
+        description: "数量"
+      - name: loss_count
+        description: "数量"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_sell_agg_mf
+    description: "牛只出栏月度聚合表，按牧场+栏舍+SKU+自然月统计出栏数量、总重量、平均重量、销售金额"
+    columns:
+      - name: natural_month
+        description: "自然月"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: cattle_sku_id
+        description: "SKU ID"
+      - name: sell_count
+        description: "出栏数量"
+      - name: sell_total_weight
+        description: "出栏总重量"
+      - name: sell_avg_weight
+        description: "出栏平均重量"
+      - name: sell_total_amount
+        description: "销售总额"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_weigh_agg_i
+    description: "牧场牛只称重事件汇总宽表，整合牛只的体重、月龄、品种、ADG、价格等多维度指标"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: natural_week
+        description: "自然周"
+      - name: natural_month
+        description: "自然月"
+      - name: customer_id
+        description: "客户ID"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: cattle_sku_id
+        description: "牛只商品ID"
+      - name: cattle_sku_name
+        description: "牛只商品名称"
+      - name: brand_name
+        description: "品牌名称"
+      - name: cattle_id
+        description: "牛只ID"
+      - name: cattle_code
+        description: "牛只编号"
+      - name: birth_date
+        description: "出生日期"
+      - name: in_stall_date
+        description: "入栏日期"
+      - name: in_stall_weight
+        description: "入栏体重"
+      - name: current_weight
+        description: "当前体重"
+      - name: age_days
+        description: "日龄天数"
+      - name: months_in_stall
+        description: "在栏月数"
+      - name: months_in_stall_bucket
+        description: "在栏月数区间"
+      - name: months_in_stall_bucket_sort
+        description: "在栏月数区间排序"
+      - name: weight_bucket
+        description: "体重区间"
+      - name: weight_bucket_sort
+        description: "体重区间排序"
+      - name: period_adg
+        description: "周期日增重"
+      - name: adg_overall_adg
+        description: "整体日增重"
+      - name: prev_weight_date
+        description: "上次称重日期"
+      - name: interval_days
+        description: "称重间隔天数"
+      - name: cattle_price
+        description: "牛只价格"
+      - name: price_start_weight
+        description: "价格开始重量"
+      - name: price_end_weight
+        description: "价格结束重量"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_cattle_weight_snap_df
+    description: "牛只最新称重聚合表，按牛只ID汇总最新称重日期、体重、测量类型、日增重及AI评分"
+    columns:
+      - name: cattle_id
+        description: "牛只ID"
+      - name: latest_weight_date
+        description: "最新称重日期"
+      - name: latest_weight
+        description: "最新体重"
+      - name: latest_measure_type
+        description: "最新称重类型"
+      - name: latest_weight_stall_id
+        description: "最新称重栏舍ID"
+      - name: latest_weight_customer_id
+        description: "最新称重客户ID"
+      - name: latest_daily_gain
+        description: "最新日增重"
+      - name: latest_ai_score
+        description: "最新AI评分"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_recipe_performance_agg_mi
+    description: "配方效果评估月汇总表，按月统计配方生长绩效和饲料效率（增量更新）"
+    columns:
+      - name: stats_month
+        description: "统计月份"
+      - name: recipe_id
+        description: "配方ID"
+      - name: recipe_name
+        description: "配方名称"
+      - name: sku_id
+        description: "品种ID"
+      - name: sku_name
+        description: "品种名称"
+      - name: stall_count
+        description: "使用该配方的栏舍数"
+      - name: cattle_count
+        description: "使用该配方的牛只数"
+      - name: cattle_count_per_stall
+        description: "每栏舍牛只数"
+      - name: total_weight_gain
+        description: "当月总增重"
+      - name: avg_period_adg
+        description: "平均区间ADG"
+      - name: avg_overall_adg
+        description: "平均整体ADG"
+      - name: total_feed_consumption
+        description: "当月总饲料消耗量"
+      - name: total_feed_cost
+        description: "当月总饲料成本"
+      - name: avg_feed_intake_per_cattle
+        description: "头均饲料采食量"
+      - name: avg_feed_cost_per_cattle
+        description: "头均饲料成本"
+      - name: concentrate_ratio_avg
+        description: "concentrate比率平均值"
+      - name: roughage_ratio_avg
+        description: "roughage比率平均值"
+      - name: additive_ratio_avg
+        description: "additive比率平均值"
+      - name: medicine_ratio_avg
+        description: "medicine比率平均值"
+      - name: actual_fcr
+        description: "实际料肉比"
+      - name: target_fcr
+        description: "配方目标料肉比"
+      - name: fcr_deviation
+        description: "料肉比偏差"
+      - name: feed_cost_per_kg_gain
+        description: "每公斤增重饲料成本"
+      - name: cost_efficiency_index
+        description: "成本效率指数"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_stall_capacity_agg_di
+    description: "栏舍容量日统计表，按日期统计栏舍的容量利用率、牛只密度、存栏量等容量指标"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: natural_week
+        description: "自然周"
+      - name: natural_month
+        description: "自然月"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: recipe_id
+        description: "配方ID"
+      - name: recipe_name
+        description: "配方名称"
+      - name: stall_type
+        description: "栏舍类型"
+      - name: region_name
+        description: "区域名称"
+      - name: customer_id
+        description: "客户ID"
+      - name: design_cattle_count
+        description: "设计牛只数量"
+      - name: design_weight_capacity
+        description: "设计承重能力"
+      - name: actual_cattle_count
+        description: "实际牛只数量"
+      - name: actual_total_weight
+        description: "实际总重量"
+      - name: cattle_capacity_utilization
+        description: "牛只容量利用率"
+      - name: weight_capacity_utilization
+        description: "重量容量利用率"
+      - name: capacity_status
+        description: "容量状态"
+      - name: remaining_cattle_capacity
+        description: "剩余牛只容量"
+      - name: remaining_weight_capacity
+        description: "剩余重量容量"
+      - name: avg_weight_per_cattle
+        description: "头均体重"
+      - name: actual_weight_per_design_slot
+        description: "设计位实际重量"
+      - name: count_simmental
+        description: "数量西门塔尔"
+      - name: count_angus
+        description: "数量安格斯"
+      - name: count_charolais
+        description: "数量夏洛来"
+      - name: count_limousin
+        description: "数量利木赞"
+      - name: count_under_300kg
+        description: "小于300kg数量"
+      - name: count_300_400kg
+        description: "300-400kg数量"
+      - name: count_400_500kg
+        description: "400-500kg数量"
+      - name: count_500_600kg
+        description: "500-600kg数量"
+      - name: count_over_600kg
+        description: "大于600kg数量"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_stall_feed_agg_di
+    description: "栏舍饲料投喂日汇总表，按日期统计栏舍投喂执行和饲料结构（增量更新）"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: recipe_id
+        description: "配方ID"
+      - name: stall_recipe_name
+        description: "配方名称"
+      - name: total_cattle_count
+        description: "当日在栏牛只数"
+      - name: system_cattle_count
+        description: "栏舍设计容量"
+      - name: capacity_utilization_rate
+        description: "容量利用率比率"
+      - name: plan_feed_quantity
+        description: "日计划投喂总量"
+      - name: act_feed_quantity
+        description: "日实际投喂总量"
+      - name: feed_plan_completion_rate
+        description: "饲料计划completion比率"
+      - name: leftover_quantity
+        description: "数量"
+      - name: leftover_rate
+        description: "比率"
+      - name: concentrate_quantity
+        description: "日精料消耗量"
+      - name: roughage_quantity
+        description: "日粗料消耗量"
+      - name: additive_quantity
+        description: "日添加剂消耗量"
+      - name: medicine_quantity
+        description: "日药品消耗量"
+      - name: other_quantity
+        description: "日其他饲料消耗量"
+      - name: concentrate_ratio
+        description: "比率"
+      - name: roughage_ratio
+        description: "比率"
+      - name: additive_ratio
+        description: "比率"
+      - name: medicine_ratio
+        description: "比率"
+      - name: avg_feed_intake_per_cattle
+        description: "头均饲料采食量"
+      - name: avg_feed_cost_per_cattle
+        description: "头均饲料成本"
+      - name: feed_unit_price
+        description: "饲料单位价格"
+      - name: total_feed_cost
+        description: "日饲料总成本"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+  - name: dws_ranch_stall_performance_agg_di
+    description: "栏舍绩效日统计表，按日期统计栏舍的运营绩效指标（ADG、料肉比、增重率、周转率等）"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: natural_week
+        description: "自然周"
+      - name: natural_month
+        description: "自然月"
+      - name: ranch_id
+        description: "牧场ID"
+      - name: ranch_name
+        description: "牧场名称"
+      - name: stall_id
+        description: "栏舍ID"
+      - name: stall_name
+        description: "栏舍名称"
+      - name: total_cattle_count
+        description: "总牛只数量"
+      - name: weighed_cattle_count
+        description: "已称重牛只数"
+      - name: adg_valid_count
+        description: "日增重valid数量"
+      - name: fcr_valid_count
+        description: "料肉比valid数量"
+      - name: total_current_weight
+        description: "当前总重量"
+      - name: avg_current_weight
+        description: "平均当前体重"
+      - name: total_install_weight
+        description: "总入栏重量"
+      - name: total_weight_add
+        description: "总增重"
+      - name: avg_weight_add
+        description: "平均增重"
+      - name: avg_period_adg
+        description: "平均周期日增重"
+      - name: min_period_adg
+        description: "最小周期日增重"
+      - name: max_period_adg
+        description: "最大周期日增重"
+      - name: stddev_period_adg
+        description: "周期日增重标准差"
+      - name: avg_overall_adg
+        description: "平均整体日增重"
+      - name: avg_period_fcr
+        description: "平均区间料肉比"
+      - name: min_period_fcr
+        description: "最小区间料肉比"
+      - name: max_period_fcr
+        description: "最大区间料肉比"
+      - name: total_feed_consumption
+        description: "总饲料消耗量"
+      - name: total_feed_cost
+        description: "总饲料成本"
+      - name: avg_feed_consumption
+        description: "平均饲料消耗量"
+      - name: weight_add_ratio
+        description: "增重率"
+      - name: count_under_30d
+        description: "小于30天数量"
+      - name: count_30_60d
+        description: "30-60天数量"
+      - name: count_60_90d
+        description: "60-90天数量"
+      - name: count_90_120d
+        description: "90-120天数量"
+      - name: count_120_150d
+        description: "120-150天数量"
+      - name: count_150_180d
+        description: "150-180天数量"
+      - name: count_over_180d
+        description: "大于180天数量"
+      - name: herd_fcr
+        description: "群体料肉比"
+      - name: feed_cost_per_kg
+        description: "每公斤增重成本"
+      - name: weigh_coverage_rate
+        description: "称重覆盖率"
+      - name: adg_coverage_rate
+        description: "日增重覆盖率比率"
+      - name: fcr_coverage_rate
+        description: "料肉比覆盖率比率"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
