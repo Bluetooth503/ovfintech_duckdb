@@ -1,0 +1,176 @@
+version: 2
+
+models:
+  - name: dws_fund_credit_agg_df
+    description: "授信日统计表，按日期维度统计授信相关指标"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: credit_cnt
+        description: "授信总笔数"
+      - name: valid_credit_cnt
+        description: "有效授信笔数"
+      - name: credit_with_balance_cnt
+        description: "有余额授信笔数"
+      - name: credit_customer_cnt
+        description: "授信客户数"
+      - name: total_credit_quota
+        description: "总授信额度"
+      - name: total_remain_quota
+        description: "总剩余额度"
+      - name: total_credit_used_quota
+        description: "总授信已用额度"
+      - name: avg_credit_quota
+        description: "平均授信额度"
+      - name: avg_remain_quota
+        description: "平均剩余额度"
+      - name: avg_credit_used_quota
+        description: "平均已用额度"
+      - name: utilization_rate
+        description: "用信率（%）"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: dws_fund_disbursement_agg_df
+    description: "放款日统计表，按日期维度统计放款相关指标"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: online_loan_cnt
+        description: "线上放款笔数"
+      - name: online_loan_amt
+        description: "线上放款金额"
+      - name: online_loan_customer_cnt
+        description: "线上放款客户数"
+      - name: offline_loan_cnt
+        description: "线下放款笔数"
+      - name: offline_loan_amt
+        description: "线下放款金额"
+      - name: offline_loan_customer_cnt
+        description: "线下放款客户数"
+      - name: total_loan_cnt
+        description: "总放款笔数"
+      - name: total_loan_amt
+        description: "总放款金额"
+      - name: total_loan_customer_cnt
+        description: "总放款客户数（未去重）"
+      - name: avg_loan_amt
+        description: "平均放款金额"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: dws_fund_repay_agg_df
+    description: "还款日统计表，按日期维度统计还款相关指标"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: repay_cnt
+        description: "还款笔数"
+      - name: repay_customer_cnt
+        description: "还款客户数"
+      - name: repay_amt
+        description: "还款总金额"
+      - name: repay_principal_amt
+        description: "还款本金"
+      - name: repay_interest_amt
+        description: "还款利息"
+      - name: avg_repay_amt
+        description: "平均还款金额"
+      - name: avg_repay_principal_amt
+        description: "平均还款本金"
+      - name: avg_repay_interest_amt
+        description: "平均还款利息"
+      - name: principal_ratio_pct
+        description: "本金占比（%）"
+      - name: interest_ratio_pct
+        description: "利息占比（%）"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: dws_fund_loan_balance_agg_df
+    description: "贷款余额日统计表，按日期维度统计贷款余额相关指标"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+      - name: total_loan_balance
+        description: "总贷款余额"
+      - name: outstanding_promissory_note_cnt
+        description: "在贷笔数（所有有效借据）"
+      - name: loan_customer_cnt
+        description: "在贷客户数"
+      - name: promissory_note_with_balance_cnt
+        description: "有余额借据笔数"
+      - name: customer_with_balance_cnt
+        description: "有余额客户数"
+      - name: overdue_loan_balance
+        description: "逾期贷款余额"
+      - name: overdue_promissory_note_cnt
+        description: "逾期借据笔数"
+      - name: overdue_customer_cnt
+        description: "逾期客户数"
+      - name: due_7d_loan_balance
+        description: "7天内到期余额"
+      - name: due_7d_promissory_note_cnt
+        description: "7天内到期笔数"
+      - name: due_30d_loan_balance
+        description: "30天内到期余额"
+      - name: due_30d_promissory_note_cnt
+        description: "30天内到期笔数"
+      - name: overdue_rate_pct
+        description: "逾期率（%）"
+      - name: avg_loan_balance_per_promissory_note
+        description: "平均每笔借据余额"
+      - name: avg_loan_balance_per_customer
+        description: "平均每个客户余额"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: dws_fund_customer_agg_df
+    description: "客户资金日汇总表，按客户和日期维度汇总客户资金指标"
+    columns:
+      - name: customer_id
+        description: "客户ID"
+      - name: customer_name
+        description: "客户名称"
+      - name: stats_date
+        description: "统计日期"
+      - name: total_credit_quota
+        description: "总授信额度"
+      - name: total_remain_quota
+        description: "总剩余额度"
+      - name: total_credit_used_quota
+        description: "总授信已用额度"
+      - name: total_loan_balance
+        description: "总贷款余额"
+      - name: outstanding_promissory_note_cnt
+        description: "在贷笔数"
+      - name: daily_loan_amt
+        description: "当日放款金额"
+      - name: daily_loan_cnt
+        description: "当日放款笔数"
+      - name: daily_repay_amt
+        description: "当日还款金额"
+      - name: daily_repay_interest_amt
+        description: "当日还款利息"
+      - name: daily_repay_cnt
+        description: "当日还款笔数"
+      - name: utilization_rate
+        description: "用信率（%）"
+      - name: cumulative_loan_amt
+        description: "累计放款金额"
+      - name: cumulative_repay_amt
+        description: "累计还款金额"
+      - name: year_cumulative_loan_amt
+        description: "年累计放款金额"
+      - name: year_cumulative_repay_amt
+        description: "年累计还款金额"
+      - name: prev_loan_balance
+        description: "昨日贷款余额"
+      - name: daily_balance_change
+        description: "当日余额变动"
+      - name: is_loan_customer
+        description: "是否贷款客户"
+      - name: has_daily_transaction
+        description: "是否有当日交易"
+      - name: dw_update_time
+        description: "数据仓库更新时间"

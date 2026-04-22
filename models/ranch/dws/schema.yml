@@ -662,8 +662,8 @@ models:
         description: "期末总饲料成本"
       - name: dw_update_time
         description: "数据仓库更新时间"
-  - name: dws_ranch_cattle_price_snap_df
-    description: "活牛最新价格聚合表，按牧场+SKU汇总最新市场单价、价格生效日期及适用体重区间"
+  - name: dws_ranch_cattle_price_state_df
+    description: "活牛价格当前状态表，记录每个牧场每个SKU的最新市场单价、价格生效日期及适用体重区间"
     columns:
       - name: ranch_id
         description: "牧场ID"
@@ -878,8 +878,8 @@ models:
         description: "价格结束重量"
       - name: dw_update_time
         description: "数据仓库更新时间"
-  - name: dws_ranch_cattle_weight_snap_df
-    description: "牛只最新称重聚合表，按牛只ID汇总最新称重日期、体重、测量类型、日增重及AI评分"
+  - name: dws_ranch_cattle_weight_state_df
+    description: "牛只称重当前状态表，记录每头牛的最新称重日期、体重、测量类型、日增重及AI评分"
     columns:
       - name: cattle_id
         description: "牛只ID"

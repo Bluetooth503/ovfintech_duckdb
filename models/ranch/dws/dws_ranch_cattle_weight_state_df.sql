@@ -1,18 +1,19 @@
 -- =============================================
--- 模型名称：dws_ranch_cattle_weight_snap_df
--- 模型描述：牛只最新称重聚合表（cattle-level），汇总每头牛的最新一次称重记录
+-- 模型名称：dws_ranch_cattle_weight_state_df
+-- 模型描述：牛只称重当前状态表，记录每头牛的最新一次称重记录
 -- Dbt更新方式：全量
 -- 粒度：牛只级（1牛1行）
 -- 说明：
 --   - 数据源：dwd_ranch_cattle_weight_fact_i（DWD层称重明细）
---   - 增量策略：全量刷新
+--   - 更新策略：每日全量覆盖，计算最新称重状态，不保留历史数据
 --   - 统计指标：最新称重日期、最新体重、称重类型、日增重、AI评分等称重指标
 --   - 聚合逻辑：按牛只ID取称重日期最新的记录
+--   - 命名说明：_state_df 表示当前称重状态快照，日全量覆盖，不保留历史
 -- =============================================
 {{ config(
     materialized='table',
-    description='牛只最新称重聚合表，按牛只ID汇总最新称重日期、体重、测量类型、日增重及AI评分',
-    tags=['ranch', 'dws', 'agg', 'cattle', 'weight', 'latest']
+    description='牛只称重当前状态表，记录每头牛的最新称重日期、体重、测量类型、日增重及AI评分',
+    tags=['ranch', 'dws', 'state', 'cattle', 'weight', 'latest']
 ) }}
 
 WITH weight_ranked AS (

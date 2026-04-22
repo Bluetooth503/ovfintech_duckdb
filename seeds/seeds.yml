@@ -1536,3 +1536,45 @@ seeds:
         operator_org_id: bigint
         operator_org_name: varchar
         fund_manager: varchar
+
+  # 资金域 - 提前还款表
+  - name: ods_fund_early_repay
+    config:
+      column_types:
+        id: bigint
+        repay_apply_id: bigint
+        create_time: timestamp
+        repay_quota: double
+        pay_off: bigint
+        repay_rate: double
+        remain_quota: double
+        result: bigint
+        update_time: timestamp
+        repay_account: bigint
+        repay_account_type: bigint
+        remark: varchar
+        creator: varchar
+
+  # 资金域 - 金融产品表
+  - name: ods_product_financial
+    config:
+      column_types:
+        id: bigint
+        financial_name: varchar
+        product_id: bigint
+        quota_start: double
+        quota_end: double
+        fund_use: varchar
+        biz_code: varchar
+        min_period: bigint
+        max_period: bigint
+        min_single_loan: double
+        max_single_loan: double
+        to_customer: bigint
+        repay_type: bigint
+        quota: double
+        limit_date: date
+        loan_type: bigint
+        grace_period: bigint
+        lmt_no: varchar
+        bank_product_id: bigint

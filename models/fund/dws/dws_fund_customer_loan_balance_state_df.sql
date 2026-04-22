@@ -1,11 +1,11 @@
 -- =============================================
--- 模型名称：dws_fund_customer_loan_balance_df
--- 模型描述：客户贷款余额汇总表，记录每个客户的授信额度和贷款余额（每日全量）
+-- 模型名称：dws_fund_customer_loan_balance_state_df
+-- 模型描述：客户贷款余额当前状态表，记录每个客户的授信额度和贷款余额的最新状态（T-1日）
 -- Dbt更新方式：全量
--- 粒度：customer_id + 日期
+-- 粒度：customer_id
 -- 说明：
 --   - 数据源：dwd_fund_credit_fact_i（授信事实表）+ dwd_fund_promissory_note_fact_i（借据事实表）
---   - 更新策略：每日全量刷新，计算 T-1 日截止时刻的贷款余额
+--   - 更新策略：每日全量覆盖，计算 T-1 日截止时刻的贷款余额，不保留历史数据
 --   - 业务时间过滤：只统计 trx_date <= T-1 的交易数据
 --   - 计算逻辑：
 --     * 授信额度：从授信事实表获取（credit_quota, remain_quota）
@@ -16,11 +16,12 @@
 --       - 不包含授信表的 loan_balance，避免与借据重复
 --   - 用于客户维度表关联，判断是否贷款客户
 --   - 架构设计：与生产环境保持一致
+--   - 命名说明：_state_df 表示当前状态快照，日全量覆盖，不保留历史
 -- =============================================
 {{ config(
     materialized='table',
-    description='客户贷款余额汇总表，记录每个客户的授信额度和贷款余额',
-    tags=['fund', 'dws', 'customer', 'loan_balance']
+    description='客户贷款余额当前状态表，记录每个客户的授信额度和贷款余额的最新状态（T-1日）',
+    tags=['fund', 'dws', 'state', 'customer', 'loan_balance']
 ) }}
 
 WITH target_date AS (

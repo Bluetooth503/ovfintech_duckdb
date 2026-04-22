@@ -40,7 +40,7 @@ WITH credit_with_apply AS (
         -- 授信额度信息
         c.credit_quota,                                                      -- 授信额度
         c.remain_quota,                                                      -- 剩余额度
-        (c.credit_quota - c.remain_quota) AS loan_balance,                   -- 贷款余额
+        (c.credit_quota - c.remain_quota) AS credit_used_quota,              -- 授信已用额度
 
         -- 利率信息
         c.base_rate,                                                         -- 基础利率
@@ -102,7 +102,7 @@ SELECT
     -- 授信额度信息
     credit_quota,                                                           -- 授信额度
     remain_quota,                                                           -- 剩余额度
-    loan_balance,                                                           -- 贷款余额
+    credit_used_quota,                                                      -- 授信已用额度
 
     -- 利率信息
     base_rate,                                                              -- 基础利率

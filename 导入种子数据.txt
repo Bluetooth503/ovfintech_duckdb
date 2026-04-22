@@ -86,7 +86,12 @@ dbt seed --full-refresh -s ods_fund_debt
 dbt seed --full-refresh -s ods_fund_debt_apply
 dbt seed --full-refresh -s ods_fund_member_credit
 dbt seed --full-refresh -s ods_fund_member_credit_apply
+dbt seed --full-refresh -s ods_fund_early_repay
+dbt seed --full-refresh -s ods_fund_early_repay_apply
+dbt seed --full-refresh -s ods_fund_order_push
 
+------------------------------------------------------- 产品主题域 -------------------------------------------------------
+dbt seed --full-refresh -s ods_product_financial
 
 
 ------------------------------------------------------- 其他命令 -------------------------------------------------------

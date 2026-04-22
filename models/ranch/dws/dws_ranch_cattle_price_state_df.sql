@@ -1,18 +1,19 @@
 -- =============================================
--- 模型名称：dws_ranch_cattle_price_snap_df
--- 模型描述：活牛最新价格聚合表，汇总每个牧场每个SKU的最新市场单价
+-- 模型名称：dws_ranch_cattle_price_state_df
+-- 模型描述：活牛价格当前状态表，记录每个牧场每个SKU的最新市场单价
 -- Dbt更新方式：全量
 -- 粒度：牧场 + SKU
 -- 说明：
 --   - 数据源：dwd_ranch_cattle_price_fact_i（DWD层价格明细）
---   - 增量策略：全量刷新
+--   - 更新策略：每日全量覆盖，计算最新价格状态，不保留历史数据
 --   - 统计指标：最新市场单价、价格生效日期、适用体重区间等价格指标
 --   - 聚合逻辑：按牧场+SKU取价格生效日期最新的记录
+--   - 命名说明：_state_df 表示当前价格状态快照，日全量覆盖，不保留历史
 -- =============================================
 {{ config(
     materialized='table',
-    description='活牛最新价格聚合表，按牧场+SKU汇总最新市场单价、价格生效日期及适用体重区间',
-    tags=['ranch', 'dws', 'agg', 'cattle', 'price', 'latest']
+    description='活牛价格当前状态表，记录每个牧场每个SKU的最新市场单价、价格生效日期及适用体重区间',
+    tags=['ranch', 'dws', 'state', 'cattle', 'price', 'latest']
 ) }}
 
 WITH price_ranked AS (

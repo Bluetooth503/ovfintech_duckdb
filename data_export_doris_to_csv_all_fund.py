@@ -18,11 +18,27 @@ TABLE_MAPPING = {
     # 'ods_offline_loan': 'ods_offline_loan',
     # 'ods_fund_debt': 'ods_fund_debt',
     # 'ods_fund_debt_apply': 'ods_fund_debt_apply',
-    'ods_fund_member_credit': 'ods_fund_member_credit',
-    'ods_fund_member_credit_apply': 'ods_fund_member_credit_apply',
-
+    # 'ods_fund_member_credit': 'ods_fund_member_credit',
+    # 'ods_fund_member_credit_apply': 'ods_fund_member_credit_apply',
+    # 'ods_fund_early_repay': 'ods_fund_early_repay',
+    # 'ods_fund_early_repay_apply': 'ods_fund_early_repay_apply',
+    # 'ods_fund_order_push': 'ods_fund_order_push',
 
     # 尚未提取
+    # 'ods_fund_repay': 'ods_fund_repay',
+    # 'ods_fund_repay_detail': 'ods_fund_repay_detail',
+    # 'ods_rpy_info': 'ods_rpy_info',
+    # 'ods_fund_bank_note': 'ods_fund_bank_note',
+    # 'ods_fund_bill_endorse': 'ods_fund_bill_endorse',
+    # 'ods_fund_discount_info': 'ods_fund_discount_info',
+    # 'ods_fund_bank_account': 'ods_fund_bank_account',
+    # 'ods_fund_online_payment_flow': 'ods_fund_online_payment_flow',
+    # 'ods_fund_transfer_records': 'ods_fund_transfer_records',
+    # 'ods_fund_risk_report_type': 'ods_fund_risk_report_type',
+    # 'ods_fund_risk_report': 'ods_fund_risk_report',
+    # 'ods_fund_after_loan_quarter_report': 'ods_fund_after_loan_quarter_report',
+    # 'ods_fund_zd_registe': 'ods_fund_zd_registe',
+    # 'ods_fund_member_contract': 'ods_fund_member_contract',
 
 }
 

@@ -70,7 +70,7 @@ latest_weight AS (
         latest_weight_customer_id,
         latest_daily_gain,
         latest_ai_score
-    FROM {{ ref('dws_ranch_cattle_weight_snap_df') }}
+    FROM {{ ref('dws_ranch_cattle_weight_state_df') }}
 ),
 
 -- ============================================
@@ -140,7 +140,7 @@ market_price AS (
         cattle_sku_id,
         latest_unit_price,
         latest_price_date
-    FROM {{ ref('dws_ranch_cattle_price_snap_df') }}
+    FROM {{ ref('dws_ranch_cattle_price_state_df') }}
 ),
 
 -- ============================================
