@@ -47,6 +47,8 @@ WITH credit_daily AS (
 online_loan_balance_daily AS (
     SELECT
         credit.customer_id,
+        MAX(credit.customer_name) AS customer_name,
+        MAX(credit.customer_type) AS customer_type,
         pn.stats_date,
         SUM(CASE WHEN pn.loan_balance > 0 THEN pn.loan_balance ELSE 0 END) AS online_loan_balance,
         COUNT(CASE WHEN pn.loan_balance > 0 THEN 1 END) AS online_promissory_note_cnt,
@@ -60,17 +62,17 @@ online_loan_balance_daily AS (
             loan_balance,
             CAST(trx_date AS DATE) AS stats_date,
             CASE
-                WHEN TRY_STRPTIME(promissory_note_end_date, '%Y%m%d') < CAST(trx_date AS DATE) THEN '1'
+                WHEN CAST(promissory_note_end_date AS DATE) < CAST(trx_date AS DATE) THEN '1'
                 ELSE '0'
             END AS is_overdue,
             CASE
-                WHEN TRY_STRPTIME(promissory_note_end_date, '%Y%m%d') >= CAST(trx_date AS DATE)
-                     AND TRY_STRPTIME(promissory_note_end_date, '%Y%m%d') <= CAST(trx_date AS DATE) + INTERVAL '7' DAY THEN '1'
+                WHEN CAST(promissory_note_end_date AS DATE) >= CAST(trx_date AS DATE)
+                     AND CAST(promissory_note_end_date AS DATE) <= CAST(trx_date AS DATE) + INTERVAL '7' DAY THEN '1'
                 ELSE '0'
             END AS is_due_within_7d,
             CASE
-                WHEN TRY_STRPTIME(promissory_note_end_date, '%Y%m%d') >= CAST(trx_date AS DATE)
-                     AND TRY_STRPTIME(promissory_note_end_date, '%Y%m%d') <= CAST(trx_date AS DATE) + INTERVAL '30' DAY THEN '1'
+                WHEN CAST(promissory_note_end_date AS DATE) >= CAST(trx_date AS DATE)
+                     AND CAST(promissory_note_end_date AS DATE) <= CAST(trx_date AS DATE) + INTERVAL '30' DAY THEN '1'
                 ELSE '0'
             END AS is_due_within_30d,
             ROW_NUMBER() OVER (PARTITION BY promissory_note_no, CAST(trx_date AS DATE) ORDER BY update_time DESC) AS rn
@@ -78,7 +80,7 @@ online_loan_balance_daily AS (
         WHERE promissory_note_status = '0'
     ) pn
     LEFT JOIN (
-        SELECT DISTINCT customer_contract_no, customer_id
+        SELECT DISTINCT customer_contract_no, customer_id, customer_name, customer_type
         FROM {{ ref('dwd_fund_credit_fact_i') }}
         WHERE credit_result = '1' AND customer_id IS NOT NULL
     ) credit ON credit.customer_contract_no = pn.contract_code
@@ -90,6 +92,7 @@ offline_loan_balance_daily AS (
     SELECT
         customer_id,
         MAX(customer_name) AS customer_name,
+        MAX(customer_type) AS customer_type,
         stats_date,
         SUM(CASE WHEN loan_repay_type = '1' THEN loan_amount ELSE 0 END) - SUM(CASE WHEN loan_repay_type = '2' THEN loan_amount ELSE 0 END) AS offline_loan_balance,
         SUM(CASE WHEN loan_repay_type = '1' THEN loan_amount ELSE 0 END) AS offline_cumulative_disbursement,
@@ -98,6 +101,7 @@ offline_loan_balance_daily AS (
         SELECT
             customer_id,
             customer_name,
+            customer_type,
             loan_repay_type,
             loan_amount,
             CAST(statistics_date AS DATE) AS stats_date,
@@ -113,6 +117,7 @@ offline_balance_cumulative AS (
         customer_id,
         stats_date,
         customer_name,
+        customer_type,
         offline_loan_balance,
         offline_cumulative_disbursement,
         offline_cumulative_repay,

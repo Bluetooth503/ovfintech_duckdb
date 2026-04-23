@@ -31,7 +31,7 @@ WITH customer_segment AS (
         lifetime_total_trx_count,
         first_trx_date,
         last_trx_date
-    FROM {{ ref('ads_rpt_fund_customer_rfm_segment_df') }}
+    FROM {{ ref('ads_rpt_fund_rfm_segment_customer_df') }}
 ),
 
 -- 全局总体统计

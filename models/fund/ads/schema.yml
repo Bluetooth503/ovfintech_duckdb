@@ -1,0 +1,276 @@
+version: 2
+
+models:
+  - name: ads_fund_customer_metrics_agg_df
+    description: "客户资金每日指标汇总表，按客户+日期粒度整合授信、余额、放还款、逾期、到期、周转率等核心资金指标"
+    columns:
+      - name: customer_id
+        description: "客户ID"
+      - name: stats_date
+        description: "统计日期"
+      - name: total_credit_quota
+        description: "总授信额度"
+      - name: total_remain_quota
+        description: "总剩余额度"
+      - name: total_credit_used_quota
+        description: "总已用额度"
+      - name: total_loan_balance
+        description: "总贷款余额"
+      - name: online_loan_balance
+        description: "线上贷款余额"
+      - name: offline_loan_balance
+        description: "线下贷款余额"
+      - name: outstanding_promissory_note_count
+        description: "在贷笔数"
+      - name: online_disbursement_amount
+        description: "线上放款金额"
+      - name: online_disbursement_count
+        description: "线上放款笔数"
+      - name: offline_disbursement_amount
+        description: "线下放款金额"
+      - name: offline_disbursement_count
+        description: "线下放款笔数"
+      - name: total_disbursement_amount
+        description: "总放款金额"
+      - name: total_disbursement_count
+        description: "总放款笔数"
+      - name: online_repay_amount
+        description: "线上还款金额"
+      - name: online_repay_count
+        description: "线上还款笔数"
+      - name: online_repay_interest_amount
+        description: "线上还款利息"
+      - name: offline_repay_amount
+        description: "线下还款金额"
+      - name: offline_repay_count
+        description: "线下还款笔数"
+      - name: total_repay_amount
+        description: "总还款金额"
+      - name: total_repay_count
+        description: "总还款笔数"
+      - name: total_repay_interest_amount
+        description: "总还款利息"
+      - name: net_increase_amount
+        description: "净增额"
+      - name: total_cumulative_disbursement_amount
+        description: "总累计放款金额"
+      - name: total_cumulative_repay_amount
+        description: "总累计还款金额"
+      - name: ytd_disbursement_amount
+        description: "本年累计放款金额"
+      - name: ytd_repay_amount
+        description: "本年累计还款金额"
+      - name: overdue_balance
+        description: "逾期金额"
+      - name: overdue_count
+        description: "逾期笔数"
+      - name: overdue_rate
+        description: "逾期率（%）"
+      - name: due_in_7_days_balance
+        description: "7天内到期余额"
+      - name: due_in_30_days_balance
+        description: "30天内到期余额"
+      - name: due_in_90_days_balance
+        description: "90天内到期余额"
+      - name: due_in_7_days_count
+        description: "7天内到期笔数"
+      - name: due_in_30_days_count
+        description: "30天内到期笔数"
+      - name: due_in_90_days_count
+        description: "90天内到期笔数"
+      - name: bank_accept_credit_limit
+        description: "银承授信额度"
+      - name: bank_accept_remain_credit
+        description: "银承可用额度"
+      - name: bank_accept_used_credit
+        description: "银承已用额度"
+      - name: bank_accept_loan_balance
+        description: "银承贷款余额"
+      - name: steel_trade_accept_credit_limit
+        description: "钢贸银承授信额度"
+      - name: utilization_rate
+        description: "用信率（%）"
+      - name: prev_loan_balance
+        description: "昨日贷款余额"
+      - name: daily_balance_change
+        description: "当日余额变动"
+      - name: day_growth_rate
+        description: "日增长率（%）"
+      - name: week_ago_loan_balance
+        description: "上周贷款余额"
+      - name: week_growth_rate
+        description: "周增长率（%）"
+      - name: fund_turnover_rate_30d
+        description: "30天资金周转率（%）"
+      - name: fund_turnover_rate_60d
+        description: "60天资金周转率（%）"
+      - name: fund_turnover_rate_90d
+        description: "90天资金周转率（%）"
+      - name: fund_turnover_rate_120d
+        description: "120天资金周转率（%）"
+      - name: fund_turnover_rate_180d
+        description: "180天资金周转率（%）"
+      - name: fund_turnover_rate_360d
+        description: "360天资金周转率（%）"
+      - name: turnover_ratio_continuous_days_30d
+        description: "30天周转率连续天数"
+      - name: turnover_ratio_continuous_days_60d
+        description: "60天周转率连续天数"
+      - name: turnover_ratio_continuous_days_90d
+        description: "90天周转率连续天数"
+      - name: turnover_ratio_continuous_days_120d
+        description: "120天周转率连续天数"
+      - name: turnover_ratio_continuous_days_180d
+        description: "180天周转率连续天数"
+      - name: turnover_ratio_continuous_days_360d
+        description: "360天周转率连续天数"
+      - name: avg_daily_loan_balance_7d
+        description: "7日均贷款余额"
+      - name: avg_daily_online_loan_balance_7d
+        description: "7日均线上贷款余额"
+      - name: avg_daily_offline_loan_balance_7d
+        description: "7日均线下贷款余额"
+      - name: avg_daily_loan_balance_30d
+        description: "30日均贷款余额"
+      - name: avg_daily_online_loan_balance_30d
+        description: "30日均线上贷款余额"
+      - name: avg_daily_offline_loan_balance_30d
+        description: "30日均线下贷款余额"
+      - name: avg_interest_rate
+        description: "平均利率"
+      - name: is_loan_customer
+        description: "是否贷款客户"
+      - name: has_online_loan
+        description: "是否有线上贷款"
+      - name: has_offline_loan
+        description: "是否有线下贷款"
+      - name: has_daily_transaction
+        description: "是否有当日交易"
+      - name: is_overdue_customer
+        description: "是否逾期客户"
+      - name: is_due_soon_customer
+        description: "是否有即将到期借据"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: ads_rpt_fund_rfm_segment_customer_df
+    description: "RFM客户分群日报表，提供客户价值分析的客户级别视图"
+    columns:
+      - name: customer_id
+        description: "客户ID"
+      - name: customer_name
+        description: "客户名称"
+      - name: stat_date
+        description: "统计日期"
+      - name: scene_id
+        description: "场景ID"
+      - name: scene_name
+        description: "场景名称"
+      - name: recency_days
+        description: "最近活跃天数"
+      - name: frequency_count
+        description: "购买次数"
+      - name: monetary_amount
+        description: "购买金额"
+      - name: r_score_global
+        description: "R评分（全局）"
+      - name: f_score_global
+        description: "F评分（全局）"
+      - name: m_score_global
+        description: "M评分（全局）"
+      - name: rfm_total_score_global
+        description: "RFM总分（全局）"
+      - name: r_score_scene
+        description: "R评分（场景内）"
+      - name: f_score_scene
+        description: "F评分（场景内）"
+      - name: m_score_scene
+        description: "M评分（场景内）"
+      - name: rfm_total_score_scene
+        description: "RFM总分（场景内）"
+      - name: customer_segment_global
+        description: "客户分群（全局）"
+      - name: customer_segment_scene
+        description: "客户分群（场景内）"
+      - name: lifetime_trx_days
+        description: "交易天数"
+      - name: lifetime_total_trx_count
+        description: "总交易次数"
+      - name: lifetime_total_amount
+        description: "总交易金额"
+      - name: first_trx_date
+        description: "首次交易日期"
+      - name: last_trx_date
+        description: "最后交易日期"
+      - name: avg_daily_trx_count
+        description: "日均交易次数"
+      - name: avg_daily_amount
+        description: "日均交易金额"
+      - name: last_30d_trx_count
+        description: "最近30天交易次数"
+      - name: last_30d_amount
+        description: "最近30天交易金额"
+      - name: last_90d_trx_count
+        description: "最近90天交易次数"
+      - name: last_90d_amount
+        description: "最近90天交易金额"
+      - name: segment_description_global
+        description: "分群描述（全局）"
+      - name: segment_strategy_global
+        description: "营销策略（全局）"
+      - name: segment_priority_global
+        description: "优先级（全局）"
+      - name: data_update_time
+        description: "数据更新时间"
+      - name: data_update_date
+        description: "数据更新日期"
+
+  - name: ads_rpt_fund_rfm_segment_stats_df
+    description: "RFM分群统计日报表，提供各客户分群的汇总统计信息（全局和场景维度）"
+    columns:
+      - name: stat_scope
+        description: "统计范围（global/scene）"
+      - name: stat_date
+        description: "统计日期"
+      - name: scene_id
+        description: "场景ID"
+      - name: scene_name
+        description: "场景名称"
+      - name: customer_segment_global
+        description: "客户分群"
+      - name: segment_description
+        description: "分群描述"
+      - name: segment_strategy
+        description: "营销策略"
+      - name: priority_level
+        description: "优先级"
+      - name: segment_customer_count
+        description: "分群客户数"
+      - name: segment_total_amount
+        description: "分群总交易金额"
+      - name: segment_avg_amount
+        description: "分群平均交易金额"
+      - name: segment_avg_trx_count
+        description: "分群平均交易次数"
+      - name: segment_avg_per_trx
+        description: "分群平均每笔交易金额"
+      - name: segment_avg_recency_days
+        description: "分群平均最近活跃天数"
+      - name: segment_avg_frequency
+        description: "分群平均频次"
+      - name: segment_avg_monetary
+        description: "分群平均金额"
+      - name: segment_avg_rfm_score
+        description: "分群平均RFM评分"
+      - name: segment_first_trx_date
+        description: "分群最早交易日期"
+      - name: segment_last_trx_date
+        description: "分群最晚交易日期"
+      - name: segment_customer_ratio
+        description: "分群客户占比（%）"
+      - name: segment_amount_ratio
+        description: "分群金额占比（%）"
+      - name: data_update_time
+        description: "数据更新时间"
+      - name: data_update_date
+        description: "数据更新日期"

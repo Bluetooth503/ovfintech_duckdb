@@ -561,8 +561,8 @@ models:
         description: "成本回收率"
       - name: dw_update_time
         description: "数据仓库更新时间"
-  - name: ads_ranch_fund_billing_mf
-    description: "牧场资金账单月报，按客户+金融产品+账单类型+自然月统计账单金额、利息与贷款余额"
+  - name: ads_ranch_fund_loan_repay_mf
+    description: "牧场资金放款还款月报，按客户+放款还款类型+自然月统计放款还款金额、利息与净增额"
     columns:
       - name: natural_month
         description: "自然月"
@@ -580,24 +580,16 @@ models:
         description: "客户名称"
       - name: customer_type
         description: "企业类型"
-      - name: financial_product_id
-        description: "金融产品ID"
-      - name: financial_product_name
-        description: "金融产品名称"
       - name: loan_repay_type
-        description: "账单类型"
-      - name: total_bill_quota
-        description: "账单金额合计"
-      - name: total_bill_interest
-        description: "账单利息合计"
-      - name: avg_loan_balance
-        description: "平均贷款余额"
-      - name: bill_count
-        description: "账单笔数"
-      - name: loan_no_count
-        description: "贷款编号数"
-      - name: serial_no_count
-        description: "业务流水号数"
+        description: "放款还款类型"
+      - name: total_loan_repay_quota
+        description: "放款还款金额合计"
+      - name: total_loan_repay_interest
+        description: "放款还款利息合计"
+      - name: loan_repay_count
+        description: "放款还款笔数"
+      - name: net_loan_amt
+        description: "净增额"
       - name: dw_update_time
         description: "数据仓库更新时间"
   - name: ads_ranch_fund_dashboard_mf
