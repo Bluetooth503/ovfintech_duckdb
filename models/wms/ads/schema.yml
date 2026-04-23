@@ -1,0 +1,172 @@
+version: 2
+
+models:
+  - name: ads_wms_warehouse_1d_df
+    description: "仓库日报表，面向业务应用的仓库维度日指标宽表，直接透传DWS仓库日聚合指标"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+        tests:
+          - not_null
+      - name: warehouse_id
+        description: "仓库ID"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "客户ID(货主)"
+      - name: tenant_id
+        description: "租户ID"
+      - name: inbound_times
+        description: "入库次数"
+      - name: inbound_charge_num
+        description: "入库计费数量(件数)"
+      - name: inbound_weight_num
+        description: "入库重量"
+      - name: inbound_goods_value
+        description: "入库货值"
+      - name: outbound_times
+        description: "出库次数"
+      - name: outbound_charge_num
+        description: "出库计费数量(件数)"
+      - name: outbound_weight_num
+        description: "出库重量"
+      - name: outbound_goods_value
+        description: "出库货值"
+      - name: make_inventory_times
+        description: "盘点次数"
+      - name: make_inventory_num
+        description: "盘点数量"
+      - name: inventory_charge_num
+        description: "库存计费数量(件数)"
+      - name: inventory_weight_num
+        description: "库存重量"
+      - name: inventory_goods_value
+        description: "库存货值"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: ads_wms_warehouse_member_1d_df
+    description: "客户维度仓库日报表，按客户+租户+日期汇总仓库指标，支持跨仓库客户级分析"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "客户ID(货主)"
+        tests:
+          - not_null
+      - name: tenant_id
+        description: "租户ID"
+      - name: inbound_times
+        description: "入库次数"
+      - name: inbound_charge_num
+        description: "入库计费数量(件数)"
+      - name: inbound_weight_num
+        description: "入库重量"
+      - name: inbound_goods_value
+        description: "入库货值"
+      - name: outbound_times
+        description: "出库次数"
+      - name: outbound_charge_num
+        description: "出库计费数量(件数)"
+      - name: outbound_weight_num
+        description: "出库重量"
+      - name: outbound_goods_value
+        description: "出库货值"
+      - name: make_inventory_times
+        description: "盘点次数"
+      - name: make_inventory_num
+        description: "盘点数量"
+      - name: inventory_charge_num
+        description: "库存计费数量(件数)"
+      - name: inventory_weight_num
+        description: "库存重量"
+      - name: inventory_goods_value
+        description: "库存货值"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: ads_wms_sku_in_out_1d_df
+    description: "SKU出入库日报表，面向业务应用的SKU维度日指标宽表"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+        tests:
+          - not_null
+      - name: warehouse_id
+        description: "仓库ID"
+        tests:
+          - not_null
+      - name: sku_id
+        description: "商品SKU ID"
+        tests:
+          - not_null
+      - name: batch_no
+        description: "批次号"
+      - name: customer_id
+        description: "客户ID(货主)"
+      - name: tenant_id
+        description: "租户ID"
+      - name: in_charge_num
+        description: "入库计费数量(件数)"
+      - name: in_weight_num
+        description: "入库重量"
+      - name: inbound_price
+        description: "入库单价(平均)"
+      - name: in_goods_value
+        description: "入库货值"
+      - name: out_charge_num
+        description: "出库计费数量(件数)"
+      - name: out_weight_num
+        description: "出库重量"
+      - name: outbound_price
+        description: "出库单价(平均)"
+      - name: out_goods_value
+        description: "出库货值"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: ads_wms_inventory_1d_df
+    description: "库存日报表，面向业务应用的SKU维度库存日指标宽表"
+    columns:
+      - name: stats_date
+        description: "统计日期"
+        tests:
+          - not_null
+      - name: warehouse_id
+        description: "仓库ID"
+        tests:
+          - not_null
+      - name: sku_id
+        description: "商品SKU ID"
+        tests:
+          - not_null
+      - name: batch_no
+        description: "批次号"
+      - name: customer_id
+        description: "客户ID(货主)"
+      - name: tenant_id
+        description: "租户ID"
+      - name: remain_charge_num
+        description: "剩余计费数量(件数)"
+      - name: remain_weight_num
+        description: "剩余重量"
+      - name: frozen_charge_num
+        description: "冻结计费数量"
+      - name: frozen_weight_num
+        description: "冻结重量"
+      - name: lock_charge_num
+        description: "锁定计费数量"
+      - name: lock_weight_num
+        description: "锁定重量"
+      - name: instock_charge_num
+        description: "在库计费数量(剩余+冻结)"
+      - name: instock_weight_num
+        description: "在库重量(剩余+冻结)"
+      - name: instock_goods_value
+        description: "在库货值"
+      - name: inventory_goods_value
+        description: "库存货值(仅剩余)"
+      - name: dw_update_time
+        description: "数据仓库更新时间"

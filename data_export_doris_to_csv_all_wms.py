@@ -12,7 +12,7 @@ DORIS_USER = 'root'             # Doris数据库用户名
 DORIS_PASSWORD = 'ggjx2024_qa'  # Doris数据库密码
 DORIS_DATABASE = 'ods'          # Doris数据库名
 SEEDS_DIR = './seeds'           # 数据导出目录
-MAX_EXPORT_LIMIT = 50000        # 最大导出记录数
+MAX_EXPORT_LIMIT = 1000000      # 最大导出记录数
 TABLE_MAPPING = {
     # 维度
     # 'ods_warehouse': 'ods_warehouse',
@@ -23,9 +23,15 @@ TABLE_MAPPING = {
     # 'ods_order_inbound_detail': 'ods_order_inbound_detail',
     # 'ods_order_outbound': 'ods_order_outbound',
     # 'ods_order_outbound_detail': 'ods_order_outbound_detail',
-    # 'ods_inventory': 'ods_inventory',
     # 'ods_make_inventory': 'ods_make_inventory',
     # 'ods_make_inventory_detail': 'ods_make_inventory_detail',
+    # 'ods_warehouse_tag_assign': 'ods_warehouse_tag_assign',
+
+
+
+    # 'ods_inventory': 'ods_inventory',  # 1000W
+
+
 }
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)

@@ -1,0 +1,113 @@
+-- =============================================
+-- 模型名称：dws_wms_warehouse_member_agg_df
+-- 模型描述：仓库-货主汇总表，支持多维度分析（包含人员关系）
+-- Dbt更新方式：全量（日）
+-- 粒度：仓库 + 货主 + 日期
+-- 说明：
+--   - 数据源：dwd_wms_warehouse_member_rel_f_d, dim_wms_warehouse, dim_wms_member
+--             dwd_wms_member_manager_rel_f_d
+--   - 支持仓库维度、货主维度、人员维度、交叉维度分析
+--   - 用于报表和BI分析
+-- =============================================
+{{ config(
+    materialized='table',
+    description='仓库-货主汇总表，支持多维度分析（包含人员关系）',
+    tags=['wms', 'dws', 'agg', 'warehouse', 'member']
+) }}
+
+SELECT
+    r.snap_date,
+    
+    -- 仓库维度
+    r.warehouse_id,
+    w.warehouse_no,
+    r.warehouse_name,
+    w.warehouse_province AS province,
+    w.warehouse_address AS address,
+    w.warehouse_type,
+    w.warehouse_attribute,
+    w.warehouse_use,
+    w.warehouse_status,
+    w.property_type,
+    w.warehouse_owner_id,
+    w.warehouse_owner_name,
+    
+    -- 仓库管理员信息（新增）
+    w.manager_member_id AS warehouse_manager_id,
+    w.contact_name AS warehouse_manager_name,
+    w.contact_phone AS warehouse_manager_phone,
+    w.manager_type AS warehouse_manager_type,
+    
+    -- 货主维度
+    r.member_id,
+    m.member_name,
+    m.member_type,
+    m.company_type,
+    m.industry_type,
+    m.contact_name AS member_contact_name,
+    m.contact_phone AS member_contact_phone,
+    m.credit_level,
+    
+    -- 货主负责人信息（新增）
+    mm.manager_name AS member_business_manager,      -- 金信负责人
+    mm.branch_org AS member_branch_org,             -- 落地机构
+    mm.business_category AS business_category,      -- 业务分类
+    mm.business_sub_type AS business_sub_type,      -- 业务子类
+    
+    -- 关系维度
+    r.relation_type,
+    r.relation_start_date,
+    r.relation_end_date,
+    r.relation_status,
+    r.goods_value_warehouse_rate,
+    r.goods_value_member_rate,
+    
+    -- 库存指标
+    r.sku_cnt,
+    r.total_charge_num,
+    r.total_weight_num,
+    r.total_goods_value,
+    r.remain_goods_value,
+    r.frozen_goods_value,
+    r.locked_goods_value,
+    
+    -- 仓库维度汇总（用于计算占比）
+    SUM(r.total_goods_value) OVER (PARTITION BY r.snap_date, r.warehouse_id) AS warehouse_total_goods_value,
+    
+    -- 货主维度汇总（用于计算占比）
+    SUM(r.total_goods_value) OVER (PARTITION BY r.snap_date, r.member_id) AS member_total_goods_value,
+    
+    -- 仓库货主数量
+    COUNT(*) OVER (PARTITION BY r.snap_date, r.warehouse_id) AS warehouse_member_cnt,
+    
+    -- 货主仓库数量
+    COUNT(*) OVER (PARTITION BY r.snap_date, r.member_id) AS member_warehouse_cnt,
+    
+    -- 货主排名（按货值）
+    ROW_NUMBER() OVER (PARTITION BY r.snap_date, r.warehouse_id ORDER BY r.total_goods_value DESC) AS member_rank_in_warehouse,
+    
+    -- 仓库排名（按货值）
+    ROW_NUMBER() OVER (PARTITION BY r.snap_date, r.member_id ORDER BY r.total_goods_value DESC) AS warehouse_rank_in_member,
+    
+    -- 业务分析字段（新增）
+    CASE
+        WHEN mm.business_category = '钢供应链项目' THEN '钢贸'
+        WHEN mm.business_category = '云仓有色项目' THEN '有色金属'
+        WHEN mm.business_category = '智慧牧场项目' THEN '牧场'
+        WHEN mm.business_category = '易牛项目' THEN '牧场'
+        ELSE '其他'
+    END AS main_business_type,
+    
+    CASE
+        WHEN r.goods_value_warehouse_rate > 80 THEN '高风险'
+        WHEN r.goods_value_warehouse_rate > 50 THEN '中风险'
+        ELSE '低风险'
+    END AS concentration_risk_level,
+    
+    r.etl_time
+
+FROM {{ ref('dwd_wms_warehouse_member_rel_f_d') }} r
+LEFT JOIN {{ ref('dim_wms_warehouse') }} w ON r.warehouse_id = w.warehouse_id
+LEFT JOIN {{ ref('dim_wms_member') }} m ON r.member_id = m.member_id
+LEFT JOIN {{ ref('dwd_wms_member_manager_rel_f_d') }} mm ON r.member_id = mm.member_id AND mm.snap_date = r.snap_date
+WHERE r.snap_date = CURRENT_DATE

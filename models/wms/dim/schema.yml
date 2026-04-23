@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: dim_wms_warehouse_member_rel
+    description: "仓库与成员（货主）关系维度表，记录仓库与成员之间的配置关联关系"
+    columns:
+      - name: warehouse_id
+        description: "仓库ID"
+        tests:
+          - not_null
+      - name: org_id
+        description: "组织/租户ID"
+        tests:
+          - not_null
+      - name: member_id
+        description: "成员ID（货主ID），0表示组织本身"
+        tests:
+          - not_null
+      - name: member_name
+        description: "成员名称（货主名称）"
+      - name: member_phone
+        description: "联系电话"
+      - name: member_type
+        description: "成员类型（1=组织, 2=个人/客户）"
+      - name: member_type_name
+        description: "成员类型名称"
+      - name: role
+        description: "角色编码"
+      - name: is_org_self
+        description: "是否组织本身（1=是, 0=否）"
+      - name: dw_effective_date
+        description: "生效日期"
+      - name: dw_expiry_date
+        description: "失效日期"
+      - name: is_current
+        description: "是否当前记录（1=是, 0=否）"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
