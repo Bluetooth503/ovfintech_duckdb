@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: dws_fund_credit_state_df
+  - name: dws_fund_customer_credit_state_df
     description: "授信额度当前状态表，记录每个授信的最新状态（T-1日）"
     columns:
       - name: credit_id
@@ -71,23 +71,39 @@ models:
       - name: dw_update_time
         description: "数据仓库更新时间"
 
-  - name: dws_fund_promissory_note_state_df
-    description: "借据当前状态表，记录每笔借据的最新状态（T-1日）"
+  - name: dws_fund_customer_promissory_note_agg_df
+    description: "借据日明细宽表，按借据+日期粒度记录每笔借据的完整状态"
     columns:
       - name: promissory_note_id
         description: "借据ID"
-      - name: promissory_note_no
-        description: "借据编号"
+      - name: stats_date
+        description: "统计日期"
       - name: customer_id
         description: "客户ID"
       - name: customer_name
         description: "客户名称"
+      - name: customer_type
+        description: "客户类型"
+      - name: promissory_note_no
+        description: "借据编号"
+      - name: contract_code
+        description: "合同编号"
       - name: credit_quota
-        description: "授信额度"
+        description: "授信总额度"
+      - name: credit_remain_quota
+        description: "授信剩余额度"
+      - name: credit_used_quota
+        description: "授信已用额度"
+      - name: credit_start_date
+        description: "授信起期"
+      - name: credit_end_date
+        description: "授信止期"
+      - name: note_credit_quota
+        description: "借据额度"
       - name: loan_balance
-        description: "贷款余额"
+        description: "借据余额"
       - name: remain_quota
-        description: "剩余额度"
+        description: "借据剩余额度"
       - name: apply_quota
         description: "申请额度"
       - name: interest_rate
@@ -96,8 +112,34 @@ models:
         description: "借据起期"
       - name: promissory_note_end_date
         description: "借据止期"
-      - name: apply_free_time
-        description: "申请放款时间"
+      - name: days_to_maturity
+        description: "距到期天数"
+      - name: is_overdue
+        description: "是否逾期"
+      - name: is_due_within_7d
+        description: "是否7天内到期"
+      - name: is_due_within_30d
+        description: "是否30天内到期"
+      - name: is_valid_promissory_note
+        description: "是否有效借据"
+      - name: has_balance
+        description: "是否有余额"
+      - name: is_on_loan
+        description: "是否在贷"
+      - name: utilization_rate
+        description: "用信率（%）"
+      - name: due_30d_balance
+        description: "30天内到期余额"
+      - name: overdue_balance
+        description: "逾期余额"
+      - name: last_repay_date
+        description: "最近还款日期"
+      - name: daily_repay_amt
+        description: "当日还款金额"
+      - name: daily_repay_interest_amt
+        description: "当日还款利息"
+      - name: daily_repay_cnt
+        description: "当日还款笔数"
       - name: financial_product_id
         description: "金融产品ID"
       - name: financial_product_name
@@ -106,12 +148,14 @@ models:
         description: "资金方ID"
       - name: fund_org_name
         description: "资金方名称"
-      - name: contract_code
-        description: "合同编号"
+      - name: repay_type
+        description: "还款方式"
       - name: promissory_note_sn
         description: "借据流水号"
       - name: entrust_account
         description: "委托账户"
+      - name: apply_free_time
+        description: "申请放款时间"
       - name: store_id
         description: "门店ID"
       - name: store_name
@@ -121,27 +165,11 @@ models:
       - name: connection_type
         description: "对接类型"
       - name: promissory_note_status
-        description: "借据状态（0=有效，1=无效）"
-      - name: remark
-        description: "备注"
-      - name: creator
-        description: "创建人"
-      - name: days_to_maturity
-        description: "距到期天数"
-      - name: is_overdue
-        description: "是否逾期"
-      - name: is_due_within_7d
-        description: "是否7天内到期"
-      - name: is_due_within_30d
-        description: "是否30天内到期"
-      - name: has_balance
-        description: "是否有余额"
-      - name: stats_date
-        description: "统计日期（T-1）"
-      - name: trx_date
-        description: "最新更新日期"
+        description: "借据状态"
+      - name: create_time
+        description: "创建时间"
       - name: update_time
-        description: "最新更新时间"
+        description: "更新时间"
       - name: dw_update_time
         description: "数据仓库更新时间"
 
@@ -163,7 +191,7 @@ models:
       - name: dw_update_time
         description: "数据仓库更新时间"
 
-  - name: dws_fund_credit_snap_df
+  - name: dws_fund_customer_credit_snap_df
     description: "授信额度每日快照表，记录每个授信在每天的历史状态"
     columns:
       - name: credit_id
@@ -342,5 +370,63 @@ models:
         description: "是否有当日交易"
       - name: fund_org_name
         description: "资金方名称"
+      - name: dw_update_time
+        description: "数据仓库更新时间"
+
+  - name: dws_fund_customer_loan_balance_agg_df
+    description: "客户贷款余额日聚合表，按客户+统计日期粒度汇总贷款余额核心指标（线上/线下/授信/逾期/到期）"
+    columns:
+      - name: customer_id
+        description: "客户ID"
+      - name: customer_name
+        description: "客户名称"
+      - name: customer_type
+        description: "客户类型（1=个人，2=企业）"
+      - name: stats_date
+        description: "统计日期"
+      - name: total_credit_quota
+        description: "总授信额度"
+      - name: total_remain_quota
+        description: "总剩余额度（客户剩余可用授信）"
+      - name: total_credit_used_quota
+        description: "总授信已用额度"
+      - name: total_loan_balance
+        description: "总贷款余额（线上+线下）"
+      - name: online_loan_balance
+        description: "线上贷款余额"
+      - name: offline_loan_balance
+        description: "线下贷款余额"
+      - name: online_promissory_note_cnt
+        description: "线上在贷借据笔数"
+      - name: online_overdue_balance
+        description: "线上逾期余额"
+      - name: online_overdue_cnt
+        description: "线上逾期借据笔数"
+      - name: online_due_7d_balance
+        description: "7天内到期余额（线上）"
+      - name: online_due_30d_balance
+        description: "30天内到期余额（线上）"
+      - name: prev_total_loan_balance
+        description: "昨日总贷款余额"
+      - name: daily_balance_change
+        description: "当日余额变动"
+      - name: total_offline_cumulative_disbursement
+        description: "线下累计放款金额"
+      - name: total_offline_cumulative_repay
+        description: "线下累计还款金额"
+      - name: year_offline_cumulative_disbursement
+        description: "线下年累计放款金额"
+      - name: year_offline_cumulative_repay
+        description: "线下年累计还款金额"
+      - name: utilization_rate
+        description: "用信率（%）"
+      - name: overdue_rate
+        description: "逾期率（%）"
+      - name: is_loan_customer
+        description: "是否贷款客户（'0'/'1'）"
+      - name: has_online_loan
+        description: "是否有线上贷款（'0'/'1'）"
+      - name: has_offline_loan
+        description: "是否有线下贷款（'0'/'1'）"
       - name: dw_update_time
         description: "数据仓库更新时间"

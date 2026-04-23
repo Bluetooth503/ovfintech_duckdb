@@ -59,7 +59,7 @@ WITH promissory_note_with_apply AS (
         a.dock_type AS connection_type,                                        -- 对接类型
 
         -- 借据状态
-        d.result AS promissory_note_status,                                    -- 借据状态（0=有效，1=无效）
+        d.result AS promissory_note_status,                                    -- 借据状态（0=失败，1=成功）
         d.remark,                                                              -- 备注
         d.creator,                                                             -- 创建人
 
@@ -116,7 +116,7 @@ SELECT
     connection_type,                                                          -- 对接类型
 
     -- 借据状态
-    promissory_note_status,                                                   -- 借据状态（0=有效，1=无效）
+    promissory_note_status,                                                   -- 借据状态（0=失败，1=成功）
     remark,                                                                   -- 备注
     creator,                                                                  -- 创建人
 

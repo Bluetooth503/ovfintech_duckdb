@@ -1,5 +1,5 @@
 -- =============================================
--- 模型名称：ads_rpt_fund_customer_rfm_segment_df
+-- 模型名称：ads_rpt_fund_rfm_segment_customer_df
 -- 模型描述：RFM客户分群日报表，提供客户价值分析的客户级别视图
 -- Dbt更新方式：全量
 -- 粒度：customer_id
