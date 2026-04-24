@@ -5,6 +5,7 @@
 -- 说明：
 --   - 数据源：ods_customer_tag_assign（客户标签分配表）
 --   - 关联关系：客户与场景多对多桥接
+--   - 关联dim_scene获取场景层级名称及路径
 -- =============================================
 {{ config(
     materialized='table',
@@ -17,8 +18,9 @@ WITH customer_scene_rel AS (
         id AS rel_id,
         member_id AS customer_id,
         member_type,
-        biz_scene_id AS scene_id,
-        biz_sub_category_id AS scene_sub_category_id,
+        CASE WHEN member_type = 1 THEN '企业客户' WHEN member_type = 2 THEN '个人客户' ELSE '未知类型' END AS member_type_name,
+        biz_scene_id AS scene_level1_id,
+        biz_sub_category_id AS scene_level2_id,
         biz_manager_id,
         biz_manager_name,
         fund_org_id,
@@ -40,32 +42,16 @@ WITH customer_scene_rel AS (
     WHERE is_deleted = '0'
 ),
 
--- 客户类型名称映射：1=企业客户，2=个人客户，其他=未知类型
-customer_scene_with_type AS (
+-- 关联场景维度表获取场景层级名称及路径
+customer_scene_with_dim AS (
     SELECT
-        rel_id,
-        customer_id,
-        member_type,
-        scene_id,
-        scene_sub_category_id,
-        biz_manager_id,
-        biz_manager_name,
-        fund_org_id,
-        fund_org_name,
-        branch_org_id,
-        branch_org_name,
-        sub_branch_org_id,
-        sub_branch_org_name,
-        regulatory_agency_org_id,
-        regulatory_agency_name,
-        creator_id,
-        creator_name,
-        create_time,
-        updator_id,
-        updator_name,
-        update_time,
-        CASE WHEN member_type = 1 THEN '企业客户' WHEN member_type = 2 THEN '个人客户' ELSE '未知类型' END AS member_type_name
-    FROM customer_scene_rel
+        cs.*,
+        ds.level1_name AS scene_level1_name,
+        ds.level2_name AS scene_level2_name,
+        ds.scene_path
+    FROM customer_scene_rel cs
+    LEFT JOIN {{ ref('dim_scene') }} ds
+        ON cs.scene_level2_id = ds.scene_id
 )
 
 SELECT
@@ -76,8 +62,11 @@ SELECT
     , cs.member_type                                                            -- 客户类型（1=企业，2=个人）
     , cs.member_type_name                                                       -- 客户类型名称
     -- 场景信息
-    , cs.scene_id                                                               -- 业务场景ID
-    , cs.scene_sub_category_id                                                  -- 业务子类ID
+    , cs.scene_level1_id                                                        -- 一级业务场景ID
+    , cs.scene_level1_name                                                      -- 一级业务场景名称
+    , cs.scene_level2_id                                                        -- 二级业务子类ID
+    , cs.scene_level2_name                                                      -- 二级业务子类名称
+    , cs.scene_path                                                             -- 场景完整路径
     -- 管理组织信息
     , cs.biz_manager_id                                                         -- 业务经理ID
     , cs.biz_manager_name                                                       -- 业务经理名称
@@ -101,5 +90,5 @@ SELECT
     , CAST('9999-12-31 23:59:59' AS TIMESTAMP) AS dw_expiry_date                -- 失效日期
     , '1' AS is_current                                                         -- 是否当前记录
 
-FROM customer_scene_with_type cs
-ORDER BY cs.customer_id, cs.scene_id
+FROM customer_scene_with_dim cs
+ORDER BY cs.customer_id, cs.scene_level1_id

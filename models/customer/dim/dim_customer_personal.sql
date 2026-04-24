@@ -3,8 +3,8 @@
 -- 模型描述：个人会员维度表，记录个人会员基础信息及历史变更（SCD Type 2）
 -- 粒度：customer_id
 -- 说明：
---   - 数据源：ods_mem_member（个人会员表）、dim_customer_scene_rel（客户场景关系）、dim_scene（场景维度）
---   - 关联逻辑：LEFT JOIN 场景关系取最新子类ID，LEFT JOIN 场景维度获取层级信息
+--   - 数据源：ods_mem_member（个人会员表）、dim_customer_scene_rel（客户场景关系）
+--   - 关联逻辑：LEFT JOIN 场景关系取最新子类ID，直接从客户场景关系获取层级信息
 -- =============================================
 {{ config(
     materialized='table',
@@ -48,8 +48,11 @@ WITH customer_base AS (
 customer_scene_rel AS (
     SELECT
         customer_id,
-        scene_id,
-        scene_sub_category_id,
+        scene_level1_id,
+        scene_level1_name,
+        scene_level2_id,
+        scene_level2_name,
+        scene_path,
         regulatory_agency_org_id,
         regulatory_agency_name,
         fund_org_id,
@@ -59,20 +62,7 @@ customer_scene_rel AS (
         sub_branch_org_id,
         sub_branch_org_name
     FROM {{ ref('dim_customer_scene_rel') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY scene_sub_category_id DESC) = 1
-),
-
--- 场景维度信息
-scene_info AS (
-    SELECT
-        scene_id,
-        scene_level,
-        scene_path,
-        level1_id AS scene_level1_id,
-        level1_name AS scene_level1_name,
-        level2_id AS scene_level2_id,
-        level2_name AS scene_level2_name
-    FROM {{ ref('dim_scene') }}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY scene_level2_id DESC) = 1
 )
 
 SELECT
@@ -103,12 +93,11 @@ SELECT
     -- 信用相关
     CASE WHEN mb.is_credit = '1' THEN '1' ELSE '0' END AS is_credit_flag,                       -- 是否开通信用
     -- 场景信息
-    csr.scene_id,                                                                              -- 业务场景ID
-    si.scene_level1_id,                                                                        -- 一级场景ID
-    si.scene_level1_name,                                                                      -- 一级场景名称
-    si.scene_level2_id,                                                                        -- 二级场景ID
-    si.scene_level2_name,                                                                      -- 二级场景名称
-    si.scene_path,                                                                             -- 场景路径
+    csr.scene_level1_id,                                                                       -- 一级场景ID
+    csr.scene_level1_name,                                                                     -- 一级场景名称
+    csr.scene_level2_id,                                                                       -- 二级场景ID
+    csr.scene_level2_name,                                                                     -- 二级场景名称
+    csr.scene_path,                                                                            -- 场景路径
     -- 监管机构信息
     csr.regulatory_agency_org_id,                                                              -- 监管机构ID
     csr.regulatory_agency_name,                                                                -- 监管机构名称
@@ -130,4 +119,3 @@ SELECT
 
 FROM customer_base mb
 LEFT JOIN customer_scene_rel csr ON mb.customer_id = csr.customer_id
-LEFT JOIN scene_info si ON csr.scene_id = si.scene_id

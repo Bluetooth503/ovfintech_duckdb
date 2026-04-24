@@ -17,7 +17,11 @@ orchid_member/
 orchid_fund/
 nohup.out
 .claude/
+.vscode/
+.kilo/
+.ruff_cache/
 config.ini
+*.csv
 
 # Python
 __pycache__/

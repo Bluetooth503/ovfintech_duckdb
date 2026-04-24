@@ -8,6 +8,21 @@
 --   - 1个货主可在多个仓库存储货物
 --   - 关联逻辑：从库存记录中提取仓库-货主-租户三元组
 -- =============================================
+
+-- =============================================
+-- 从数仓ods_inventory计算出来的结果
+-- SELECT DISTINCT
+--     warehouse_id,
+--     warehouse_name,
+--     CASE WHEN customer_id = '0' THEN org_id ELSE customer_id END AS customer_id,
+--     CASE WHEN customer_id = '0' THEN org_name ELSE customer_name END AS customer_name,
+--     CURRENT_TIMESTAMP AS dw_update_time
+-- FROM ods_inventory
+-- WHERE remain_weight_num + remain_charge_num > 0
+-- =============================================
+
+
+
 {{ config(
     materialized='table',
     description='仓库与货主（客户）映射关系表',
