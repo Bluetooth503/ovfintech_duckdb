@@ -27,8 +27,6 @@ TABLE_MAPPING = {
     # 'ods_make_inventory_detail': 'ods_make_inventory_detail',
     # 'ods_warehouse_tag_assign': 'ods_warehouse_tag_assign',
 
-
-
     # 'ods_inventory': 'ods_inventory',  # 1000W
 
 
